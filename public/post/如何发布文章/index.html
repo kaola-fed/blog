@@ -1,0 +1,120 @@
+	
+	<!doctype html>
+<html lang="en">
+  <head>    
+    <title>ALEXFINN - 如何发布文章</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+        
+    <link href="http://localhost:1313/blog//css/milk.min.css" rel="stylesheet">
+    <link href="http://localhost:1313/blog//css/milk-responsive.min.css" rel="stylesheet">     
+    <link href="http://localhost:1313/blog//css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="http://localhost:1313/blog//css/fonts.css" rel="stylesheet" type="text/css" media="all">
+    <link rel="shortcut icon" href="/images/alexfinn.ico"> 
+    <link rel="apple-touch-icon" href="">
+    <link rel="canonical" href="http://localhost:1313/blog/post/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/">
+
+    
+    <link href="/rss.xml" type="application/atom+xml" rel="alternate" title="kaola">    
+
+  </head>
+  <body>    
+    <div class="navbar navbar-fixed-top">        
+  <div id="navbar-inner">
+          <div id="logo">
+            <a href="http://ru.alexfinn.de"><img src="/blog/images/letter-a.jpg" width="100px"></img></a>
+          </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="content">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="posts">
+      
+
+	    
+	  <div class="post">
+	    <header class="post-header">
+	        <h1><a href="/blog/post/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/">如何发布文章</a></h1>
+	        <div class="post-time">November 22 2015</div>
+	    </header>
+	    <div class="post-after">
+	        <div class="tags">
+	            
+	                <a href="http://localhost:1313/blog//tags/%E6%95%99%E7%A8%8B">教程</a>              
+	            
+	        </div>
+	    </div>
+	    <hr>
+	    <div class="post content">
+	        
+
+<h2 id="准备工作:1be1c1bda82528e92721b3e28448f330">准备工作</h2>
+
+<ol>
+<li>下载<a href="http://www.gohugo.io/">Hugo</a></li>
+<li>clone <code>kaolafed/blog</code>到本地<a href="https://github.com/kaolafed/blog.git">https://github.com/kaolafed/blog.git</a></li>
+</ol>
+
+<h2 id="开始发布:1be1c1bda82528e92721b3e28448f330">开始发布</h2>
+
+<ol>
+<li>在blog repo目录下， 执行<code>hugo new post/文章名称.md</code>，新建一篇文章；</li>
+<li>编辑好文章后，执行<code>hugo server -w</code>，运行本地博客服务，这时候可以打开<code>http://localhost:1313/blog</code>就可以看到新增的内容了；</li>
+<li>确认编辑好后， 直接提交所有更改到master分支；</li>
+<li>等待一段时间，wercker自动部署好后， 就可以在<code>http://kaolafed.github.io/blog/</code>看到更新了；</li>
+</ol>
+
+<p>Refs:</p>
+
+<ul>
+<li><a href="https://gohugo.io/tutorials/automated-deployments/">使用hugo + wercker + github pages搭建博客</a></li>
+<li><a href="http://git.bookislife.com/post/2015/how-to-use-hugo/">使用hugo + wercker + github pages搭建博客翻译版</a></li>
+</ul>
+
+	    </div>
+	    
+	<div class="about">
+	<p> 
+     
+    </p>
+</div>
+		<nav id="pagination">
+			
+			
+		</nav>
+	
+		        <footer>
+		        	Build with <a href="https://github.com/spf13/hugo">Hugo</a> 
+		        	<p>© Alexander Ivanov 2014</p>
+		        </footer>
+		    </div>
+		  </div>    
+		</div>
+      </div>
+    </div>
+<script data-no-instant>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + ":change-me";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 4]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+    g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="http://change-me" style="border:0;" alt="" /></p></noscript>
+
+
+</html>

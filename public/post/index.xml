@@ -5,47 +5,38 @@
     <link>http://localhost:1313/blog/post/</link>
     <language>en-us</language>
     <author>Alexander Ivanov</author>
-    <updated>2015-11-23 10:46:17 &#43;0800 CST</updated>
+    <updated>2015-11-22 16:14:53 &#43;0800 CST</updated>
     
     <item>
-      <title>test</title>
-      <link>http://localhost:1313/blog/post/test/</link>
-      <pubDate>Mon, 23 Nov 2015 10:46:17 CST</pubDate>
-      <author>Alexander Ivanov</author>
-      <guid>http://localhost:1313/blog/post/test/</guid>
-      <description>
-
-&lt;h1 id=&#34;heading:b128b7694e4de962e0088bcb1bcb254f&#34;&gt;heading&lt;/h1&gt;
-
-&lt;p&gt;this is text23&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>two</title>
-      <link>http://localhost:1313/blog/post/two/</link>
-      <pubDate>Sun, 22 Nov 2015 16:15:00 CST</pubDate>
-      <author>Alexander Ivanov</author>
-      <guid>http://localhost:1313/blog/post/two/</guid>
-      <description>
-
-&lt;h1 id=&#34;heading:e6a0bff01fd722bafeff865963008e1e&#34;&gt;heading&lt;/h1&gt;
-
-&lt;p&gt;this is text23&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>one</title>
-      <link>http://localhost:1313/blog/post/one/</link>
+      <title>如何发布文章</title>
+      <link>http://localhost:1313/blog/post/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/</link>
       <pubDate>Sun, 22 Nov 2015 16:14:53 CST</pubDate>
       <author>Alexander Ivanov</author>
-      <guid>http://localhost:1313/blog/post/one/</guid>
+      <guid>http://localhost:1313/blog/post/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/</guid>
       <description>
 
-&lt;h1 id=&#34;heading:f066022a5cd7e2eba28340b66795b149&#34;&gt;heading&lt;/h1&gt;
+&lt;h2 id=&#34;准备工作:1be1c1bda82528e92721b3e28448f330&#34;&gt;准备工作&lt;/h2&gt;
 
-&lt;p&gt;this is text1&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;下载&lt;a href=&#34;http://www.gohugo.io/&#34;&gt;Hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;clone &lt;code&gt;kaolafed/blog&lt;/code&gt;到本地&lt;a href=&#34;https://github.com/kaolafed/blog.git&#34;&gt;https://github.com/kaolafed/blog.git&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;开始发布:1be1c1bda82528e92721b3e28448f330&#34;&gt;开始发布&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;在blog repo目录下， 执行&lt;code&gt;hugo new post/文章名称.md&lt;/code&gt;，新建一篇文章；&lt;/li&gt;
+&lt;li&gt;编辑好文章后，执行&lt;code&gt;hugo server -w&lt;/code&gt;，运行本地博客服务，这时候可以打开&lt;code&gt;http://localhost:1313/blog&lt;/code&gt;就可以看到新增的内容了；&lt;/li&gt;
+&lt;li&gt;确认编辑好后， 直接提交所有更改到master分支；&lt;/li&gt;
+&lt;li&gt;等待一段时间，wercker自动部署好后， 就可以在&lt;code&gt;http://kaolafed.github.io/blog/&lt;/code&gt;看到更新了；&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Refs:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://gohugo.io/tutorials/automated-deployments/&#34;&gt;使用hugo + wercker + github pages搭建博客&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://git.bookislife.com/post/2015/how-to-use-hugo/&#34;&gt;使用hugo + wercker + github pages搭建博客翻译版&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

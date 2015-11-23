@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-      <title> on kaola </title>
-    <link>http://localhost:1313/blog/</link>
+      <title>Tutorial on kaola </title>
+    <link>http://localhost:1313/blog/categories/tutorial/</link>
     <language>en-us</language>
     <author>Alexander Ivanov</author>
     <updated>2015-11-22 16:14:53 &#43;0800 CST</updated>
