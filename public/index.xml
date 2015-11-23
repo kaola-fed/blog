@@ -22,34 +22,6 @@
     </item>
     
     <item>
-      <title></title>
-      <link>http://localhost:1313/blog/post/3/</link>
-      <pubDate>Sun, 22 Nov 2015 16:15:00 CST</pubDate>
-      <author>Alexander Ivanov</author>
-      <guid>http://localhost:1313/blog/post/3/</guid>
-      <description>
-
-&lt;h1 id=&#34;heading:ae9997a2769c75053f068259cadd520a&#34;&gt;heading&lt;/h1&gt;
-
-&lt;p&gt;this is text23&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://localhost:1313/blog/post/4/</link>
-      <pubDate>Sun, 22 Nov 2015 16:15:00 CST</pubDate>
-      <author>Alexander Ivanov</author>
-      <guid>http://localhost:1313/blog/post/4/</guid>
-      <description>
-
-&lt;h1 id=&#34;heading:e7fd8297e2196d1a566a3e2e51cbb23a&#34;&gt;heading&lt;/h1&gt;
-
-&lt;p&gt;this is text233223&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>one</title>
       <link>http://localhost:1313/blog/post/one/</link>
       <pubDate>Sun, 22 Nov 2015 16:14:53 CST</pubDate>
