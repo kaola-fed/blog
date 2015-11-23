@@ -1,4 +1,4 @@
-baseurl = "http://kaola-fed.github.io/blog/"
+baseurl = "http://kaola-fed.github.io/blog"
 languageCode = "en-us"
 title = "kaola"
 theme = "simple-a-master"

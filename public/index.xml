@@ -31,7 +31,7 @@
 &lt;li&gt;等待一段时间，wercker自动部署好后， 就可以在&lt;code&gt;http://kaola-fed.github.io/blog/&lt;/code&gt;看到更新了；&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Refs:&lt;/p&gt;
+&lt;h2 id=&#34;refs:1be1c1bda82528e92721b3e28448f330&#34;&gt;Refs:&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://gohugo.io/tutorials/automated-deployments/&#34;&gt;使用hugo + wercker + github pages搭建博客&lt;/a&gt;&lt;/li&gt;
