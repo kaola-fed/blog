@@ -1,0 +1,14 @@
+{{ $baseurl := .Site.BaseURL }}
+{{ template "theme/chrome/header.html" . }}
+
+	<section id="main">
+	  <div>
+	   <h1 id="title">{{ .Title }}</h1>
+	   <ul>
+	   {{ $data := .Data }}
+	    {{ range $key,$value := .Data.Index.ByCount }}
+	    <li><a href="{{ $baseurl }}/tags/{{ $value.Name | urlize }}"> {{ $value.Name }} </a> {{ $value.Count }} </li>
+	    {{ end }}
+	   </ul>
+	  </div>
+	</section>

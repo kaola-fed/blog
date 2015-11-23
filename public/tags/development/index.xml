@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+      <title>Development on nupthale </title>
+    <link>http://localhost:1313/hugoblog/tags/development/</link>
+    <language>en-us</language>
+    <author>Alexander Ivanov</author>
+    <updated>2015-11-22 16:15:00 &#43;0800 CST</updated>
+    
+    <item>
+      <title></title>
+      <link>http://localhost:1313/hugoblog/post/3/</link>
+      <pubDate>Sun, 22 Nov 2015 16:15:00 CST</pubDate>
+      <author>Alexander Ivanov</author>
+      <guid>http://localhost:1313/hugoblog/post/3/</guid>
+      <description>
+
+&lt;h1 id=&#34;heading:ae9997a2769c75053f068259cadd520a&#34;&gt;heading&lt;/h1&gt;
+
+&lt;p&gt;this is text23&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://localhost:1313/hugoblog/post/4/</link>
+      <pubDate>Sun, 22 Nov 2015 16:15:00 CST</pubDate>
+      <author>Alexander Ivanov</author>
+      <guid>http://localhost:1313/hugoblog/post/4/</guid>
+      <description>
+
+&lt;h1 id=&#34;heading:e7fd8297e2196d1a566a3e2e51cbb23a&#34;&gt;heading&lt;/h1&gt;
+
+&lt;p&gt;this is text233223&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>two</title>
+      <link>http://localhost:1313/hugoblog/post/two/</link>
+      <pubDate>Sun, 22 Nov 2015 16:15:00 CST</pubDate>
+      <author>Alexander Ivanov</author>
+      <guid>http://localhost:1313/hugoblog/post/two/</guid>
+      <description>
+
+&lt;h1 id=&#34;heading:e6a0bff01fd722bafeff865963008e1e&#34;&gt;heading&lt;/h1&gt;
+
+&lt;p&gt;this is text23&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>one</title>
+      <link>http://localhost:1313/hugoblog/post/one/</link>
+      <pubDate>Sun, 22 Nov 2015 16:14:53 CST</pubDate>
+      <author>Alexander Ivanov</author>
+      <guid>http://localhost:1313/hugoblog/post/one/</guid>
+      <description>
+
+&lt;h1 id=&#34;heading:f066022a5cd7e2eba28340b66795b149&#34;&gt;heading&lt;/h1&gt;
+
+&lt;p&gt;this is text1&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

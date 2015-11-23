@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>    
+    <title>ALEXFINN - {{ .Title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+    {{ template "theme/chrome/includes.html" . }}
+    <link rel="shortcut icon" href="/images/alexfinn.ico"> 
+    <link rel="apple-touch-icon" href="">
+    <link rel="canonical" href="{{ .Permalink }}">
+
+    <!-- atom & rss feed -->
+    <link href="/rss.xml" type="application/atom+xml" rel="alternate" title="{{ .Site.Title }}">    
+
+  </head>
+  <body>    
+    {{ template "theme/chrome/menu.html" }}
+
+<div class="container">
+  <div class="content">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="posts">
+      

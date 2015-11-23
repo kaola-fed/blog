@@ -1,0 +1,304 @@
+body {
+  font-size: 16px; 
+}
+
+/* Custom container */
+
+.container-narrow {
+  margin: 0 auto;
+  max-width: 700px; }
+
+.container-narrow > hr {
+  margin: 30px 0; }
+
+.navbar .nav {
+  float: right; }
+
+figure.full img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;  
+}
+
+figure.medium
+{
+    width:400px;
+    margin-top:30px;
+    margin-bottom:30px;            
+    margin-left: auto;
+    margin-right: auto;    
+}
+
+figure.large
+{
+    width:500px;
+    margin-top:30px;
+    margin-bottom:30px;            
+    margin-left: auto;
+    margin-right: auto;    
+}
+
+figure.large img {
+    width:500px; 
+    height: auto;
+}
+
+figcaption
+{
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    background-color: #EFEFEF;    
+    font-size: 90%;        
+    margin-left: 1%;
+    padding-left: 4%;
+    padding-right: 4%;
+    text-align: justify;
+    display: block;
+}
+
+footer { 
+ position: relative;
+ z-index: 10; 
+ line-height: normal;
+ margin-top: 10px; 
+ font-size: 0.6em;
+ text-transform: uppercase;
+ font-family: 'Liberation Sans', Helvetica, sans-serif; 
+ padding-top: 2em; 
+ text-align: center;
+}
+
+.content h1 {
+  font-family: Philosopher, serif;
+  color: #3F3F3F;
+  font-size: 1.8em;
+  text-align: center; 
+  margin-bottom: 40px;
+}
+
+#logo {
+  width: 80px;
+  margin: auto;
+}
+
+#logo a {
+  border: none;
+}
+
+#navbar-inner {
+  min-height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: white;
+  margin: auto;
+  max-width: 980px;
+  border-bottom: 1px solid #989898;
+}
+
+.container {  
+  margin: 0 auto;
+  max-width: 960px;
+  margin-top: 5%;
+}
+
+.row-fluid .span12 ul .posts {
+  margin: 0 0 10px 0;
+}
+
+.posts {
+  text-align: center;
+  padding-top: 5%;
+}
+
+.posts li {  
+  line-height: 90%;
+  list-style: none;
+}
+.posts li p {
+  margin-bottom: 25px;
+}
+
+.posts span {
+  float: right;
+  text-transform: uppercase;
+  font-size: 0.70em;
+  color: #777777;
+}
+
+.post {
+  margin: auto;
+  padding-bottom: 20px;
+  background: #fff;
+  border-bottom: 1px solid #d5d5d5;
+  max-width: 700px;
+}
+
+.post h2 {
+  font-size: 25px;
+  line-height: 50px;
+  margin: 25px 0;
+}
+
+p {
+  line-height: 25px;
+  margin: 0 0 20px;
+}
+
+.post .content {
+  text-align: left;
+  margin-top: 3em;
+  font-family: "Liberation Serif", "Palatino Linotype", Georgia, serif;
+  font-size: 18px;
+}
+
+.post .content li {
+  line-height: 150%;
+  list-style: square;
+}
+
+.post .content ol {
+  margin-bottom: 25px;
+}
+
+.post-header {
+  padding: 20px 40px 20px 40px;
+  text-align: center;
+}
+
+.post-header h1 {
+  font-size: 1.8em;
+  color: #444;
+  font-family: Philosopher;
+  margin-bottom: 10px;
+}
+
+.post-header a {
+    color: headings-color;
+    font-size: 1em;
+    color: #444;
+}
+
+.post-header a:hover {
+  text-decoration: none;
+  border:none;
+}
+
+.post-time {
+  margin-top: 3px;
+  font-family: Philosopher;
+}
+
+.post-after {
+  padding-left: 40px;
+  margin-bottom: 12px;
+}
+
+.post-after ul {
+  clearfix()
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.post-after ul li {
+  float: left;
+  margin-right: 20px;
+}
+
+.post-after ul li a {
+  display: block;
+}
+
+.tags a {
+  color: #505050;
+  margin-right: 12px;
+  font-size: 0.6em;
+  padding: 5px 8px 2px 8px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: 300ms background ease;
+  display: inline-block;
+  margin-bottom: 8px;
+  border-bottom: 3px solid #fa5305;
+  font-family: 'Liberation Sans', Helvetica, 'Helvetica Neue', sans-serif;
+}
+
+.tags a:hover {
+  color: #fff;
+  background-color: #fa5305;
+  border-bottom: 3px solid #fa5305;
+  text-decoration: none;
+}
+
+.one-post a, p a {
+  border-bottom: 1px solid #fa5305;
+  color: #505050;
+  padding-bottom: 2px;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+  border-bottom: 3px solid #fa5305;
+}
+
+blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 20px;
+  border-left: 5px solid #fa5305;
+  font-family: Philosopher;
+  font-size: 18px;
+}
+
+.tag-list {
+  font-family: Philosopher;
+  max-width: 700px;
+  margin: auto;
+}
+
+.tag-list h1 {
+  max-width: 300px;
+  margin: auto;
+  padding-bottom: 2em;
+}
+
+.one-post {
+  padding-bottom: 30px;
+}
+
+#pagination {
+  margin-top: 1.5em;
+}
+
+#pagination a {
+  margin-top: 20px;
+  padding: 7px 20px 3px 20px;
+  width: 115px;
+  color: #646464;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: 'Liberation Sans', Helvetica, sans-serif;
+  border-bottom: 4px solid #646464;
+}
+
+#pagination a:hover {
+  color: #fff;
+  background-color: #646464;
+  border-bottom: 4px solid #646464;
+  text-decoration: none;
+}
+
+pre code {
+  display: block;
+  font-size: 14px;
+}
+
+.code {
+  font-family: 'Liberation Mono', Monaco, Consolas;
+  display: block;
+}
+
+code, pre {
+    font-family: 'Liberation Mono', Monaco, Consolas;
+    font-size: 14px;
+}

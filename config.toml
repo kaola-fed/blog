@@ -1,0 +1,4 @@
+baseurl = "http://kaolafed.github.io/blog/"
+languageCode = "en-us"
+title = "kaola"
+theme = "simple-a-master"
