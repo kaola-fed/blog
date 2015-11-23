@@ -5,7 +5,21 @@
     <link>http://localhost:1313/blog/</link>
     <language>en-us</language>
     <author>Alexander Ivanov</author>
-    <updated>2015-11-22 16:15:00 &#43;0800 CST</updated>
+    <updated>2015-11-23 10:46:17 &#43;0800 CST</updated>
+    
+    <item>
+      <title>test</title>
+      <link>http://localhost:1313/blog/post/test/</link>
+      <pubDate>Mon, 23 Nov 2015 10:46:17 CST</pubDate>
+      <author>Alexander Ivanov</author>
+      <guid>http://localhost:1313/blog/post/test/</guid>
+      <description>
+
+&lt;h1 id=&#34;heading:b128b7694e4de962e0088bcb1bcb254f&#34;&gt;heading&lt;/h1&gt;
+
+&lt;p&gt;this is text23&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>two</title>
