@@ -76,8 +76,8 @@ footer {
 }
 
 #logo {
-  width: 80px;
-  margin: auto;
+  width: 40px;
+  display:inline-block; 
 }
 
 #logo a {
@@ -90,8 +90,9 @@ footer {
   padding-right: 10px;
   background-color: white;
   margin: auto;
-  max-width: 980px;
-  border-bottom: 1px solid #989898;
+  background:#D51B44;
+  box-shadow:0 0 10px #666;
+  color:#fff;
 }
 
 .container {  
