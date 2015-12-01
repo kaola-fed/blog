@@ -17,6 +17,10 @@
 
 &lt;h2 id=&#34;js中的事件循环与定时器:00dbedeee498dc523aeaec841937d175&#34;&gt;JS中的事件循环与定时器&lt;/h2&gt;
 
+&lt;blockquote&gt;
+&lt;p&gt;by tianyn1990&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;p&gt;&lt;em&gt;本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。&lt;/em&gt; &lt;strong&gt;Orz&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;一-单线程:00dbedeee498dc523aeaec841937d175&#34;&gt;一、单线程&lt;/h3&gt;
