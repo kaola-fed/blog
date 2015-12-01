@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+      <title>Javascript on kaola </title>
+    <link>http://localhost:1313/blog/tags/javascript/</link>
+    <language>en-us</language>
+    <author>Alexander Ivanov</author>
+    <updated>2015-12-01 16:48:59 &#43;0800 CST</updated>
+    
+    <item>
+      <title>JS中的事件循环与定时器</title>
+      <link>http://localhost:1313/blog/post/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/</link>
+      <pubDate>Tue, 01 Dec 2015 16:48:59 CST</pubDate>
+      <author>Alexander Ivanov</author>
+      <guid>http://localhost:1313/blog/post/JS%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8/</guid>
+      <description>
+
+&lt;h2 id=&#34;js中的事件循环与定时器:00dbedeee498dc523aeaec841937d175&#34;&gt;JS中的事件循环与定时器&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;by tianyn1990&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。&lt;/em&gt; &lt;strong&gt;Orz&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;一-单线程:00dbedeee498dc523aeaec841937d175&#34;&gt;一、单线程&lt;/h3&gt;
+
+&lt;p&gt;javascript单线程执行，是由浏览器的场景决定的，避免了复杂的同步问题。HTML5提出「Web Worker」标准，允许js创建多个线程，但子线程仍受主线程控制，且不能操作DOM，js的本质未变。&lt;/p&gt;
+
+&lt;h3 id=&#34;二-任务队列-事件循环:00dbedeee498dc523aeaec841937d175&#34;&gt;二、任务队列 &amp;amp; 事件循环&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/taskqueue.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;任务分为：&lt;strong&gt;同步任务（synchronous）&lt;/strong&gt;、&lt;strong&gt;异步任务（asynchronous）&lt;/strong&gt;；同步任务被放入&lt;strong&gt;主线程&lt;/strong&gt;，异步任务放入&lt;strong&gt;任务队列（task queue）&lt;/strong&gt;。任务队列中的异步任务一旦运行有了结果，那么会在任务队列中放置一个对应的事件，当主线程中的同步任务全部执行完毕以后，会检查任务队列，将包含对应事件的异步任务放入主线程，然后主线程会执行所有任务，执行完毕以后再次检查task queue。这样不断循环的过程就叫做&lt;strong&gt;「event loop」&lt;/strong&gt;。（需要注意的是，loop的时间精度在4ms-16ms之间，oldIE会比较大，部分现代浏览器会判断pc是否外接电源来调整精确度）&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;task queue中的「事件」包括：IO设备（keypress,network events like ajax&amp;hellip;）、鼠标点击、页面滚动等。事件被添加到主线程后，在下一个loop中执行的是该事件的「回调函数」，所以async task都有回调函数。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;task queue是「先进先出」队列结构，首先注册的事件第一个进入主线程等待执行。但「定时器」功能还会校验该事件的时间，到达时间后的async task才进入主线程。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/eventloop.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;如上图，主线程的运行会产生&lt;strong&gt;「堆 heap」&lt;/strong&gt;和&lt;strong&gt;「栈 stack」&lt;/strong&gt;，&lt;strong&gt;「执行栈」&lt;/strong&gt;（主线程）中的代码可能会通过调用「WebAPIs」在task queue中创建async task，得到结果的async task会将「回调函数」放入callback queue中，并把相应事件放入task queue中，当「执行栈」中的代码执行完毕，就会依次将task queue中所有符合时间要求（定时器）的事件放入「执行栈」中，并在下一个event loop中执行对应的「回调函数」。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;三-定时器:00dbedeee498dc523aeaec841937d175&#34;&gt;三、定时器&lt;/h3&gt;
+
+&lt;h3 id=&#34;settimeout:00dbedeee498dc523aeaec841937d175&#34;&gt;setTimeout&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;setTimeout 与 setInterval 实现原理一致，setTimeout(fn,0) 会将「事件」放入task queue的&lt;strong&gt;尾部&lt;/strong&gt;，在&lt;strong&gt;下一次loop&lt;/strong&gt;中，当「同步任务」与task queue中现有事件都执行完之后再执行。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;setTimeout存在&lt;strong&gt;「时间精度问题」&lt;/strong&gt;，至少在4ms以上，根据浏览器、设备是否插电源等有所不同，最多能达到近16ms。为了解决这个问题，加快响应速度，产生了&lt;strong&gt;「setImmediate API 与 setImmediate.js项目」&lt;/strong&gt;与&lt;strong&gt;「requestAnimationFrame」&lt;/strong&gt;，前者解决&lt;strong&gt;「触发之后，立即调用回调函数，希望延迟尽可能短」&lt;/strong&gt;的情况，后者可以实现&lt;strong&gt;「流畅的JS动画」（见下文）&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;setinterval:00dbedeee498dc523aeaec841937d175&#34;&gt;setInterval&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;setInterval如果使用「固定步长」（间隔时间为定值），例如200ms，那么它可能会在距离js执行开始的205ms，405ms，605ms&amp;hellip;时将「事件」放入task queue中的末尾等待执行。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;h4 id=&#34;问题一:00dbedeee498dc523aeaec841937d175&#34;&gt;问题一：&lt;/h4&gt;
+
+&lt;p&gt;如果主线程（或执行栈）中的任务与task queue中的其它任务再加上setInterval中的回调函数的总执行时间超过了「固定步长」（200ms），那么setInterval的回调函数就会「延后执行」，浏览器会保证&lt;strong&gt;「当任务队列中没有定时器的任何其它代码实例时，才将新的定时器添加到任务队列」&lt;/strong&gt;，长时间运行就会产生大量「积压」在内存中待执行的函数，如果主线程终于空闲下来，那么就会立刻执行&lt;strong&gt;「积压」&lt;/strong&gt;的大量函数，中间不会有任何停顿。那么真正的执行时间可能就变成了（假设主线程执行时间每loop固定为300ms）：305ms、605ms、605ms、905ms、1205ms、1205ms&amp;hellip;就会产生&lt;strong&gt;「跳帧」&lt;/strong&gt;。例子如下：（补充：&lt;a href=&#34;https://developer.mozilla.org/zh-CN/docs/Code_snippets/Timers&#34;&gt;Date.now&lt;/a&gt; IE9以上支持，相对new Date()来说减少创建一次对象的时间和内存）&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;	var i = 0, itv;
+	(function btnclick(){
+		itv = setInterval(function(){
+			console.log(&#39;run:&#39;+i++);
+			var start = Date.now();
+			while(Date.now() - start &amp;lt; 2000) {}
+		}, 500);
+	})();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;但在试验中（ff，chrome，safari），只有firefox发生了「积压」效果&lt;/strong&gt;，具体表现为：会有几个「run:i」同时打印到控制台。推测是webkit内核对这块做了优化。如果一定要使用setInterval的话，问题一（避免事件积压）的解决办法有（摘自『javascript高级程序设计』）：&lt;br /&gt;
+(1) 间隔时间使用百分比: 开始值 + (目标值 - 开始值) * （Date.now() - 开始时间）/ 时间区间；&lt;br /&gt;
+(2) 使用链式setTimeout；&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;h4 id=&#34;问题二:00dbedeee498dc523aeaec841937d175&#34;&gt;问题二：&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;「setTimeout同样有这个问题！」&lt;/strong&gt;通过切换标签页等操作让页面在后台运行，循环仍在继续，只是「时间间隔变长」了而已。另外，当动画发生在页面viewport可视区域以外的时候，中断动画运行，才是性能更优的选择（raf就是如此）。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;h4 id=&#34;问题三:00dbedeee498dc523aeaec841937d175&#34;&gt;问题三：&lt;/h4&gt;
+
+&lt;p&gt;在使用setTimeout制作JS动画的时候，时间间隔是不好把握的，如果假设某浏览器的渲染速率为60Hz，那么就是16又2/3毫秒渲染一次，为了匹配这个速率，我们需要确保「setTimeout中设定的时间间隔」+「回调函数执行时间」+「在显示器上绘制/改变动画的下一帧的时间」刚好等于「16 2/3ms」，假设3者相加时间为15ms，那么每10『(16 &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;) / ((16 &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;)- 15)=10』帧会多出一帧来，那么结果就是在第10帧的时候，动画函数连续执行了两次，于是动画不再平滑了&amp;hellip;（详见&lt;a href=&#34;https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html&#34;&gt;这篇啰嗦的文章&lt;/a&gt;），更不要说还要考虑setTimeout的「时间精度」问题（4ms 一次 event loop，也即是最少4ms才检查一次setTimeout的时间是否达到）&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;requestanimationframe:00dbedeee498dc523aeaec841937d175&#34;&gt;requestAnimationFrame&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;requestAnimationFrame 会把每一帧中的所有DOM操作集中起来，在&lt;strong&gt;「一次重绘或回流中就完成」&lt;/strong&gt;，并且&lt;strong&gt;「重绘或回流的时间间隔紧紧跟随浏览器的刷新频率」&lt;/strong&gt;，一般来说，这个频率为每秒60帧。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在隐藏或不可见的元素中，requestAnimationFrame将不会进行重绘或回流，这当然就意味着更少的的cpu，gpu和内存使用量。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;    var i = 0, _load = +new Date(), loop = 1000/60;
+    function f(){
+        var _now = +new Date();
+        console.log(i++, (_now-_load)/loop);
+        _load = _now;
+        requestAnimationFrame(f);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;与setTimeout相比，requestAnimationFrame不是自己指定回调函数运行的时间，而是跟着浏览器内建的刷新频率来执行回调，这当然就能达到浏览器所能实现动画的最佳效果了。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;但另外一方面，requestAnimationFrame的预期执行时间要比setTimeout要长，因为setTimeout的最小执行时间是由「第7点：浏览器的时间精度」决定的，但raf会跟随浏览器DOM的刷新频率来执行，理论为16 2/3ms。但是，&lt;strong&gt;在setTimeout中如果进行了DOM操作（尤其是产生了重绘）通常不会立即执行，而是等待浏览器内建刷新时才执行&lt;/strong&gt;。因此对于「动画」来说的话，raf要远远比setTimeout适合得多。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;rAF与setTimeout性能比较：（据某些人说，早期的raf性能堪忧，尤其是在手机上，反而不如setTimeout）&lt;br /&gt;
+&lt;strong&gt;macbook pro chrome 46.0.2490.86 (64-bit)：&lt;/strong&gt;&lt;br /&gt;
+(1) setTimeout用时：37280ms&lt;br /&gt;
+(2) raf用时：       18360ms&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;setTimeout:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    var raf, i= 1, body = document.querySelector(&#39;body&#39;);
+    body.innerHTML = &#39;&amp;lt;div id=&amp;quot;sq&amp;quot; style=&amp;quot;position:fixed;width:30px;height:30px;top:50px;left:50px;background:red;&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;&#39;;
+    var sq = document.querySelector(&amp;quot;#sq&amp;quot;);
+    var pause = 10;//回调函数执行时间
+    var _load = +new Date();
+    var t = 1000/60;
+    function run1(){
+        i++;
+        sq.style.left = sq.offsetLeft + 1 + &#39;px&#39;;
+        var start = Date.now();
+        while(Date.now() - start &amp;lt; pause) {}
+        if(i == 1000){
+            console.log(Date.now() - _load);
+        }
+        raf = setTimeout(run1, t);
+    }
+    function stop(){
+        clearTimeout(raf);
+    }
+    //37280
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;rAF:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    var raf, i= 1, body = document.querySelector(&#39;body&#39;);
+    body.innerHTML = &#39;&amp;lt;div id=&amp;quot;sq&amp;quot; style=&amp;quot;position:fixed;width:30px;height:30px;top:50px;left:50px;background:red;&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;&#39;;
+    var sq = document.querySelector(&amp;quot;#sq&amp;quot;);
+    var pause = 10;//回调函数执行时间
+    var _load = +new Date();
+    function run(){
+        i++;
+        sq.style.left = sq.offsetLeft + 1 + &#39;px&#39;;
+        var start = Date.now();
+        while(Date.now() - start &amp;lt; pause) {}
+        if(i == 1000){
+            console.log(Date.now() - _load);
+        }
+        raf = requestAnimationFrame(run);
+    }
+    function stop(){
+        cancelAnimationFrame(raf);
+    }
+    //18360
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;由于requestAnimationFrame的特性之一：会把每一帧中的所有DOM操作集中起来，在「一次重绘或回流中就完成」。因此有github项目fastdom，我会在另一篇文章中详细分析fastdom的实现思路与代码。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;四-更快的异步执行:00dbedeee498dc523aeaec841937d175&#34;&gt;四、更快的异步执行&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;不是为了「动画」，而是单纯的希望最快速的执行异步回调：&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;使用异步函数-settimeout-raf-setimmediate:00dbedeee498dc523aeaec841937d175&#34;&gt;使用异步函数：setTimeout、raf、setImmediate：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;setTimeout会有「时间精度问题」，经过本地试验，chrome用时约1.5ms（连接电源）、safari用时约5ms、firefox用时约0.3ms（为何这么快&amp;hellip;）&lt;/li&gt;
+&lt;li&gt;raf会跟随浏览器内置重绘页面的频率，约60Hz，理论上平均时间为：1000/60/2ms，chrome上测试：第一次时间多在1ms内，第二次调用时间大于10ms。&lt;/li&gt;
+&lt;li&gt;setImmediate：仅IE10支持，尚未成为标准。但nodeJS已经支持并推荐使用此方法。另外，github上有&lt;a href=&#34;https://github.com/YuzuJS/setImmediate/blob/master/README.md&#34;&gt;setImmediate.js项目&lt;/a&gt;，用其它方法实现了setImmediate功能&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;测试：&lt;br /&gt;
+&lt;strong&gt;setTimeout:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    var now = function(){
+        return performance ? performance.now() : +new Date();
+    };
+    var i = now();
+    setTimeout(function(){
+        setTimeout(function(){
+            console.log(now()-j);
+        },0);
+        var j = now();
+        console.log(j-i);
+    },0);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;raf:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    var now = function(){
+        return performance ? performance.now() : +new Date();
+    };
+    var i = now();
+    requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+            console.log(now()-j);
+        });
+        var j = now();
+        console.log(j-i);
+    });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;其它方式实现异步调用:00dbedeee498dc523aeaec841937d175&#34;&gt;其它方式实现异步调用：&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;onmessage：和iframe通信时常常会使用到onmessage方法，但是如果同一个window postMessage给自身，其实也相当于异步执行了一个function。&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;    var doSth = function(){};
+    window.addEventListener(&amp;quot;message&amp;quot;, doSth, true);
+    window.postMessage(&amp;quot;&amp;quot;, &amp;quot;*&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;另外，还可以利用script标签，实现函数异步执行（把script添加到文档也会执行onreadystatechange 但是该方法只能在IE下浏览器里使用），例如：&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;    var newScript = document.createElement(&amp;quot;script&amp;quot;);
+    newScript.onreadystatechange = doSth;
+    document.documentElement.appendChild(newScript);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;理论上，执行回调函数的等待时间排序：&lt;br /&gt;
+&lt;strong&gt;setImmediate &amp;lt; readystatechange &amp;lt; onmessage &amp;lt; setTimeout 0 &amp;lt; requestAnimationFrame&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;另外，在&lt;strong&gt;「&lt;a href=&#34;https://github.com/YuzuJS/setImmediate/blob/master/README.md&#34;&gt;setImmediate.js项目&lt;/a&gt;」&lt;/strong&gt;中说了它的实现策略，对上文进行一个有力的补充：&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;## The Tricks
+
+### `process.nextTick`
+
+In Node.js versions below 0.9, `setImmediate` is not available, but [`process.nextTick`][nextTick] is—and in those versions, `process.nextTick` uses macrotask semantics. So, we use it to shim support for a global `setImmediate`.
+
+In Node.js 0.9 and above, `process.nextTick` moved to microtask semantics, but `setImmediate` was introduced with macrotask semantics, so there&#39;s no need to polyfill anything.
+
+Note that we check for *actual* Node.js environments, not emulated ones like those produced by browserify or similar. Such emulated environments often already include a `process.nextTick` shim that&#39;s not as browser-compatible as setImmediate.js.
+
+### `postMessage`
+
+In Firefox 3+, Internet Explorer 9+, all modern WebKit browsers, and Opera 9.5+, [`postMessage`][postMessage] is available and provides a good way to queue tasks on the event loop. It&#39;s quite the abuse, using a cross-document messaging protocol within the same document simply to get access to the event loop task queue, but until there are native implementations, this is the best option.
+
+Note that Internet Explorer 8 includes a synchronous version of `postMessage`. We detect this, or any other such synchronous implementation, and fall back to another trick.
+
+### `MessageChannel`
+
+Unfortunately, `postMessage` has completely different semantics inside web workers, and so cannot be used there. So we turn to [`MessageChannel`][MessageChannel], which has worse browser support, but does work inside a web worker.
+
+### `&amp;lt;script&amp;gt; onreadystatechange`
+
+For our last trick, we pull something out to make things fast in Internet Explorer versions 6 through 8: namely, creating a `&amp;lt;script&amp;gt;` element and firing our calls in its `onreadystatechange` event. This does execute in a future turn of the event loop, and is also faster than `setTimeout(…, 0)`, so hey, why not?
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;setimmediate-api-未完待续:00dbedeee498dc523aeaec841937d175&#34;&gt;setImmediate API：未完待续&amp;hellip;&lt;/h3&gt;
+
+&lt;h3 id=&#34;部分参考资料:00dbedeee498dc523aeaec841937d175&#34;&gt;部分参考资料：&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;JavaScript 运行机制详解：再谈Event Loop
+&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&#34;&gt;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&lt;/a&gt;
+—相关视频：Help, I&amp;rsquo;m stuck in an event-loop  &lt;a href=&#34;https://vimeo.com/96425312&#34;&gt;https://vimeo.com/96425312&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;更快的异步执行
+&lt;a href=&#34;http://www.alloyteam.com/2014/03/faster-asynchronous-execution/&#34;&gt;http://www.alloyteam.com/2014/03/faster-asynchronous-execution/&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Enable REQUEST_ANIMATION_FRAME on all ports?
+&lt;a href=&#34;https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html&#34;&gt;https://lists.webkit.org/pipermail/webkit-dev/2011-September/018095.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;拥有更好性能的requesAnimationFrame
+&lt;a href=&#34;http://sentsin.com/web/949.html&#34;&gt;http://sentsin.com/web/949.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;性能更好的js动画实现方式——requestAnimationFrame
+&lt;a href=&#34;http://www.cnblogs.com/2050/p/3871517.html&#34;&gt;http://www.cnblogs.com/2050/p/3871517.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

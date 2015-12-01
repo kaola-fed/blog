@@ -1,7 +1,7 @@
 +++
-Categories = []
+Categories = ['technique']
 Description = ""
-Tags = []
+Tags = ['javascript']
 date = "2015-12-01T16:48:59+08:00"
 title = "JS中的事件循环与定时器"
 
