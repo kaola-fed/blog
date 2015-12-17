@@ -3,8 +3,13 @@
   
   <url>
     <loc>http://localhost:1313/blog/</loc>
-    <lastmod>2015-12-01T16:48:59+08:00</lastmod>
+    <lastmod>2015-12-17T17:43:04+08:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://localhost:1313/blog/post/impress.js%E8%B0%83%E7%A0%94%E6%8A%A5%E5%91%8A/</loc>
+    <lastmod>2015-12-17T17:43:04+08:00</lastmod>
   </url>
   
   <url>
