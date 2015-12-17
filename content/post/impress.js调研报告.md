@@ -9,6 +9,8 @@ title = "impress.js调研报告"
 
 # impress.js调研报告
 
+> by [tianyn1990](https://tianyn1990.github.io)
+
 在开始阅读本文之前，你至少应该打开官网的[例子](http://impress.github.io/impress.js)看看，并且[下载代码](https://github.com/stefina/impressJS)到本地跑跑 :-)
 
 在阅读过程中，强烈建议阅读的同时不断查看源码，不断对照官网提供的[例子](http://impress.github.io/impress.js)

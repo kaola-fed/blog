@@ -17,6 +17,10 @@
 
 &lt;h1 id=&#34;impress-js调研报告:e716f5ff76630826152ec0d7425bbfc4&#34;&gt;impress.js调研报告&lt;/h1&gt;
 
+&lt;blockquote&gt;
+&lt;p&gt;by &lt;a href=&#34;https://tianyn1990.github.io&#34;&gt;tianyn1990&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;p&gt;在开始阅读本文之前，你至少应该打开官网的&lt;a href=&#34;http://impress.github.io/impress.js&#34;&gt;例子&lt;/a&gt;看看，并且&lt;a href=&#34;https://github.com/stefina/impressJS&#34;&gt;下载代码&lt;/a&gt;到本地跑跑 :-)&lt;/p&gt;
 
 &lt;p&gt;在阅读过程中，强烈建议阅读的同时不断查看源码，不断对照官网提供的&lt;a href=&#34;http://impress.github.io/impress.js&#34;&gt;例子&lt;/a&gt;&lt;/p&gt;
