@@ -75,16 +75,16 @@ title = "impress.js调研报告"
 - body>#impress>.step（简称「Page」）
   + 所有#impress的子元素都必须设置class='step'
   + 文中所说的「Page」均指的是「#impress元素」下的「.step元素」，每个「Page」均表示演示文稿中的一页
-  + 通过在该节点上配置各种属性，我们就可以得到一个具有不同大小、位置、3D切换效果的演示文稿了，这些配置有 _重点_：
-    + data-x，data-y：如果将整个页面比作一个巨大的画布，那么我们需要确定每一个Page在这张画布上的具体位置。这两个属性指明了Page的**「中心」**的x,y坐标。注意：**值可以是负的**
-    + data-scale：该属性表示Page的「缩放倍数」，设置了该属性的Page大小是「标准」（step上设置的width,height）的N倍，也就是长宽属性是标准Page的N倍。在画布上所占面积也当然有所不同。注意：**值可以为小数，表示缩小**
-    + data-rotate：相当于为Page设置了样式transform:rotate(**deg)，表示对Page进行了旋转。该属性的值为角度数，当然可以为负值
-    + data-z：_「页面终于酷炫起来了」_ Page终于被赋予了3D属性。通过沿着z轴移动，拉近/远离了屏幕，相当于样式transform:translateZ(**px)，再结合#impress上的data-perspective，最终产生3D效果╮()╯_╰)╭
-    + data-rotate-x，data-rotate-y：不仅距离上可以对Page进行3D移动，还可以将Page进行x,y轴向的旋转操作，另外z轴的旋转就是前面的data-rotate。**记：分别从上、左、正面看一个物体，顺时针方向就分别是y轴、x轴、z轴旋转的「正方向」**
-  + 做个总结吧：
-    + `data-x`, `data-y`, `data-z`：定义了Page的**中心**在三维空间的位置
-    + `data-rotate-x`, `data-rotate-y`, `data-rotate-z`, `data-rotate`：定义了Page沿x/y/z轴的旋转角度，「data-rotate-z」与「data-rotate」完全一致
-    + `data-scale`：定义了Page的缩放倍数，值为小数表示缩小
+  - 通过在该节点上配置各种属性，我们就可以得到一个具有不同大小、位置、3D切换效果的演示文稿了，这些配置有 **重点**：
+     + data-x，data-y：如果将整个页面比作一个巨大的画布，那么我们需要确定每一个Page在这张画布上的具体位置。这两个属性指明了Page的**「中心」**的x,y坐标。注意：**值可以是负的**
+     + data-scale：该属性表示Page的「缩放倍数」，设置了该属性的Page大小是「标准」（step上设置的width,height）的N倍，也就是长宽属性是标准Page的N倍。在画布上所占面积也当然有所不同。注意：**值可以为小数，表示缩小**
+     + data-rotate：相当于为Page设置了样式transform:rotate(**deg)，表示对Page进行了旋转。该属性的值为角度数，当然可以为负值
+     + data-z：_「页面终于酷炫起来了」_ Page终于被赋予了3D属性。通过沿着z轴移动，拉近/远离了屏幕，相当于样式transform:translateZ(**px)，再结合#impress上的data-perspective，最终产生3D效果╮(╯_╰)╭
+     + data-rotate-x，data-rotate-y：不仅距离上可以对Page进行3D移动，还可以将Page进行x,y轴向的旋转操作，另外z轴的旋转就是前面的data-rotate。**记：分别从上、左、正面看一个物体，顺时针方向就分别是y轴、x轴、z轴旋转的「正方向」**
+  - 做个总结吧：
+     + `data-x`, `data-y`, `data-z`：定义了Page的**中心**在三维空间的位置
+     + `data-rotate-x`, `data-rotate-y`, `data-rotate-z`, `data-rotate`：定义了Page沿x/y/z轴的旋转角度，「data-rotate-z」与「data-rotate」完全一致
+     + `data-scale`：定义了Page的缩放倍数，值为小数表示缩小
 
 - 预览功能：impress.js并没有直接提供「预览所有Page」的功能，但我们可以通过新建一个Page并设置特殊的属性值，很容易的实现。步骤如下：
   + 增加一个Page，设置id=overview（当然别的也可以）
@@ -253,18 +253,22 @@ Impress.js不调用任何外部的样式文件，**JS会生成「动画所需」
 
 你需要3层div，我们可以任性的分别取名为：#impress>#canvas>.step
 
-第一层#impress需要至少需要赋予属性值perspective:***px，以及transform-origin。perspective可以理解为「视距」（虽然中文意思是：透视，视角，
+第一层#impress需要至少需要赋予属性值perspective:***px，以及perspective-origin。perspective可以理解为「视距」（虽然中文意思是：透视，视角，
 完全不明白的同学可以参考[这篇](http://www.zhangxinxu.com/wordpress/?p=2592)，或者其他优秀文章），也就是眼睛距离屏幕的距离（z轴）。
-transform-origin指的是眼睛的方位（x,y轴）。这两个值确定了眼睛和屏幕的三维位置关系（xyz）（不了解「眼睛」有啥作用的话请继续看下文）。
+perspective-origin指的是眼睛的方位（x,y轴）。这两个值确定了眼睛和屏幕的三维位置关系（xyz）（不了解「眼睛」有啥作用的话请继续看下文）。
 
 第二层#canvas，顾名思义可以称作「画布」，因为所有具体展现出来的的3D元素(.step)都包含在它内部。
 它至少必须设置样式transform-style:preserve-3d，但这个样式为了保险，一般可以设置到这3层中的所有节点上。
 
 第三层.step，它就可以有很多兄弟节点了，这些节点通过设置translate:translate3d() rotate3d() scale()等等样式来定位自己在三维环境中的位置。
 其中最关键的就是z轴的距离（translateZ），它定义了图形距离屏幕的距离。通过这个距离，以及在#impress中设置的「眼睛」距离屏幕的距离，我们可以画一个「从眼睛到图形的锥形」，
-而「锥形与屏幕相交」的位置就是这个.step图形在屏幕上呈现的大小了。这么说不是太具体，请看下图（要是弄成可拖动的动画就好了...）：
+而「锥形与屏幕相交」的位置就是这个.step图形在屏幕上呈现的大小了。这么说不是太具体，请看下图（要是弄成可拖动带交互效果的就好了...）：
 
-可以看看我的[这个栗子](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html)，以及[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html)，还有[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html)
+![images](../images/perspective.jpg)
+
+上面两张图中的画的眼睛可以理解为观察者的位置，那面白板可以看做是电脑屏幕，眼睛到白板的距离d就是perspective的值。虚线组成的圆形就是我们希望展示到页面上的图形（impress.js中就是Page），由于它处于
+
+完整的例子可以参考我的[这个栗子](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html)，以及[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html)，还有[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html)
 
 
 ### 2、impress.js的切换动画
@@ -665,7 +669,7 @@ DOM节点要有`classList` 和 `dataset` API，并且最后作者还任性的把
 - 初始化config参数（前面有提到），然后根据config计算PPT的scale缩放倍数：`windowScale = computeWindowScale( config );`，使每张Page都呈现出来大小都是比较合适的。
 
 - __「重要」__将所有Page的外面包裹一层div，该节点对应变量`canvas`，这层div使用CSS 3D所必须的（至少按我的了解是这样），你可以看看我的[这个例子](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html)，以及[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html)，还有[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html)，搭建一个完整的3D效果具体步骤如下（基本复述了前面原理部分讲过的内容）：
-  + 最外层div（也就是#impress）声明视距（观察者的眼睛离屏幕的距离），也就是设置样式：transform:perspective(***px) 或者 perspective:***px；以及观察角度：transform-origin
+  + 最外层div（也就是#impress）声明视距（观察者的眼睛离屏幕的距离），也就是设置样式：transform:perspective(***px) 或者 perspective:***px；以及观察角度：perspective-origin
   + 第二层div（就是代码中新增的那层div）设置：transform-style:preserve-3d（IE不支持），声明这是一个画布，当然你也可以同时声明多个画布，可以通过设置画布的transform 3d属性来控制整个画布的3d变换
   + 第三层就可以写各种各样的3d模块了，它们都是按照以上的视距、观察角度来展示的
 

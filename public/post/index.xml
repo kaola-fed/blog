@@ -113,16 +113,22 @@
 &lt;ul&gt;
 &lt;li&gt;所有#impress的子元素都必须设置class=&amp;lsquo;step&amp;rsquo;&lt;/li&gt;
 &lt;li&gt;文中所说的「Page」均指的是「#impress元素」下的「.step元素」，每个「Page」均表示演示文稿中的一页&lt;/li&gt;
-&lt;li&gt;通过在该节点上配置各种属性，我们就可以得到一个具有不同大小、位置、3D切换效果的演示文稿了，这些配置有 _重点_：&lt;/li&gt;
+&lt;li&gt;通过在该节点上配置各种属性，我们就可以得到一个具有不同大小、位置、3D切换效果的演示文稿了，这些配置有 &lt;strong&gt;重点&lt;/strong&gt;：
+
+&lt;ul&gt;
 &lt;li&gt;data-x，data-y：如果将整个页面比作一个巨大的画布，那么我们需要确定每一个Page在这张画布上的具体位置。这两个属性指明了Page的&lt;strong&gt;「中心」&lt;/strong&gt;的x,y坐标。注意：&lt;strong&gt;值可以是负的&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;data-scale：该属性表示Page的「缩放倍数」，设置了该属性的Page大小是「标准」（step上设置的width,height）的N倍，也就是长宽属性是标准Page的N倍。在画布上所占面积也当然有所不同。注意：&lt;strong&gt;值可以为小数，表示缩小&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;data-rotate：相当于为Page设置了样式transform:rotate(**deg)，表示对Page进行了旋转。该属性的值为角度数，当然可以为负值&lt;/li&gt;
-&lt;li&gt;data-z：&lt;em&gt;「页面终于酷炫起来了」&lt;/em&gt; Page终于被赋予了3D属性。通过沿着z轴移动，拉近/远离了屏幕，相当于样式transform:translateZ(**px)，再结合#impress上的data-perspective，最终产生3D效果╮()╯_╰)╭&lt;/li&gt;
+&lt;li&gt;data-z：&lt;em&gt;「页面终于酷炫起来了」&lt;/em&gt; Page终于被赋予了3D属性。通过沿着z轴移动，拉近/远离了屏幕，相当于样式transform:translateZ(**px)，再结合#impress上的data-perspective，最终产生3D效果╮(╯_╰)╭&lt;/li&gt;
 &lt;li&gt;data-rotate-x，data-rotate-y：不仅距离上可以对Page进行3D移动，还可以将Page进行x,y轴向的旋转操作，另外z轴的旋转就是前面的data-rotate。&lt;strong&gt;记：分别从上、左、正面看一个物体，顺时针方向就分别是y轴、x轴、z轴旋转的「正方向」&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;做个总结吧：&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;做个总结吧：
+
+&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;data-x&lt;/code&gt;, &lt;code&gt;data-y&lt;/code&gt;, &lt;code&gt;data-z&lt;/code&gt;：定义了Page的&lt;strong&gt;中心&lt;/strong&gt;在三维空间的位置&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;data-rotate-x&lt;/code&gt;, &lt;code&gt;data-rotate-y&lt;/code&gt;, &lt;code&gt;data-rotate-z&lt;/code&gt;, &lt;code&gt;data-rotate&lt;/code&gt;：定义了Page沿x/y/z轴的旋转角度，「data-rotate-z」与「data-rotate」完全一致&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;data-scale&lt;/code&gt;：定义了Page的缩放倍数，值为小数表示缩小&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;预览功能：impress.js并没有直接提供「预览所有Page」的功能，但我们可以通过新建一个Page并设置特殊的属性值，很容易的实现。步骤如下：&lt;/p&gt;
@@ -333,18 +339,22 @@
 
 &lt;p&gt;你需要3层div，我们可以任性的分别取名为：#impress&amp;gt;#canvas&amp;gt;.step&lt;/p&gt;
 
-&lt;p&gt;第一层#impress需要至少需要赋予属性值perspective:***px，以及transform-origin。perspective可以理解为「视距」（虽然中文意思是：透视，视角，
+&lt;p&gt;第一层#impress需要至少需要赋予属性值perspective:***px，以及perspective-origin。perspective可以理解为「视距」（虽然中文意思是：透视，视角，
 完全不明白的同学可以参考&lt;a href=&#34;http://www.zhangxinxu.com/wordpress/?p=2592&#34;&gt;这篇&lt;/a&gt;，或者其他优秀文章），也就是眼睛距离屏幕的距离（z轴）。
-transform-origin指的是眼睛的方位（x,y轴）。这两个值确定了眼睛和屏幕的三维位置关系（xyz）（不了解「眼睛」有啥作用的话请继续看下文）。&lt;/p&gt;
+perspective-origin指的是眼睛的方位（x,y轴）。这两个值确定了眼睛和屏幕的三维位置关系（xyz）（不了解「眼睛」有啥作用的话请继续看下文）。&lt;/p&gt;
 
 &lt;p&gt;第二层#canvas，顾名思义可以称作「画布」，因为所有具体展现出来的的3D元素(.step)都包含在它内部。
 它至少必须设置样式transform-style:preserve-3d，但这个样式为了保险，一般可以设置到这3层中的所有节点上。&lt;/p&gt;
 
 &lt;p&gt;第三层.step，它就可以有很多兄弟节点了，这些节点通过设置translate:translate3d() rotate3d() scale()等等样式来定位自己在三维环境中的位置。
 其中最关键的就是z轴的距离（translateZ），它定义了图形距离屏幕的距离。通过这个距离，以及在#impress中设置的「眼睛」距离屏幕的距离，我们可以画一个「从眼睛到图形的锥形」，
-而「锥形与屏幕相交」的位置就是这个.step图形在屏幕上呈现的大小了。这么说不是太具体，请看下图（要是弄成可拖动的动画就好了&amp;hellip;）：&lt;/p&gt;
+而「锥形与屏幕相交」的位置就是这个.step图形在屏幕上呈现的大小了。这么说不是太具体，请看下图（要是弄成可拖动带交互效果的就好了&amp;hellip;）：&lt;/p&gt;
 
-&lt;p&gt;可以看看我的&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html&#34;&gt;这个栗子&lt;/a&gt;，以及&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html&#34;&gt;这个&lt;/a&gt;，还有&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html&#34;&gt;这个&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../images/perspective.jpg&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上面两张图中的画的眼睛可以理解为观察者的位置，那面白板可以看做是电脑屏幕，眼睛到白板的距离d就是perspective的值。虚线组成的圆形就是我们希望展示到页面上的图形（impress.js中就是Page），由于它处于&lt;/p&gt;
+
+&lt;p&gt;完整的例子可以参考我的&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html&#34;&gt;这个栗子&lt;/a&gt;，以及&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html&#34;&gt;这个&lt;/a&gt;，还有&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html&#34;&gt;这个&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;2-impress-js的切换动画:e716f5ff76630826152ec0d7425bbfc4&#34;&gt;2、impress.js的切换动画&lt;/h3&gt;
 
@@ -768,7 +778,7 @@ DOM节点要有&lt;code&gt;classList&lt;/code&gt; 和 &lt;code&gt;dataset&lt;/co
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;「重要」&lt;/strong&gt;将所有Page的外面包裹一层div，该节点对应变量&lt;code&gt;canvas&lt;/code&gt;，这层div使用CSS 3D所必须的（至少按我的了解是这样），你可以看看我的&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html&#34;&gt;这个例子&lt;/a&gt;，以及&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html&#34;&gt;这个&lt;/a&gt;，还有&lt;a href=&#34;http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html&#34;&gt;这个&lt;/a&gt;，搭建一个完整的3D效果具体步骤如下（基本复述了前面原理部分讲过的内容）：&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;最外层div（也就是#impress）声明视距（观察者的眼睛离屏幕的距离），也就是设置样式：transform:perspective(&lt;strong&gt;&lt;em&gt;px) 或者 perspective:&lt;/em&gt;&lt;/strong&gt;px；以及观察角度：transform-origin&lt;/li&gt;
+&lt;li&gt;最外层div（也就是#impress）声明视距（观察者的眼睛离屏幕的距离），也就是设置样式：transform:perspective(&lt;strong&gt;&lt;em&gt;px) 或者 perspective:&lt;/em&gt;&lt;/strong&gt;px；以及观察角度：perspective-origin&lt;/li&gt;
 &lt;li&gt;第二层div（就是代码中新增的那层div）设置：transform-style:preserve-3d（IE不支持），声明这是一个画布，当然你也可以同时声明多个画布，可以通过设置画布的transform 3d属性来控制整个画布的3d变换&lt;/li&gt;
 &lt;li&gt;第三层就可以写各种各样的3d模块了，它们都是按照以上的视距、观察角度来展示的&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
