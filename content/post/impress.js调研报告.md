@@ -236,7 +236,7 @@ Impress.js不调用任何外部的样式文件，**JS会生成「动画所需」
 #### 作者的其它样式
 
 * 作者发现的一个bug：有时候（chrome等部分浏览器部分版本）进行过3D变换的元素（尤其是沿z轴负方向移动的）会不可点击，原因是它们跑到了body后面。为了避免这个问题，
-作者使用了「(pointer-events: none)[https://developer.mozilla.org/en/CSS/pointer-events]」(IE11以上支持，在作者的努力下impress.js继续缩小了支持范围真是太棒了)，
+作者使用了「[pointer-events: none](https://developer.mozilla.org/en/CSS/pointer-events)」(IE11以上支持，在作者的努力下impress.js继续缩小了支持范围真是太棒了)，
 使用原则是：设置「除#impress元素以外」的所有元素均不可点击，如：
 
 ````
@@ -247,7 +247,7 @@ Impress.js不调用任何外部的样式文件，**JS会生成「动画所需」
 * 作者写了一个「.hint」，目的是告知第一次使用演示文稿的同学如何操作，纯样式实现，没啥可说的（不过作用在body上的pointer-events属性让它也不可点击了）。
 
 
-## 四、基本实现原理__「重要」__
+## 四、基本实现原理**「重要」**
 
 ### 1、如何使用CSS构建一个3D环境
 
@@ -266,7 +266,7 @@ perspective-origin指的是眼睛的方位（x,y轴）。这两个值确定了�
 
 ![images](../images/perspective.jpg)
 
-上面两张图中的画的眼睛可以理解为观察者的位置，那面白板可以看做是电脑屏幕，眼睛到白板的距离d就是perspective的值。虚线组成的圆形就是我们希望展示到页面上的图形（impress.js中就是Page），由于它处于
+上面两张图中的画的眼睛可以理解为观察者的位置，那面白板可以看做是电脑屏幕，眼睛到白板的距离d就是perspective的值。虚线组成的圆形就是我们希望展示到页面上的图形（impress.js中就是Page）。由这个图形和观察者的眼睛组成的「视锥」投影到屏幕（白板）上的大小，就是屏幕最终展示的图形大小。而大量图形都通过这种方式呈现到屏幕上以后，图形之间就呈现了三维的视觉联系。
 
 完整的例子可以参考我的[这个栗子](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%AD%A3%E6%96%B9%E4%BD%93.html)，以及[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E6%97%8B%E8%BD%AC%E6%9C%A8%E9%A9%AC.html)，还有[这个](http://tianyn1990.github.io/demos/canvas/html/css3-3d/css3-3d-demo-%E7%BF%BB%E4%B9%A6.html)
 
