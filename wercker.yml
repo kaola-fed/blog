@@ -29,5 +29,5 @@ deploy:
             packages: git ssh-client
         - lukevivier/gh-pages@0.2.1:
             token: $GIT_TOKEN
-            domain: kaola-fed.github.io
+            domain: blog.kaolafed.com
             basedir: public
