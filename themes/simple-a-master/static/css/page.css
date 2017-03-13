@@ -1,5 +1,6 @@
 body {
-  font-size: 16px; 
+  font-size: 16px;
+  font-family: "Merriweather", "PT Serif", Georgia, "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif;
 }
 
 /* Custom container */
@@ -45,7 +46,6 @@ figure.large img {
 
 figcaption
 {
-    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     background-color: #EFEFEF;    
     font-size: 90%;        
     margin-left: 1%;
@@ -62,13 +62,11 @@ footer {
  margin-top: 10px; 
  font-size: 0.6em;
  text-transform: uppercase;
- font-family: 'Liberation Sans', Helvetica, sans-serif; 
  padding-top: 2em; 
  text-align: center;
 }
 
 .content h1 {
-  font-family: Philosopher, serif;
   color: #3F3F3F;
   font-size: 1.8em;
   text-align: center; 
@@ -86,6 +84,9 @@ footer {
 
 #navbar-inner {
   min-height: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  font-weight: bold;
   padding-left: 10px;
   padding-right: 10px;
   background-color: white;
@@ -147,7 +148,6 @@ p {
 .post .content {
   text-align: left;
   margin-top: 3em;
-  font-family: "Liberation Serif", "Palatino Linotype", Georgia, serif;
   font-size: 18px;
 }
 
@@ -168,7 +168,6 @@ p {
 .post-header h1 {
   font-size: 1.8em;
   color: #444;
-  font-family: Philosopher;
   margin-bottom: 10px;
 }
 
@@ -220,7 +219,6 @@ p {
   display: inline-block;
   margin-bottom: 8px;
   border-bottom: 3px solid #fa5305;
-  font-family: 'Liberation Sans', Helvetica, 'Helvetica Neue', sans-serif;
 }
 
 .tags a:hover {
@@ -246,12 +244,10 @@ blockquote {
   padding: 0 0 0 15px;
   margin: 0 0 20px;
   border-left: 5px solid #fa5305;
-  font-family: Philosopher;
   font-size: 18px;
 }
 
 .tag-list {
-  font-family: Philosopher;
   max-width: 700px;
   margin: auto;
 }
@@ -278,7 +274,6 @@ blockquote {
   text-transform: uppercase;
   text-decoration: none;
   font-size: 15px;
-  font-family: 'Liberation Sans', Helvetica, sans-serif;
   border-bottom: 4px solid #646464;
 }
 
