@@ -1,19 +1,14 @@
-+++
-Categories = ['technique']
-Description = ""
-Tags = ['javascript','css3','css 3D']
-date = "2015-12-17T17:43:04+08:00"
-title = "impress.js调研报告"
-
-+++
-
-# impress.js调研报告
+---
+title: impress.js调研报告
+---
 
 > by [tianyn1990](https://tianyn1990.github.io)
 
 在开始阅读本文之前，你至少应该打开官网的[例子](http://impress.github.io/impress.js)看看，并且[下载代码](https://github.com/stefina/impressJS)到本地跑跑 :-)
 
 在阅读过程中，强烈建议阅读的同时不断查看源码，不断对照官网提供的[例子](http://impress.github.io/impress.js)
+
+<!-- more -->
 
 ## 一、命名
 
@@ -264,7 +259,7 @@ perspective-origin指的是眼睛的方位（x,y轴）。这两个值确定了�
 其中最关键的就是z轴的距离（translateZ），它定义了图形距离屏幕的距离。通过这个距离，以及在#impress中设置的「眼睛」距离屏幕的距离，我们可以画一个「从眼睛到图形的锥形」，
 而「锥形与屏幕相交」的位置就是这个.step图形在屏幕上呈现的大小了。这么说不是太具体，请看下图（要是弄成可拖动带交互效果的就好了...）：
 
-![images](../images/perspective.jpg)
+![images](/uploads/perspective.jpg)
 
 上面两张图中的画的眼睛可以理解为观察者的位置，那面白板可以看做是电脑屏幕，眼睛到白板的距离d就是perspective的值。虚线组成的圆形就是我们希望展示到页面上的图形（impress.js中就是Page）。由这个图形和观察者的眼睛组成的「视锥」投影到屏幕（白板）上的大小，就是屏幕最终展示的图形大小。而大量图形都通过这种方式呈现到屏幕上以后，图形之间就呈现了三维的视觉联系。
 

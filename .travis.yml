@@ -1,0 +1,31 @@
+language: node_js
+
+node_js:
+- 6
+
+branches:
+  only:
+  - master
+
+before_install:
+- npm install -g hexo
+
+install:
+- npm install
+
+before_script:
+- git config --global user.name 'Kaola Bot'
+- git config --global user.email 'kaolabot@163.com'
+
+script:
+- hexo g
+
+after_success:
+- mkdir .deploy
+- cd .deploy
+- git clone --depth 1 --branch gh-pages --single-branch https://$REPO_TOKEN@github.com/kaola-fed/blog.git . || (git init && git remote add -t gh-pages origin https://$REPO_TOKEN@github.com/kaola-fed/blog.git)
+- cp -r ../public/* .
+- git add -A .
+- git commit -m 'Auto updated'
+- git branch -m gh-pages
+- git push -q -u origin gh-pages

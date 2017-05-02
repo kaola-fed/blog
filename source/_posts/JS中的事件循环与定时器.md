@@ -1,17 +1,12 @@
-+++
-Categories = ['technique']
-Description = ""
-Tags = ['javascript']
-date = "2015-12-01T16:48:59+08:00"
-title = "JS中的事件循环与定时器"
-
-+++
-
-## JS中的事件循环与定时器
+---
+title: JS中的事件循环与定时器
+---
 
 > by tianyn1990
 
 *本文是在看过一些文章和视频之后，结合自己的理解，做的一个汇总，如果发现理解错误的地方，请及时指出便于更正。* **Orz**
+
+<!-- more -->
 
 ### 一、单线程
 
@@ -19,7 +14,7 @@ javascript单线程执行，是由浏览器的场景决定的，避免了复杂�
 
 ### 二、任务队列 & 事件循环
 
-![image](../images/taskqueue.png)
+![image](/uploads/taskqueue.png)
 
 * 任务分为：**同步任务（synchronous）**、**异步任务（asynchronous）**；同步任务被放入**主线程**，异步任务放入**任务队列（task queue）**。任务队列中的异步任务一旦运行有了结果，那么会在任务队列中放置一个对应的事件，当主线程中的同步任务全部执行完毕以后，会检查任务队列，将包含对应事件的异步任务放入主线程，然后主线程会执行所有任务，执行完毕以后再次检查task queue。这样不断循环的过程就叫做**「event loop」**。（需要注意的是，loop的时间精度在4ms-16ms之间，oldIE会比较大，部分现代浏览器会判断pc是否外接电源来调整精确度）
 
@@ -27,7 +22,7 @@ javascript单线程执行，是由浏览器的场景决定的，避免了复杂�
 
 * task queue是「先进先出」队列结构，首先注册的事件第一个进入主线程等待执行。但「定时器」功能还会校验该事件的时间，到达时间后的async task才进入主线程。
 
-![image](../images/eventloop.png)
+![image](/uploads/eventloop.png)
 
 * 如上图，主线程的运行会产生**「堆 heap」**和**「栈 stack」**，**「执行栈」**（主线程）中的代码可能会通过调用「WebAPIs」在task queue中创建async task，得到结果的async task会将「回调函数」放入callback queue中，并把相应事件放入task queue中，当「执行栈」中的代码执行完毕，就会依次将task queue中所有符合时间要求（定时器）的事件放入「执行栈」中，并在下一个event loop中执行对应的「回调函数」。
 
