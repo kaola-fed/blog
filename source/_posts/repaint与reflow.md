@@ -10,7 +10,7 @@ date: 2017-03-30
 <!-- more -->
 
 ## 什么是Repaint/Reflow
-![](http://haitao.nos.netease.com/3f491bc6cb7a4f0894723efa4015fb52.png)
+![](https://haitao.nos.netease.com/3f491bc6cb7a4f0894723efa4015fb52.png)
 上图是浏览器解析的大概过程，归纳为4个步骤：
 
 1. `解析HTML以构建DOM树：`渲染引擎开始解析HTML文档，转换树中的html标签或js生成的标签到DOM节点，它被称为 -- DOM树。
@@ -36,15 +36,15 @@ date: 2017-03-30
 </html>
 ```
 1. 根据浏览器的解析过程，浏览器首先会将上面的html解析为如下的一个dom树：
-![](http://haitao.nos.netease.com/be5735d4e2ed4757a580e8294618601a.jpg)
+![](https://haitao.nos.netease.com/be5735d4e2ed4757a580e8294618601a.jpg)
 
 2. 根据css样式表生成CSSOM：
-![](http://haitao.nos.netease.com/cf31d8bd4ab0452a90b96378714dafc3.jpg)
+![](https://haitao.nos.netease.com/cf31d8bd4ab0452a90b96378714dafc3.jpg)
 
 3. DOM + CSSOM = RenderTree
 
 然后浏览器会计算每个元素的属性，确定如何展示页面；根据样式和js构建render树, 如下：
-![](http://haitao.nos.netease.com/8e313c6dc4c742b1915e9edd428d749e.jpg)
+![](https://haitao.nos.netease.com/8e313c6dc4c742b1915e9edd428d749e.jpg)
 
 对比dom树与render树，可以发现少了head和被隐藏的元素；因为render树只包括可见的元素部分，具体的说，是从page的(0,0)坐标到(window.innerWidth, window.innerHeight)构成的矩形区域；
 

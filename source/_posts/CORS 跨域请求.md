@@ -21,7 +21,7 @@ CORS需要浏览器和服务器同时支持。
 请求和你发送请求的URL一致，且不带任何参数  
 OPTIONS请求通过，则发送真正的请求，否则将不再发送真正请求  
 
-![optioons预请求](http://haitao.nosdn5.127.net/1489652433458options.jpg?imageView "optioons预请求")
+![optioons预请求](https://haitao.nosdn5.127.net/1489652433458options.jpg?imageView "optioons预请求")
 
 ## 跨域配置
 

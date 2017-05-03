@@ -9,7 +9,7 @@ Chrome Devtools 的颜色提取器 [EyeDropper](https://developers.google.com/we
 
 <!-- more -->
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/eyedropper.jpg)
+![image](https://7xidng.com1.z0.glb.clouddn.com/eyedropper.jpg)
 
 但它并不支持在页面中使用，想在页面中使用只能自己实现一个。
 
@@ -29,7 +29,7 @@ Chrome Devtools 的颜色提取器 [EyeDropper](https://developers.google.com/we
 
 当我们说红、绿、黄时，我们说的就是色相。将色相按照波谱顺序排列，首位相连形成环状则为「色相环」。虽然人们习惯将其分为七种颜色：红、橙、黄、绿、青、蓝、紫，但实际上的光谱应该是连续的。
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/hue.png)
+![image](https://7xidng.com1.z0.glb.clouddn.com/hue.png)
 
 #### 2. 饱和度（saturation）
 
@@ -45,7 +45,7 @@ Chrome Devtools 的颜色提取器 [EyeDropper](https://developers.google.com/we
 
 三者可以简单用下图综合表示：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/colorful.jpg)
+![image](https://7xidng.com1.z0.glb.clouddn.com/colorful.jpg)
 
 ## 3. 方案设计
 
@@ -53,7 +53,7 @@ Chrome Devtools 的颜色提取器 [EyeDropper](https://developers.google.com/we
 
 理解了基础的颜色原理后就好办事了，拿 Chrome Devtools EyeDropper 分析：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/eytedropperDetail.png)
+![image](https://7xidng.com1.z0.glb.clouddn.com/eytedropperDetail.png)
 
 1. 饱和度和亮度选择器。
 2. 色相选择器。
@@ -91,11 +91,11 @@ hsl(hue, 100%, 50%)
 
 此时饱和度应设为 100%，因为饱和度为 0% 时为灰色，100% 时为原色。
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/saturation.png)
+![image](https://7xidng.com1.z0.glb.clouddn.com/saturation.png)
 
 而亮度是指颜色偏向于白色还是黑色。50%的亮度值表示颜色位于黑色和白色中间，这时颜色会基本保持原来的颜色不变。
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/value.png)
+![image](https://7xidng.com1.z0.glb.clouddn.com/value.png)
 
 ② 同时利用线性渐变 `linear-gradient` 做色层叠加实现。
 
@@ -155,7 +155,7 @@ var hsv = color.toHsv();
 
 代码可以 [戳我](https://github.com/Deol/regular-color) 查看，具体实现如下：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/regular-color.jpg)
+![image](https://7xidng.com1.z0.glb.clouddn.com/regular-color.jpg)
 
 ## 附录：
 

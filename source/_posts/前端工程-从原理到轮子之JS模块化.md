@@ -114,7 +114,7 @@ xhr.send(null);
 
 #### 2.  模块依赖管理
 一个模块的加载过程如下图所示。
-![](http://haitao.nos.netease.com/e9bc3b86-2069-4e53-a04f-c7275bbf6ad8.jpg)
+![](https://haitao.nos.netease.com/e9bc3b86-2069-4e53-a04f-c7275bbf6ad8.jpg)
 - 状态管理
 从上面可以看出，一个模块的加载可能存在以下几种可能的状态。
 1. 加载(load)状态，包括未加载(preload)状态、加载(loading)状态和加载完毕(loaded)状态。

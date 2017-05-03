@@ -40,7 +40,7 @@ CommonJS 的标准符合 [module1.1](http://wiki.commonjs.org/wiki/Modules/1.1) 
 ### 写一个 `main` 函数
 本文讲的是如何模拟一个 $require 函数，先来捋一捋 require 函数的主逻辑
 
-![](http://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image1.jpg)
+![](https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image1.jpg)
 
 根据这个逻辑，我们先写一个 `main` 函数，以及定义一些需要的接口
 
@@ -152,7 +152,7 @@ function getParent(pathname) {
 ```
 
 ### 2. 具体的模块文件查找逻辑
-![](http://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image2.jpg)
+![](https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image2.jpg)
 #### a. 检测模块类型与定位包的位置
 这个函数要做下面的事情
 1. 检测模块类型：绝对路径，相对路径 或是 在 `node_modules` 内
