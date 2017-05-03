@@ -7,7 +7,7 @@ date: 2017-04-24
 
 Masonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包含的内容列表的高度是不可控的，并且，每个内容列表呈堆栈状排列。称作瀑布流，最关键的是——**各堆栈间没有多余的间距差**（将整个布局看做一个大的容器，最新进来的内容元素，永远在高度最短的那一列上）。具体如下图所示：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-18/7095748-file_1492518092681_692f.jpg)
+![](https://cdn.int64ago.org/srwap2bn.jpeg)
 
 <!-- more -->
 
@@ -23,13 +23,13 @@ Masonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包
 
 简化版应该是下面这样的：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-19/6894775-file_1492585472987_1485f.jpg)
+![](https://cdn.int64ago.org/r4oy5tyl.jpg)
 
 但是，这样处理，表现层的东西依赖 ```javaScript``` 来处理，有点多余（当时确实是唯一的办法），能不能用样式来搞定呢？
 
 首先，会想到 ```float``` 或者 ```inline-block``` ，但是它们都没办法很好的控制列表之间的间距。最终得到的效果就像下面这样：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-18/91172146-file_1492520732217_3c80.jpg)
+![](https://cdn.int64ago.org/d26yfnkb.jpeg)
 
 那，除此之外，就没有单纯用 ```css``` 可以搞定的方法了吗？近几年，```css``` 的技术更新频繁，出现了很多新的布局方法：```multi-columns```、```Flexbox```、```Grid```。用上面提到的布局方法能否实现瀑布流呢？
 
@@ -41,13 +41,13 @@ Masonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包
 
 三列：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-19/6052647-file_1492583213750_f998.jpg)
+![](https://cdn.int64ago.org/8tds2ivs.jpeg)
 
 四列：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-19/64024046-file_1492585971855_820e.jpg)
+![](https://cdn.int64ago.org/fimtkz9y.jpeg)
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-23/96286616-file_1492935443571_b065.jpg)
+![](https://cdn.int64ago.org/p7qw71k4.jpeg)
 
 猛一看很完美。但是，与使用 js 实现对比之下：
 
@@ -60,13 +60,13 @@ Masonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包
 
 首先，只有在**多列元素集含有块级元素、并且避免在元素内部断行并产生新列**的时候，才会涉及到布局，上面的瀑布流例子，要是不避免在元素内部断行并产生新列，将会是这样的：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-19/38594787-file_1492589160818_437a.jpg)
+![](https://cdn.int64ago.org/zkfzanl.jpeg)
 
 只有将属性 ```break-inside``` 设置为 ```avoid```，才会有块级元素的效果。
 
 回到上面说到的空白区域的问题，```multi-columns``` 的整体布局会受到几个因素的影响：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-23/6104793-file_1492933166561_161f.jpg)
+![](https://cdn.int64ago.org/vfhgqllp.jpeg)
 
 总体而言，优先级：自身属性 > 容器属性。
 
@@ -76,17 +76,17 @@ Masonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包
 
 * 首先取 ```column-count``` ，如果元素（block）个数不超过 ```column-count``` ，布局成一横排；
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-24/75466976-file_1493030440719_8c45.jpg)
+![](https://cdn.int64ago.org/mgd56d9.jpeg)
 
 * 若是元素（block）个数超过 ```column-count``` ，首先在第一列增加 block 元素，而后以第一列的高度为标准，来填充后续各列（此时会发生列填充不满的情况）；
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-23/83117387-file_1492934426479_b060.jpg)
+![](https://cdn.int64ago.org/d8ducmx.jpeg)
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-24/25746446-file_1493030763216_9a8a.jpg)
+![](https://cdn.int64ago.org/db76hgs.jpeg)
 
 * 若是之后元素中发现一个高度较高的**X元素**，对于布局的调整会以这个较高的**X元素**为分界线，不会将后面的低高度元素排列到**X元素**之前：
 
-![](http://olz3b8fm9.bkt.clouddn.com/17-4-23/69097383-file_1492934661657_1393a.jpg)
+![](https://cdn.int64ago.org/bzd833en.jpeg)
 
 就会出现较大空白区域的情况。
 所以，出现空白区域的根本原因是：```multi-columns``` 布局的特点是**按列布局、顺序计算、顺序排列**，前面有较大空白区域，不会用后续元素去填补。
