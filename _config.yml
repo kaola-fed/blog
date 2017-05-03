@@ -72,3 +72,6 @@ deploy:
   repo: git@github.com:kaola-fed/blog.git
   branch: gh-pages
   message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
+
+sitemap:
+  path: sitemap.xml
