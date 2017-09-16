@@ -7,6 +7,8 @@ author: luzhongfang
 
 先扔个扫盲贴，[SVG Sprite 使用简介](https://github.com/kaola-fed/blog/issues/36)一文类比了icon font，清晰的介绍了svg图标的使用方式。
 
+<!-- more -->
+
 ### 项目中实践过程
 
 - #### 收集图标

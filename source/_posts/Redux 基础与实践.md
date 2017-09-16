@@ -7,6 +7,8 @@ tags:
 # [关于 Redux](http://cn.redux.js.org/index.html)
 > Redux 是 JavaScript 状态容器，提供可预测化的状态管理。
 
+<!-- more -->
+
 # 看一个简单的 DEMO
 ```js
 const store = redux.createStore(function(prevState, action) {

@@ -1,11 +1,12 @@
 ---
-title: art-template学习笔记
-date: 2017-06-12
+title:  art-template学习笔记
+date:  2017-06-12
 ---
 
 > `art-template`是一个性能卓越的javascript模板引擎。除了高性能之外，Ta的语法简洁易懂、支持基础的js语法、能满足绝大多数的使用场景，而且其出色的调试功能，编写模板再无后顾之忧，能在模板中定位语法错误。在前后端分离方案中，几经对比，最后选用了[art-template](https://github.com/aui/art-template)这个前后端通用的轻量的模板。
 
 <!-- more ->
+
 
 ### 选用模板的几大原则
 

@@ -22,6 +22,8 @@ date: 2017-07-26
 console.info('this is inline');
 </script>
 ```
+<!-- more -->
+
 - 2.用内联脚本动态向页面中append一个脚本, 并给脚本注册onload回调, 脚本的内容和onload哪个先执行?
 
 ```
@@ -40,6 +42,8 @@ console.info('this is inline');
     console.info('this is a');
 }())
 ```
+
+
 
 - 3.向页面中append一个脚本后, 再把这个脚本remove掉, 脚本会执行吗? 
 
