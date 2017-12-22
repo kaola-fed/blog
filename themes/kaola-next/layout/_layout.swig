@@ -28,6 +28,7 @@
     </header>
 
     <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
       <div class="main-inner">
         <div class="content-wrap">
           <div id="content" class="content">

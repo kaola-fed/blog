@@ -1,3 +1,7 @@
+<a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
 <div class="site-brand-wrapper">
   <div class="site-meta {% if theme.custom_logo.enabled %}custom-logo{% endif %}">
     {% if theme.custom_logo.image and theme.scheme === 'Muse' %}
