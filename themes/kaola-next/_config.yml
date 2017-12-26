@@ -161,7 +161,7 @@ social_icons:
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.jpg
 # in site  directory(source/uploads): /uploads/avatar.jpg
-avatar: /images/avatar.png
+avatar: https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png
 
 
 # Table Of Contents in the Sidebar
