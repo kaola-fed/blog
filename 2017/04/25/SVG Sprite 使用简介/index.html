@@ -1,0 +1,756 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="SVG简介SVG即可缩放矢量图形 (Scalable Vector Graphics)的简称, 是一种用来描述二维矢量图形的XML标记语言. SVG图形不依赖于分辨率, 因此图形不会因为放大而显示出明显的锯齿边缘.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVG Sprite 使用简介">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/25/SVG Sprite 使用简介/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="SVG简介SVG即可缩放矢量图形 (Scalable Vector Graphics)的简称, 是一种用来描述二维矢量图形的XML标记语言. SVG图形不依赖于分辨率, 因此图形不会因为放大而显示出明显的锯齿边缘.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://og40ypzfa.bkt.clouddn.com/use_shadowdom.png">
+<meta property="og:image" content="http://og40ypzfa.bkt.clouddn.com/svg.icon.size.png">
+<meta property="og:image" content="http://og40ypzfa.bkt.clouddn.com/svg.icon.color.png">
+<meta property="og:image" content="http://og40ypzfa.bkt.clouddn.com/svg.icon.color.parts.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.372Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVG Sprite 使用简介">
+<meta name="twitter:description" content="SVG简介SVG即可缩放矢量图形 (Scalable Vector Graphics)的简称, 是一种用来描述二维矢量图形的XML标记语言. SVG图形不依赖于分辨率, 因此图形不会因为放大而显示出明显的锯齿边缘.">
+<meta name="twitter:image" content="http://og40ypzfa.bkt.clouddn.com/use_shadowdom.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/25/SVG Sprite 使用简介/"/>
+
+
+
+
+
+  <title>SVG Sprite 使用简介 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/25/SVG Sprite 使用简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SVG Sprite 使用简介
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T00:00:00+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SVG简介"><a href="#SVG简介" class="headerlink" title="SVG简介"></a>SVG简介</h1><p>SVG即可缩放矢量图形 (Scalable Vector Graphics)的简称, 是一种用来描述二维矢量图形的XML标记语言. SVG图形不依赖于分辨率, 因此图形不会因为放大而显示出明显的锯齿边缘.</p>
+<a id="more"></a>
+<h1 id="icon-sprite"><a href="#icon-sprite" class="headerlink" title="icon sprite"></a>icon sprite</h1><p>当我们需要使用多个icon的时候, 为了节省请求和方便管理, 通常会把icon合并到一个文件中, 在使用时再通过一定的方法从icon集合文件中取出所需的图形并显示. 目前使用得最多的应该就是我们所熟悉的CSS Sprite和Icon Font.</p>
+<h2 id="CSS-Sprite"><a href="#CSS-Sprite" class="headerlink" title="CSS Sprite"></a>CSS Sprite</h2><p>CSS Sprite的原理是将多个icon按一定规律整理到一个图片文件中, 使用时利用<code>background-image</code>和<code>background-position</code>将图片中特定部分显示出来. CSS Sprite技术已经被广泛应用了很长的一段时间, 目前有许多自动化生成Sprite图片和CSS文件的工具, 例如(gulp.spritesmith)[<a href="https://github.com/twolfson/gulp.spritesmith" target="_blank" rel="noopener">https://github.com/twolfson/gulp.spritesmith</a>].</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.icon1</span> &#123;</div><div class="line">    <span class="attribute">background-image</span>: <span class="built_in">url</span>(/res/icon1.png)</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.icon1-increase</span> &#123;</div><div class="line">    <span class="attribute">background-position</span>: -<span class="number">10px</span> -<span class="number">10px</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"icon1 icon1-increase"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<p>CSS Sprite技术成熟, 兼容性好, 但是缺点也比较明显. 如在实际需求中, 对应形状相同但颜色不同的icon, 就需要为不同颜色的icon各保存一份; 有时候需要对已有icon放大显示时, 发现锯齿严重, 那么又要再保存一份放大版的icon. 因此, Sprite文件会随着时间越变越大, 同时内容越来越乱, 逐渐变得难以管理.</p>
+<h2 id="Icon-Font"><a href="#Icon-Font" class="headerlink" title="Icon Font"></a>Icon Font</h2><p>Icon Font的基本原理是将Icon定义为图片字体, 在CSS中用<code>@font-face</code>引入Icon Font自定义字体, 再利用<code>font-family</code>和字符码显示出指定的图标.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@<span class="keyword">font-face</span> &#123;</div><div class="line">    <span class="attribute">font-family</span>: <span class="string">'iconfont'</span>;</div><div class="line">    <span class="attribute">src</span>: <span class="built_in">url</span>(/res/icon2.ttf) <span class="built_in">format</span>(<span class="string">'truetype'</span>);</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.icon2</span> &#123;</div><div class="line">    <span class="attribute">font-family</span>: <span class="string">'iconfont'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"icon2"</span>&gt;</span>&amp;#33<span class="tag">&lt;/<span class="name">i</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>由于使用的是字体, 因此可以通过<code>color</code>, <code>font-size</code>设置icon的样式. Icon Font拥有比CSS Sprite图片更小的文件体积, 维护也比图片更方便, 但是icon font通常只能使用单一的颜色, 字体文件生成也比CSS Sprite更复杂.</p>
+<h1 id="SVG-Sprite"><a href="#SVG-Sprite" class="headerlink" title="SVG Sprite"></a>SVG Sprite</h1><p>通常在使用SVG的时候, 我们是直接写到<code>svg</code>标签当中:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/2000/svg"</span> <span class="attr">width</span>=<span class="string">"150"</span> <span class="attr">height</span>=<span class="string">"100"</span> <span class="attr">viewBox</span>=<span class="string">"0 0 3 2"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"0"</span> <span class="attr">fill</span>=<span class="string">"#008d46"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"1"</span> <span class="attr">fill</span>=<span class="string">"#ffffff"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"2"</span> <span class="attr">fill</span>=<span class="string">"#d2232c"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>此时SVG图形会直接在页面当中显示. SVG属性中, 可以利用(<code>symbol</code>)[<a href="https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/symbol]封装图形" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/symbol]封装图形</a>, 并利用(<code>use</code>)[<a href="https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/use]将其实例化" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/use]将其实例化</a>, 从而实现SVG Sprite的功能.</p>
+<p>SVG Sprite实例:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">style</span>=<span class="string">"height:0;width:0;display:none;"</span> <span class="attr">version</span>=<span class="string">"1.1"</span> <span class="attr">xmlns</span>=<span class="string">"http://www.w3.org/2000/svg"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">symbol</span> <span class="attr">id</span>=<span class="string">"icon-italy"</span> <span class="attr">width</span>=<span class="string">"150"</span> <span class="attr">height</span>=<span class="string">"100"</span> <span class="attr">viewBox</span>=<span class="string">"0 0 3 2"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"0"</span> <span class="attr">fill</span>=<span class="string">"#008d46"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"1"</span> <span class="attr">fill</span>=<span class="string">"#ffffff"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"2"</span> <span class="attr">fill</span>=<span class="string">"#d2232c"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">symbol</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">symbol</span> <span class="attr">id</span>=<span class="string">"icon-france"</span> <span class="attr">width</span>=<span class="string">"150"</span> <span class="attr">height</span>=<span class="string">"100"</span> <span class="attr">viewBox</span>=<span class="string">"0 0 3 2"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"0"</span> <span class="attr">fill</span>=<span class="string">"#002496"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"1"</span> <span class="attr">fill</span>=<span class="string">"#ffffff"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"2"</span> <span class="attr">fill</span>=<span class="string">"#ee2839"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">symbol</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-italy"</span>/&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-france"</span>/&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这样就实现了SVG Sprite.</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>通过devtool可以观察到, <code>use</code>标签是利用shadow dom实现的.</p>
+<p><img src="http://og40ypzfa.bkt.clouddn.com/use_shadowdom.png" alt="use.shadowdom"></p>
+<p>它通过<code>xlink:href</code>这个XML的<code>attribute</code>引用指定的SVG <code>symbol</code>, 在渲染时指定<code>symbol</code>标签中的内容就会被渲染显示在页面当中. 这意味着, 如果无法直接对<code>use</code>标签中的shadow dom进行访问和修改. 例如像<code>use#rect</code>这样的选择器是无法生效的, 因此不能通过一般的css选择器对<code>use</code>中图形不同的部分进行控制.</p>
+<h2 id="CSS样式"><a href="#CSS样式" class="headerlink" title="CSS样式"></a>CSS样式</h2><p>更多的时候, 我们通常都只需要改变图标的大小和颜色, 在SVG Sprite当中, 实现起来并不复杂.</p>
+<ol>
+<li>大小</li>
+</ol>
+<p>通过改变<code>svg</code>容器的大小, 可以轻松地对图标大小进行控制.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.icon</span>&#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">120px</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">80px</span>;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.icon</span><span class="selector-class">.icon-small</span>&#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">60px</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">40px</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon"</span>&gt;</span><span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-italy"</span>/&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon icon-small"</span>&gt;</span><span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-italy"</span>/&gt;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="http://og40ypzfa.bkt.clouddn.com/svg.icon.size.png" alt="svg.icon.size"></p>
+<ol>
+<li>颜色</li>
+</ol>
+<ul>
+<li>单色</li>
+</ul>
+<p>颜色由于不能直接对<code>use</code>的shadow root中的图形标签进行选择, 因此在为图标定义颜色时需要利用<code>fill: inherit</code>这个一属性.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">svg</span> <span class="selector-tag">path</span>&#123;</div><div class="line">    <span class="attribute">fill</span>: inherit;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.icon2-green</span>&#123;</div><div class="line">    <span class="attribute">fill</span>: <span class="number">#008d46</span>;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.icon2-red</span>&#123;</div><div class="line">    <span class="attribute">fill</span>: <span class="number">#dc352f</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon2 icon2-green"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-increase"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon2 icon2-red"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-increase"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="http://og40ypzfa.bkt.clouddn.com/svg.icon.color.png" alt="svg.icon.color"></p>
+<p>利用<code>inherit</code>, 还可以定义<code>stroke-width</code>, <code>stroke</code>等属性.</p>
+<ul>
+<li>多色</li>
+</ul>
+<p>除了对图标整体颜色进行定义以外, 还可以根据需要对图形不同部分进行颜色定义. 这里使用到了css 的自定义属性(<a href="https://www.w3.org/TR/css-variables/" target="_blank" rel="noopener">CSS Custom Properties</a>).</p>
+<p>这里需要对<code>icon.svg</code>进行修改, 将图形个部分的颜色设置为<code>fill: var(--*[, default])</code>的形式.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">symbol</span> <span class="attr">id</span>=<span class="string">"icon-flag"</span> <span class="attr">width</span>=<span class="string">"150"</span> <span class="attr">height</span>=<span class="string">"100"</span> <span class="attr">viewBox</span>=<span class="string">"0 0 3 2"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"0"</span> <span class="attr">style</span>=<span class="string">"fill: var(--color0, #008d46)"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"1"</span> <span class="attr">style</span>=<span class="string">"fill: var(--color1, #fff)"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rect</span> <span class="attr">width</span>=<span class="string">"1"</span> <span class="attr">height</span>=<span class="string">"2"</span> <span class="attr">x</span>=<span class="string">"2"</span> <span class="attr">style</span>=<span class="string">"fill: var(--color2, #d2232c)"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">symbol</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>定义css样式</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">.flag-belgium &#123;</div><div class="line">    --color0: #201b18;</div><div class="line">    --color1: #f1ee3d;</div><div class="line">    --color2: #dc352f;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-flag"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon flag-belgium"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-flag"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="http://og40ypzfa.bkt.clouddn.com/svg.icon.color.parts.png" alt="svg.icon.color.parts"></p>
+<p>除此以外, 还有其他一些样式定义的形式, 更详细的内容可以阅读<a href="http://tympanus.net/codrops/2015/07/16/styling-svg-use-content-css/" target="_blank" rel="noopener">Styling SVG <use></use> Content with CSS</a>.</p>
+<h1 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h1><h2 id="引用外部svg"><a href="#引用外部svg" class="headerlink" title="引用外部svg"></a>引用外部svg</h2><p>上文介绍的是使用内联svg, 但其实还可以使用外部svg的.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">class</span>=<span class="string">"icon"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"/res/svg/icon.svg#icon-flag"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>然而这种方法不兼容IE9~10, 但如果非要使用外部svg的形式, 可以引入一个pollyfill<a href="https://github.com/jonathantneal/svg4everybody" target="_blank" rel="noopener">svg4everybody</a>, 当运行在不支持外部svg的情况下, 这个pollyfill会通过异步请求加载svg委文件并将其注入到页面当中, 将引用方法转换成内联svg.</p>
+<h2 id="在ftl中使用"><a href="#在ftl中使用" class="headerlink" title="在ftl中使用"></a>在ftl中使用</h2><p>可以在<code>svg.ftl</code>中定义一系列<code>macro</code>, 用以加载<code>.svg</code>文件.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">#macro</span> <span class="attr">svgicon</span> <span class="attr">path</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">#include</span> "$&#123;<span class="attr">path</span>&#125;"&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">#macro</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">#macro</span> <span class="attr">svgicon3</span> &gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">@svgicon</span> "<span class="attr">.</span>/<span class="attr">icon3.svg</span>"/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">#macro</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在页面中引用<code>demo.ftl</code>:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">@svgicon1</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">xlink:href</span>=<span class="string">"#icon-italy"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="在regular中使用"><a href="#在regular中使用" class="headerlink" title="在regular中使用"></a>在regular中使用</h2><p><code>xlink:href</code>是使用了命名空间的XML特性, 如果是写在<code>.html</code>页面的标签, 该特性能够正常被浏览器解析并完成svg渲染. 如果该svg变量是通过DOM API创建出来的话, 则需要使用特定的方法进行处理(<a href="http://stackoverflow.com/questions/25975523/svg-with-use-tag-not-rendering" target="_blank" rel="noopener">SVG with USE tag not rendering</a>).</p>
+<p>即需要利用<code>createElementNS</code>和<code>setAttributeNS</code>方法在创建的同时声明命名空间.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> use = <span class="built_in">document</span>.createElementNS(<span class="string">'http://www.w3.org/2000/svg'</span>, <span class="string">'use'</span>);</div><div class="line">use.setAttributeNS(<span class="string">'http://www.w3.org/1999/xlink'</span>, <span class="string">'xlink:href'</span>, <span class="string">'#icon-increase'</span>);</div><div class="line"><span class="built_in">document</span>.querySelector(<span class="string">'#svgid'</span>).appendChild(use);</div></pre></td></tr></table></figure>
+<p>只要是需要动态创建<code>use</code>元素, 都需要使用上面这种方法才能使SVG Sprite中的元素实例化. 但在目前的Regular(0.4.3)中, 不会对命名空间进行处理, 这意味着, 如果直接将<code>&lt;svg&gt;&lt;use xlink:href/&gt;&lt;/svg&gt;</code>写在Regular组件的模版中时, 该标签是无法正常渲染的. 为此可以增加一个指令<code>r-xlink:href</code>以完成手动设置命名空间的操作.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Regular.directive(<span class="string">'r-xlink:href'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">elem, val</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (val&amp;&amp; val.type === <span class="string">'expression'</span>) &#123;</div><div class="line">        <span class="keyword">this</span>.$watch(val, <span class="function"><span class="keyword">function</span> (<span class="params">newVal</span>) </span>&#123;</div><div class="line">            elem.setAttributeNS(<span class="string">'http://www.w3.org/1999/xlink'</span>, <span class="string">'href'</span>, newVal);</div><div class="line">        &#125;);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        elem.setAttributeNS(<span class="string">'http://www.w3.org/1999/xlink'</span>, <span class="string">'href'</span>, val);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>那么在组件模版中就可以像在普通<code>.html</code>中那样使用SVG Sprite了. 当然, 首先得确保SVG Sprite被写到页面中.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">use</span> <span class="attr">r-xlink:href</span>=<span class="string">"#icon-italy"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在Regular的SVG 实践中得到了郑海波大神的指点, 否则得绕更大的路才能把问题解决, 在此表示感谢.</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>对比前文提到的CSS Sprite和Icon Font, SVG有着明显的优势:</p>
+<ul>
+<li>放大缩小不会失真</li>
+<li>大小, 颜色等属性自定义灵活</li>
+<li>体积小, 同时管理方便</li>
+</ul>
+<p>虽然SVG Sprite有着高度的灵活性, 但于此同时, SVG兼容性有待考究, 同时其渲染性能也不及图片和字体那么高, 可能在某些情况下不适用. 不过在一般的场景中, svg sprite还能够给开发带来很大的便利的.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element" target="_blank" rel="noopener">SVG元素参考</a></li>
+<li><a href="http://stackoverflow.com/questions/25975523/svg-with-use-tag-not-rendering" target="_blank" rel="noopener">SVG with USE tag not rendering</a></li>
+<li><a href="http://www.zhangxinxu.com/wordpress/2014/07/introduce-svg-sprite-technology/" target="_blank" rel="noopener">未来必热：SVG Sprite技术介绍</a></li>
+<li><a href="http://tympanus.net/codrops/2015/07/16/styling-svg-use-content-css/" target="_blank" rel="noopener">Styling SVG <use></use> Content with CSS</a></li>
+<li><a href="https://css-tricks.com/svg-sprites-use-better-icon-fonts/" target="_blank" rel="noopener">Icon System with SVG Sprites</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/24/CSS Masonry Layouts（1）—— multi-columns/" rel="next" title="CSS Masonry Layouts（1）—— multi-columns">
+                <i class="fa fa-chevron-left"></i> CSS Masonry Layouts（1）—— multi-columns
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/26/webpack构建之hash缓存的利用/" rel="prev" title="webpack构建之hash缓存的利用">
+                webpack构建之hash缓存的利用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SVG简介"><span class="nav-number">1.</span> <span class="nav-text">SVG简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#icon-sprite"><span class="nav-number">2.</span> <span class="nav-text">icon sprite</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Sprite"><span class="nav-number">2.1.</span> <span class="nav-text">CSS Sprite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Icon-Font"><span class="nav-number">2.2.</span> <span class="nav-text">Icon Font</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SVG-Sprite"><span class="nav-number">3.</span> <span class="nav-text">SVG Sprite</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">3.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS样式"><span class="nav-number">3.2.</span> <span class="nav-text">CSS样式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际使用"><span class="nav-number">4.</span> <span class="nav-text">实际使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引用外部svg"><span class="nav-number">4.1.</span> <span class="nav-text">引用外部svg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在ftl中使用"><span class="nav-number">4.2.</span> <span class="nav-text">在ftl中使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在regular中使用"><span class="nav-number">4.3.</span> <span class="nav-text">在regular中使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

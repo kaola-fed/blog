@@ -1,0 +1,716 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="vue-cli是Vue.js官方脚手架命令行工具，我们可以用它快速搭建Vue.js项目，vue-cli最主要的功能就是初始化项目，既可以使用官方模板，也可以使用自定义模板生成项目，而且从2.8.0版本开始，vue-cli新增了build命令，能让你零配置启动一个Vue.js应用。接下来，我们一起探究一下vue-cli是如何工作的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue-cli是如何工作的">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/16/vue-cli是如何工作的/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="vue-cli是Vue.js官方脚手架命令行工具，我们可以用它快速搭建Vue.js项目，vue-cli最主要的功能就是初始化项目，既可以使用官方模板，也可以使用自定义模板生成项目，而且从2.8.0版本开始，vue-cli新增了build命令，能让你零配置启动一个Vue.js应用。接下来，我们一起探究一下vue-cli是如何工作的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/16/59432fe15d720.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/16/594331ee7a506.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.381Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue-cli是如何工作的">
+<meta name="twitter:description" content="vue-cli是Vue.js官方脚手架命令行工具，我们可以用它快速搭建Vue.js项目，vue-cli最主要的功能就是初始化项目，既可以使用官方模板，也可以使用自定义模板生成项目，而且从2.8.0版本开始，vue-cli新增了build命令，能让你零配置启动一个Vue.js应用。接下来，我们一起探究一下vue-cli是如何工作的。">
+<meta name="twitter:image" content="https://ooo.0o0.ooo/2017/06/16/59432fe15d720.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/16/vue-cli是如何工作的/"/>
+
+
+
+
+
+  <title>vue-cli是如何工作的 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/16/vue-cli是如何工作的/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                vue-cli是如何工作的
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-16T00:00:00+08:00">
+                2017-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>vue-cli是Vue.js官方脚手架命令行工具，我们可以用它快速搭建Vue.js项目，vue-cli最主要的功能就是初始化项目，既可以使用官方模板，也可以使用自定义模板生成项目，而且从2.8.0版本开始，vue-cli新增了<code>build</code>命令，能让你零配置启动一个Vue.js应用。接下来，我们一起探究一下vue-cli是如何工作的。</p>
+<a id="more"></a>
+<h4 id="全局安装"><a href="#全局安装" class="headerlink" title="全局安装"></a>全局安装</h4><p>首先，vue-cli是一个node包，且可以在终端直接通过<code>vue</code>命令调用，所以vue-cli需要全局安装，当npm全局安装一个包时，主要做了两件事：</p>
+<ol>
+<li>将包安装到全局的node_modules目录下。</li>
+<li>在bin目录下创建对应的命令，并链接到对应的可执行脚本。</li>
+</ol>
+<p>看一下vue-cli的package.json，可以发现如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;bin&quot;: &#123;</div><div class="line">    &quot;vue&quot;: &quot;bin/vue&quot;,</div><div class="line">    &quot;vue-init&quot;: &quot;bin/vue-init&quot;,</div><div class="line">    &quot;vue-list&quot;: &quot;bin/vue-list&quot;,</div><div class="line">    &quot;vue-build&quot;: &quot;bin/vue-build&quot;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样在全局安装vue-cli后，npm会帮你注册<code>vue</code>, <code>vue-init</code>, <code>vue-list</code>, <code>vue-build</code>这几个命令。</p>
+<p><img src="https://ooo.0o0.ooo/2017/06/16/59432fe15d720.png" alt=""></p>
+<h4 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h4><p>vue-cli项目本身也不大，项目结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── bin</div><div class="line">├── docs</div><div class="line">├── lib</div><div class="line">└── test</div><div class="line">    └── e2e</div></pre></td></tr></table></figure></p>
+<p><code>bin</code>目录下是可执行文件，<code>docs</code>下是新特性<code>vue build</code>的文档，<code>lib</code>是拆分出来的类库，<code>test</code>下是测试文件，我们着重看<code>bin</code>目录下的文件即可。</p>
+<h4 id="bin-vue"><a href="#bin-vue" class="headerlink" title="bin/vue"></a>bin/vue</h4><p>首先看<code>bin/vue</code>，内容很简短，只有如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env node</div><div class="line"></div><div class="line">require(&apos;commander&apos;)</div><div class="line">  .version(require(&apos;../package&apos;).version)</div><div class="line">  .usage(&apos;&lt;command&gt; [options]&apos;)</div><div class="line">  .command(&apos;init&apos;, &apos;generate a new project from a template&apos;)</div><div class="line">  .command(&apos;list&apos;, &apos;list available official templates&apos;)</div><div class="line">  .command(&apos;build&apos;, &apos;prototype a new project&apos;)</div><div class="line">  .parse(process.argv)</div></pre></td></tr></table></figure></p>
+<p>vue-cli是基于<a href="https://github.com/tj/commander.js" target="_blank" rel="noopener">commander.js</a>写的，支持<a href="https://github.com/tj/commander.js#git-style-sub-commands" target="_blank" rel="noopener">Git-style sub-commands</a>,所以执行<code>vue init</code>可以达到和<code>vue-init</code>同样的效果。</p>
+<h4 id="bin-vue-init"><a href="#bin-vue-init" class="headerlink" title="bin/vue-init"></a>bin/vue-init</h4><p>接下来看<code>bin/vue-init</code>，<code>vue-init</code>的主要作用是根据指定模板生成项目原型。文件首先是引入一些依赖模块和lib中的辅助函数，因为init命令需要接收至少一个参数，所以<code>vue-init</code>第一个被执行到的就是检验入参的<a href="https://github.com/vuejs/vue-cli/blob/master/bin/vue-init#L54" target="_blank" rel="noopener"><code>help</code>函数</a>，如果没有传入参数，则打印提示，传入参数则继续运行。</p>
+<p>再向下是解析参数的过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var template = program.args[0]</div><div class="line">var hasSlash = template.indexOf(&apos;/&apos;) &gt; -1</div><div class="line">var rawName = program.args[1]</div><div class="line">var inPlace = !rawName || rawName === &apos;.&apos;</div><div class="line">var name = inPlace ? path.relative(&apos;../&apos;, process.cwd()) : rawName</div><div class="line">var to = path.resolve(rawName || &apos;.&apos;)</div><div class="line">var clone = program.clone || false</div><div class="line"></div><div class="line">var tmp = path.join(home, &apos;.vue-templates&apos;, template.replace(/\//g, &apos;-&apos;))</div><div class="line">if (program.offline) &#123;</div><div class="line">  console.log(`&gt; Use cached template at $&#123;chalk.yellow(tildify(tmp))&#125;`)</div><div class="line">  template = tmp</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>template</code>是模板名，第二个参数(<code>program.args[1]</code>)<code>rawName</code>为项目名，如果不存在或为<code>.</code>则视为在当前目录下初始化(<code>inPlace = true</code>)，默认项目名称<code>name</code>也为当前文件夹名。<code>to</code>是项目的输出路径，后面会用到。<code>clone</code>参数判断是否使用git clone的方式下载模板，当模板在私有仓库时用得上。<code>offline</code>参数决定是否使用离线模式，如果使用离线模式，vue-cli会尝试去<code>~/.vue-templates</code>下获取对应的模板，可以省去漫长的<code>downloading template</code>的等待时间，但是模板是不是最新的版本就无法确定了。</p>
+<p>前面在处理参数时会得到一个变量<code>to</code>，表示即将生成的项目路径，如果已存在，则会输出警告，让用户确认是否继续，确认后执行<code>run</code>函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">if (exists(to)) &#123;</div><div class="line">  inquirer.prompt([&#123;</div><div class="line">    type: &apos;confirm&apos;,</div><div class="line">    message: inPlace</div><div class="line">      ? &apos;Generate project in current directory?&apos;</div><div class="line">      : &apos;Target directory exists. Continue?&apos;,</div><div class="line">    name: &apos;ok&apos;</div><div class="line">  &#125;], function (answers) &#123;</div><div class="line">    if (answers.ok) &#123;</div><div class="line">      run()</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125; else &#123;</div><div class="line">  run()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><a href="https://github.com/vuejs/vue-cli/blob/master/bin/vue-init#L103" target="_blank" rel="noopener">run函数</a>主要检查了模板是否是本地模板，然后获取或下载模板，获取到模板后执行<code>generate</code>函数。</p>
+<p>generate函数是生成项目的核心，主要代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">module.exports = function generate (name, src, dest, done) &#123;</div><div class="line">  var opts = getOptions(name, src)</div><div class="line">  // Metalsmith读取template下所有资源</div><div class="line">  var metalsmith = Metalsmith(path.join(src, &apos;template&apos;))</div><div class="line">  var data = Object.assign(metalsmith.metadata(), &#123;</div><div class="line">    destDirName: name,</div><div class="line">    inPlace: dest === process.cwd(),</div><div class="line">    noEscape: true</div><div class="line">  &#125;)</div><div class="line">  opts.helpers &amp;&amp; Object.keys(opts.helpers).map(function (key) &#123;</div><div class="line">    Handlebars.registerHelper(key, opts.helpers[key])</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  var helpers = &#123;chalk, logger&#125;</div><div class="line"></div><div class="line">  if (opts.metalsmith &amp;&amp; typeof opts.metalsmith.before === &apos;function&apos;) &#123;</div><div class="line">    opts.metalsmith.before(metalsmith, opts, helpers)</div><div class="line">  &#125;</div><div class="line">  // 一次使用askQuestions, filterFiles, renderTemplateFiles处理读取的内容</div><div class="line">  metalsmith.use(askQuestions(opts.prompts))</div><div class="line">    .use(filterFiles(opts.filters))</div><div class="line">    .use(renderTemplateFiles(opts.skipInterpolation))</div><div class="line"></div><div class="line">  if (typeof opts.metalsmith === &apos;function&apos;) &#123;</div><div class="line">    opts.metalsmith(metalsmith, opts, helpers)</div><div class="line">  &#125; else if (opts.metalsmith &amp;&amp; typeof opts.metalsmith.after === &apos;function&apos;) &#123;</div><div class="line">    opts.metalsmith.after(metalsmith, opts, helpers)</div><div class="line">  &#125;</div><div class="line">  // 将处理后的文件输出</div><div class="line">  metalsmith.clean(false)</div><div class="line">    .source(&apos;.&apos;) // start from template root instead of `./src` which is Metalsmith&apos;s default for `source`</div><div class="line">    .destination(dest)</div><div class="line">    .build(function (err, files) &#123;</div><div class="line">      done(err)</div><div class="line">      if (typeof opts.complete === &apos;function&apos;) &#123;</div><div class="line">        var helpers = &#123;chalk, logger, files&#125;</div><div class="line">        opts.complete(data, helpers)</div><div class="line">      &#125; else &#123;</div><div class="line">        logMessage(opts.completeMessage, data)</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">  return data</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先通过<a href="https://github.com/vuejs/vue-cli/blob/master/lib/options.js#L14" target="_blank" rel="noopener"><code>getOptions</code></a>获取了一些项目的基础配置信息，如项目名，git用户信息等。然后通过<code>metalsmith</code>结合<code>askQuestions</code>,<code>filterFiles</code>,<code>renderTemplateFiles</code>这几个中间件完成了项目模板的生成过程。<strong><a href="https://github.com/segmentio/metalsmith" target="_blank" rel="noopener">metalsmith</a></strong>是一个插件化的静态网站生成器，它的一切都是通过插件运作的，这样可以很方便地为其扩展。<br>通过generate函数的代码，很容易看出来生成项目的过程主要是以下几个阶段。</p>
+<p><img src="https://ooo.0o0.ooo/2017/06/16/594331ee7a506.png" alt=""></p>
+<p>每个过程主要用了以下库：</p>
+<ul>
+<li>getOptions: 主要是读取模板下的<code>meta.json</code>或<code>meta.js</code>，<code>meta.json</code>是必须的文件，为cli提供多种信息，例如自定义的helper，自定义选项，文件过滤规则等等。该如何写一个自定义模板，可以参考<a href="https://github.com/vuejs/vue-cli#writing-custom-templates-from-scratch" target="_blank" rel="noopener">这里</a></li>
+<li>通过Metalsmith读取模板内容，需要注意的是，此时的模板内容还是未被处理的，所以大概长这样:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/* eslint-disable no-new */</div><div class="line">new Vue(&#123;</div><div class="line">  el: &apos;#app&apos;,</div><div class="line">  &#123;&#123;#router&#125;&#125;</div><div class="line">  router,</div><div class="line">  &#123;&#123;/router&#125;&#125;</div><div class="line">  &#123;&#123;#if_eq build &quot;runtime&quot;&#125;&#125;</div><div class="line">  render: h =&gt; h(App)&#123;&#123;#if_eq lintConfig &quot;airbnb&quot;&#125;&#125;,&#123;&#123;/if_eq&#125;&#125;</div><div class="line">  &#123;&#123;/if_eq&#125;&#125;</div><div class="line">  &#123;&#123;#if_eq build &quot;standalone&quot;&#125;&#125;</div><div class="line">  template: &apos;&lt;App/&gt;&apos;,</div><div class="line">  components: &#123; App &#125;&#123;&#123;#if_eq lintConfig &quot;airbnb&quot;&#125;&#125;,&#123;&#123;/if_eq&#125;&#125;</div><div class="line">  &#123;&#123;/if_eq&#125;&#125;</div><div class="line">&#125;)&#123;&#123;#if_eq lintConfig &quot;airbnb&quot;&#125;&#125;;&#123;&#123;/if_eq&#125;&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>获取自定义配置: 主要是通过<a href="https://github.com/caolan/async" target="_blank" rel="noopener">async</a>和<a href="https://github.com/SBoudrias/Inquirer.js" target="_blank" rel="noopener">inquirer</a>的配合完成收集用户自定义配置。</li>
+<li>filterFiles: 对文件进行过滤，通过<a href="https://github.com/isaacs/minimatch" target="_blank" rel="noopener">minimatch</a>进行文件匹配。</li>
+<li>渲染模板：通过<a href="https://github.com/tj/consolidate.js" target="_blank" rel="noopener">consolidate.js</a>配合<a href="https://github.com/wycats/handlebars.js/" target="_blank" rel="noopener">handlebars</a>渲染文件。</li>
+<li>输出：直接输出</li>
+</ul>
+<p><code>vue-init</code>的整个工作流程大致就是这样，<code>vue-cli</code>作为一个便捷的命令行工具，其代码写的也简洁易懂，而且通过分析源码，可以发现其中用到的很多有意思的模块。</p>
+<h4 id="bin-vue-list"><a href="#bin-vue-list" class="headerlink" title="bin/vue-list"></a>bin/vue-list</h4><p><a href="https://github.com/vuejs/vue-cli/blob/master/bin/vue-list" target="_blank" rel="noopener">vue-list</a>功能很简单，拉取<a href="https://api.github.com/users/vuejs-templates" target="_blank" rel="noopener">vuejs-templates</a>的模板信息并输出。</p>
+<h4 id="bin-vue-build"><a href="#bin-vue-build" class="headerlink" title="bin/vue-build"></a>bin/vue-build</h4><p><a href="https://github.com/vuejs/vue-cli/blob/master/bin/vue-build" target="_blank" rel="noopener">vue-build</a>则是通过一份webpack配置将项目跑起来，如果是入口仅是一个<code>.vue</code>组件，就使用默认的<code>default-entry.es6</code>加载组件并渲染。</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>在看vue-cli源码时，发现了<a href="https://github.com/sindresorhus/user-home" target="_blank" rel="noopener">user-home</a>这个模块，这个模块的内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&apos;use strict&apos;;</div><div class="line">module.exports = require(&apos;os-homedir&apos;)();</div></pre></td></tr></table></figure></p>
+<p><code>os-homedir</code>这个包是一个<code>os.homedir</code>的polyfill，在<a href="https://github.com/sindresorhus/user-home#why-not-just-use-the-os-home-module" target="_blank" rel="noopener">Why not just use the os-home module?</a>下，我看到了<a href="https://github.com/sindresorhus/ama/issues/10#issuecomment-117766328" target="_blank" rel="noopener">Modules are cheap in Node.js</a>这个blog。事实上<a href="https://github.com/sindresorhus" target="_blank" rel="noopener">sindresorhus</a>写了很多的One-line node modules，他也很喜欢One-line node moduels，因为模块越小，就意味着灵活性和重用性更高。当然对于One-line modules，每个人的看法不一样，毕竟也不是第一次听到<strong>“就这一个函数也tm能写个包”</strong>的话了。我认为这个要因人而异，sindresorhus何许人也，很多著名开源项目的作者，发布的npm包1000+，大多数他用到的模块，都是他自己写的，所以对他来说，使用各种“积木”去组建“高楼”得心应手。不过对于其他人来说，如果习惯于这种方式，可能会对这些东西依赖性变强，就像现在很多前端开发依赖框架而不重基础一样，所以我认为这种“拼积木”开发方式挺好，但最好还是要知其所以然。但是我感觉One-line modules的作用却不大，就像user-home这个模块，如果没有它，<code>const home = require(&#39;os-homedir&#39;)();</code>也可以达到目的，可能处于强迫症的原因，user-home才诞生了吧，而且像<a href="https://github.com/sindresorhus/negative-zero" target="_blank" rel="noopener">negative-zero</a>这样的One-line modules,使用场景少是其一，而且也没带来什么方便，尤其是2.0版本，这个包直接使用Object.is去判断了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&apos;use strict&apos;;</div><div class="line">module.exports = x =&gt; Object.is(x, -0);</div></pre></td></tr></table></figure></p>
+<p>不知道大家对One-line modules是什么看法？</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/12/art-template学习笔记/" rel="next" title="art-template学习笔记">
+                <i class="fa fa-chevron-left"></i> art-template学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/19/异步请求功能性优化实践/" rel="prev" title="异步请求功能性优化实践">
+                异步请求功能性优化实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#全局安装"><span class="nav-number">1.</span> <span class="nav-text">全局安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#项目结构"><span class="nav-number">2.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bin-vue"><span class="nav-number">3.</span> <span class="nav-text">bin/vue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bin-vue-init"><span class="nav-number">4.</span> <span class="nav-text">bin/vue-init</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bin-vue-list"><span class="nav-number">5.</span> <span class="nav-text">bin/vue-list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bin-vue-build"><span class="nav-number">6.</span> <span class="nav-text">bin/vue-build</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他"><span class="nav-number">7.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

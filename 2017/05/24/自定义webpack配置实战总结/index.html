@@ -1,0 +1,724 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="背景在优惠券二期的任务中，需要进行整体重构。 在和yubaoquan讨论之后，我们希望的技术栈是这样：  打包用webpack2 js用es2015 css用mcss js框架regularjs ui框架nek-ui(基于regularjs)  上面这些问题不是很大。  有个比较麻烦的地方就是，前端和后端的连接方式有所改变，详情请看下文。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义webpack配置实战总结">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/24/自定义webpack配置实战总结/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="背景在优惠券二期的任务中，需要进行整体重构。 在和yubaoquan讨论之后，我们希望的技术栈是这样：  打包用webpack2 js用es2015 css用mcss js框架regularjs ui框架nek-ui(基于regularjs)  上面这些问题不是很大。  有个比较麻烦的地方就是，前端和后端的连接方式有所改变，详情请看下文。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义webpack配置实战总结">
+<meta name="twitter:description" content="背景在优惠券二期的任务中，需要进行整体重构。 在和yubaoquan讨论之后，我们希望的技术栈是这样：  打包用webpack2 js用es2015 css用mcss js框架regularjs ui框架nek-ui(基于regularjs)  上面这些问题不是很大。  有个比较麻烦的地方就是，前端和后端的连接方式有所改变，详情请看下文。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/24/自定义webpack配置实战总结/"/>
+
+
+
+
+
+  <title>自定义webpack配置实战总结 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/24/自定义webpack配置实战总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自定义webpack配置实战总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-24T00:00:00+08:00">
+                2017-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+-->
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在优惠券二期的任务中，需要进行整体重构。 在和<a href="https://github.com/yubaoquan" target="_blank" rel="noopener">yubaoquan</a>讨论之后，我们希望的技术栈是这样：</p>
+<ul>
+<li>打包用webpack2</li>
+<li>js用es2015</li>
+<li>css用mcss</li>
+<li>js框架regularjs</li>
+<li>ui框架nek-ui(基于regularjs)</li>
+</ul>
+<p>上面这些问题不是很大。 </p>
+<p>有个比较麻烦的地方就是，前端和后端的连接方式有所改变，详情请看下文。</p>
+<a id="more"></a>
+<h2 id="以前的方式"><a href="#以前的方式" class="headerlink" title="以前的方式"></a>以前的方式</h2><p>此项目是非spa项目，所以会有多个页面。</p>
+<p>比如，根目录下有2个页面：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/WEB-INF/ftl/pageA.ftl</div><div class="line">/WEB-INF/ftl/pageB.ftl</div></pre></td></tr></table></figure>
+<p>pageA中引入<code>js/pageA/entry.js</code>，<code>entry.js</code>再引入业务js。pageB同理。</p>
+<p>后端controller中连接到pageA的方式很简单，只要<code>return &quot;/WEB-INF/ftl/pageA&quot;</code>这样即可。</p>
+<p>备注：<br>ftl文件：是freemarker（后端用的模板引擎）的模板文件，可以理解为html页面</p>
+<h2 id="现在的方式"><a href="#现在的方式" class="headerlink" title="现在的方式"></a>现在的方式</h2><p>与之前的不同就是， 每个entry.js都要经过一次webpack打包，再重新注入到ftl中，这里会面临2个问题：</p>
+<ul>
+<li>如何将打包完成的entry.js注入到ftl文件中</li>
+<li>如何配置webpack多入口</li>
+</ul>
+<p>项目不断扩大，添加了新页面，配置又要重新写一次吗？迎面而来第3个问题：</p>
+<ul>
+<li>如何动态生成webpack配置</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="如何将打包完成的entry-js注入到ftl文件中"><a href="#如何将打包完成的entry-js注入到ftl文件中" class="headerlink" title="如何将打包完成的entry.js注入到ftl文件中"></a>如何将打包完成的entry.js注入到ftl文件中</h3><p>由于之前接触过<a href="https://github.com/jantimon/html-webpack-plugin" target="_blank" rel="noopener"><code>htmlwebpackPlugin</code></a>插件，可以动态的生成html文件，并将entry.js插入到html文件中。那么生成ftl文件也应该没问题，查看了文档之后，确实只需要修改filename就行了。</p>
+<h3 id="如何配置webpack多入口"><a href="#如何配置webpack多入口" class="headerlink" title="如何配置webpack多入口"></a>如何配置webpack多入口</h3><p>在github上找到了<a href="https://github.com/jantimon/html-webpack-plugin/issues/218#issuecomment-183066602" target="_blank" rel="noopener">答案</a></p>
+<p>简单解释下：</p>
+<ul>
+<li>entry中加入多个字段如page1, page2;</li>
+<li>output中路径加入[name]的动态字段</li>
+<li>htmlwebpackPlugin配置中，设置chunks字段未入口的配置的字段即可</li>
+</ul>
+<h3 id="如何动态生成webpack配置"><a href="#如何动态生成webpack配置" class="headerlink" title="如何动态生成webpack配置"></a>如何动态生成webpack配置</h3><p>大家熟悉的<code>webpack.config.js</code>文件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    <span class="attr">entry</span>: <span class="string">"./entry.js"</span>,</div><div class="line">    <span class="attr">output</span>: &#123;</div><div class="line">        <span class="attr">path</span>: __dirname,</div><div class="line">        <span class="attr">filename</span>: <span class="string">"bundle.js"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">module</span>: &#123;</div><div class="line">        <span class="attr">loaders</span>: [</div><div class="line">            &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="string">"style!css"</span> &#125;</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>可以看出这个是commonjs语法，导出一个对象，那我们就可以对这个对象进行一些预处理，最后再导出这个经过处理的新对象即可。</p>
+<p>就像这样：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> myConfig = &#123;&#125;</div><div class="line"></div><div class="line">myConfig.entry = <span class="string">"./entry.js"</span></div><div class="line"><span class="comment">// ....anything you want</span></div><div class="line"><span class="built_in">module</span>.exports = myConfig</div></pre></td></tr></table></figure></p>
+<h2 id="实际开发中遇到的问题记录"><a href="#实际开发中遇到的问题记录" class="headerlink" title="实际开发中遇到的问题记录"></a>实际开发中遇到的问题记录</h2><h3 id="commonjs导出异步对象"><a href="#commonjs导出异步对象" class="headerlink" title="commonjs导出异步对象"></a>commonjs导出异步对象</h3><p>由于遍历文件夹，返回文件是一个异步操作，所以模块导出需要导出一个promise;</p>
+<p>代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line">    recursive(PAGE_PATH, (err, files) =&gt; &#123;</div><div class="line">        <span class="comment">// Files is an array of filename</span></div><div class="line">        <span class="keyword">let</span> filerFilesFunc = <span class="function"><span class="params">file</span> =&gt;</span> /\.ftl$/.test(file);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (err) &#123;</div><div class="line">            <span class="built_in">console</span>.log(err);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        files = files.filter(filerFilesFunc);</div><div class="line">        resolve(generateWebpackConfig(files, baseWebpackConfig));</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="ftl中使用相对路径，路径找不到"><a href="#ftl中使用相对路径，路径找不到" class="headerlink" title="ftl中使用相对路径，路径找不到"></a>ftl中使用相对路径，路径找不到</h3><p><a href="http://stackoverflow.com/questions/34620628/htmlwebpackplugin-injects-relative-path-files-which-breaks-when-loading-non-root" target="_blank" rel="noopener">stackoverflow上的答案</a></p>
+<p>需要设置<code>publicPath</code>属性为根目录（请根据实际需求修改）：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">output: &#123;</div><div class="line">    <span class="attr">publicPath</span>: <span class="string">'/'</span> </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="其他webpack插件介绍"><a href="#其他webpack插件介绍" class="headerlink" title="其他webpack插件介绍"></a>其他webpack插件介绍</h2><p><a href="https://github.com/webpack-contrib/extract-text-webpack-plugin" target="_blank" rel="noopener">ExtractTextPlugin</a>: 可以把样式模块提取成单独的css文件<br><a href="https://webpack.js.org/plugins/commons-chunk-plugin/" target="_blank" rel="noopener">CommonsChunkPlugin</a>: 可以把共用的模块提取成单个文件，不同入口之间可以通用<br><a href="https://webpack.js.org/guides/caching/" target="_blank" rel="noopener">chunkhash</a>: 单独给文件创建hashes，缓存文件</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>目前项目已上线，中间很多坑都踩过，其中很多问题都是<a href="https://github.com/yubaoquan" target="_blank" rel="noopener">yubaoquan</a>解决的，合作愉快（握手）。<code>webpack.config.js</code>代码在这<a href="https://github.com/jerryni/blog/blob/master/webpack.config.js" target="_blank" rel="noopener">code here</a>，供大家参考，有什么问题可以一起讨论</p>
+<p>by <a href="https://github.com/jerryni" target="_blank" rel="noopener">Kaola nrz</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/23/实现一个简单的html ast解析算法/" rel="next" title="实现一个简单的html ast解析算法">
+                <i class="fa fa-chevron-left"></i> 实现一个简单的html ast解析算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/26/Foxman, 基于微核架构的 Mock 解决方案/" rel="prev" title="Foxman, 基于微核架构的 Mock 解决方案">
+                Foxman, 基于微核架构的 Mock 解决方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#以前的方式"><span class="nav-number">2.</span> <span class="nav-text">以前的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现在的方式"><span class="nav-number">3.</span> <span class="nav-text">现在的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">4.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何将打包完成的entry-js注入到ftl文件中"><span class="nav-number">4.1.</span> <span class="nav-text">如何将打包完成的entry.js注入到ftl文件中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何配置webpack多入口"><span class="nav-number">4.2.</span> <span class="nav-text">如何配置webpack多入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何动态生成webpack配置"><span class="nav-number">4.3.</span> <span class="nav-text">如何动态生成webpack配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际开发中遇到的问题记录"><span class="nav-number">5.</span> <span class="nav-text">实际开发中遇到的问题记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#commonjs导出异步对象"><span class="nav-number">5.1.</span> <span class="nav-text">commonjs导出异步对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ftl中使用相对路径，路径找不到"><span class="nav-number">5.2.</span> <span class="nav-text">ftl中使用相对路径，路径找不到</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他webpack插件介绍"><span class="nav-number">6.</span> <span class="nav-text">其他webpack插件介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">7.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

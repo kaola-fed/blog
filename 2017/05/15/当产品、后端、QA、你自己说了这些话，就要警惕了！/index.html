@@ -1,0 +1,704 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="如下观点不一定适用于所有场景 欢迎小伙伴踊跃补充！！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当产品&#x2F;后端&#x2F;QA&#x2F;你自己说了这些话，就要警惕了！">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/15/当产品、后端、QA、你自己说了这些话，就要警惕了！/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="如下观点不一定适用于所有场景 欢迎小伙伴踊跃补充！！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="当产品&#x2F;后端&#x2F;QA&#x2F;你自己说了这些话，就要警惕了！">
+<meta name="twitter:description" content="如下观点不一定适用于所有场景 欢迎小伙伴踊跃补充！！">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/15/当产品、后端、QA、你自己说了这些话，就要警惕了！/"/>
+
+
+
+
+
+  <title>当产品/后端/QA/你自己说了这些话，就要警惕了！ | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/15/当产品、后端、QA、你自己说了这些话，就要警惕了！/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                当产品/后端/QA/你自己说了这些话，就要警惕了！
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-15T00:00:00+08:00">
+                2017-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>如下观点不一定适用于所有场景</p>
+<p>欢迎小伙伴踊跃补充！！</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="产品"><a href="#产品" class="headerlink" title="产品"></a>产品</h2><h3 id="1、『这个功能很简单，跟XX保持一致就行』"><a href="#1、『这个功能很简单，跟XX保持一致就行』" class="headerlink" title="1、『这个功能很简单，跟XX保持一致就行』"></a>1、『这个功能很简单，跟XX保持一致就行』</h3><p>跟什么一致啊，小姐姐请把话说清楚，然后<strong>明确到交互稿</strong>上吧；</p>
+<h3 id="2、『加个小需求呗，很简单的（已经快上线了）』"><a href="#2、『加个小需求呗，很简单的（已经快上线了）』" class="headerlink" title="2、『加个小需求呗，很简单的（已经快上线了）』"></a>2、『加个小需求呗，很简单的（已经快上线了）』</h3><p>一旦<strong>涉及到业务逻辑，要拉QA、后端一起评审，评估清楚影响范围</strong>，不怕花时间，就怕线上bug；</p>
+<h3 id="3、『（交互稿）这个地方要这样那样改一下』"><a href="#3、『（交互稿）这个地方要这样那样改一下』" class="headerlink" title="3、『（交互稿）这个地方要这样那样改一下』"></a>3、『（交互稿）这个地方要这样那样改一下』</h3><p>一定<strong>要求产品更新交互稿</strong>（方便QA测试、留下证据、以后产品开发QA都有可能查阅，用处非常大），更新之后再看一看交互，<strong>确保自己的理解跟产品是一致的</strong>；</p>
+<h3 id="4、『这个字段-文案前端写死就行了』"><a href="#4、『这个字段-文案前端写死就行了』" class="headerlink" title="4、『这个字段/文案前端写死就行了』"></a>4、『这个字段/文案前端写死就行了』</h3><p>无论前端写死还是后端传，要认识到「<strong>我比较懒</strong>」这个实际情况；</p>
+<p>如果产品要求三端/两端一致，文案让后端拼好直接传就很合适了</p>
+<h2 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h2><h3 id="1、『接口定义好了发给你』"><a href="#1、『接口定义好了发给你』" class="headerlink" title="1、『接口定义好了发给你』"></a>1、『接口定义好了发给你』</h3><p>一定要用<strong>NEI</strong>！没用过？没关系，就让小哥哥来<strong>手把手</strong>的教教你；</p>
+<p>接口定义好之后，要先对一遍，有问题可以马上修改，避免开发过程中发现缺少字段，或字段不便于使用；</p>
+<h3 id="2、『别急，接口我就快整理好了，今天一定能给你（开发N天后，后端进度-gt-50-）』"><a href="#2、『别急，接口我就快整理好了，今天一定能给你（开发N天后，后端进度-gt-50-）』" class="headerlink" title="2、『别急，接口我就快整理好了，今天一定能给你（开发N天后，后端进度&gt;50%）』"></a>2、『别急，接口我就快整理好了，今天一定能给你（开发N天后，后端进度&gt;50%）』</h3><p>先定义接口再开发是原则问题。不单是口头定义，而是在NEI上详细的定下来。如果实在定不了，可以先定个v1版，后面再进行调整；</p>
+<h3 id="3、『sortType为0是综合，2是新品，5是价格，balabala』"><a href="#3、『sortType为0是综合，2是新品，5是价格，balabala』" class="headerlink" title="3、『sortType为0是综合，2是新品，5是价格，balabala』"></a>3、『sortType为0是综合，2是新品，5是价格，balabala』</h3><p>业务逻辑尽量封装到后端，<strong>前端模块尽可能通用，只负责根据后端数据进行渲染，尽量与业务逻辑解耦</strong>（尤其是已经/未来会通用的组件）。</p>
+<p>在这个例子中，价格(sortType===5)是一种交互效果，其他的是另一种交互效果，那么要求后端通过新增一个字段，对这两种交互进行区分，前端就不需要关心sortType的具体含义了；</p>
+<h2 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h2><h3 id="1、『部署失败了，你看看-png-（-java报错）』"><a href="#1、『部署失败了，你看看-png-（-java报错）』" class="headerlink" title="1、『部署失败了，你看看[.png]（**.java报错）』"></a>1、『部署失败了，你看看[<em>.png]（**</em>.java报错）』</h3><p>对于容易分辨归属（前后端）的问题，教会QA如何分辨它们，当他的分类能力提高，对所有人（尤其是自己）的效率提升都很有帮助。还可以教给他们如何通过查看同步/异步数据定位问题；</p>
+<h3 id="2、『模块A我测出来个bug，你改一下，（一个小时后），模块C也有问题，你再看看』"><a href="#2、『模块A我测出来个bug，你改一下，（一个小时后），模块C也有问题，你再看看』" class="headerlink" title="2、『模块A我测出来个bug，你改一下，（一个小时后），模块C也有问题，你再看看』"></a>2、『模块A我测出来个bug，你改一下，（一个小时后），模块C也有问题，你再看看』</h3><p>建议在互相不影响的情况下，A模块测出问题后，先测试其他模块/页面，最后<strong>一起交给开发来修改</strong>，这样会减少打断开发手头的工作，QA也可以集中精力测试；</p>
+<h2 id="自己"><a href="#自己" class="headerlink" title="自己"></a>自己</h2><h3 id="1、『qa妹子好，我这里有个小改动希望搭车上线』"><a href="#1、『qa妹子好，我这里有个小改动希望搭车上线』" class="headerlink" title="1、『qa妹子好，我这里有个小改动希望搭车上线』"></a>1、『qa妹子好，我这里有个小改动希望搭车上线』</h3><blockquote>
+<p>搭车上线：代码提交到QA的另一个任务的分支中，一起上线</p>
+</blockquote>
+<p>一般不建议搭车，单独提个任务拉分支很难么，还能提高表面上的业绩呢；</p>
+<h3 id="2、『这个任务我们自测（开发自提需求）』"><a href="#2、『这个任务我们自测（开发自提需求）』" class="headerlink" title="2、『这个任务我们自测（开发自提需求）』"></a>2、『这个任务我们自测（开发自提需求）』</h3><p>自测的任务在codereview/resolve之后，要尽快跟QA要测试资源测掉，避免QA以为你已经自测过，而将未测的代码上线；</p>
+<p>同时：开发自提任务JIRA描述标准，需要有下面几块内容：</p>
+<ul>
+<li>背景和目的</li>
+<li>任务内容</li>
+<li>其他注意事项</li>
+</ul>
+<blockquote>
+<p>未完待续，欢迎补充！！</p>
+</blockquote>
+<p>by tianyanan</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/15/API与NEI定义规范/" rel="next" title="API与NEI定义规范">
+                <i class="fa fa-chevron-left"></i> API与NEI定义规范
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/22/学习BFC/" rel="prev" title="学习BFC">
+                学习BFC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#产品"><span class="nav-number">1.</span> <span class="nav-text">产品</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、『这个功能很简单，跟XX保持一致就行』"><span class="nav-number">1.1.</span> <span class="nav-text">1、『这个功能很简单，跟XX保持一致就行』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、『加个小需求呗，很简单的（已经快上线了）』"><span class="nav-number">1.2.</span> <span class="nav-text">2、『加个小需求呗，很简单的（已经快上线了）』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、『（交互稿）这个地方要这样那样改一下』"><span class="nav-number">1.3.</span> <span class="nav-text">3、『（交互稿）这个地方要这样那样改一下』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、『这个字段-文案前端写死就行了』"><span class="nav-number">1.4.</span> <span class="nav-text">4、『这个字段/文案前端写死就行了』</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后端"><span class="nav-number">2.</span> <span class="nav-text">后端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、『接口定义好了发给你』"><span class="nav-number">2.1.</span> <span class="nav-text">1、『接口定义好了发给你』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、『别急，接口我就快整理好了，今天一定能给你（开发N天后，后端进度-gt-50-）』"><span class="nav-number">2.2.</span> <span class="nav-text">2、『别急，接口我就快整理好了，今天一定能给你（开发N天后，后端进度&gt;50%）』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、『sortType为0是综合，2是新品，5是价格，balabala』"><span class="nav-number">2.3.</span> <span class="nav-text">3、『sortType为0是综合，2是新品，5是价格，balabala』</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#QA"><span class="nav-number">3.</span> <span class="nav-text">QA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、『部署失败了，你看看-png-（-java报错）』"><span class="nav-number">3.1.</span> <span class="nav-text">1、『部署失败了，你看看[.png]（**.java报错）』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、『模块A我测出来个bug，你改一下，（一个小时后），模块C也有问题，你再看看』"><span class="nav-number">3.2.</span> <span class="nav-text">2、『模块A我测出来个bug，你改一下，（一个小时后），模块C也有问题，你再看看』</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自己"><span class="nav-number">4.</span> <span class="nav-text">自己</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、『qa妹子好，我这里有个小改动希望搭车上线』"><span class="nav-number">4.1.</span> <span class="nav-text">1、『qa妹子好，我这里有个小改动希望搭车上线』</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、『这个任务我们自测（开发自提需求）』"><span class="nav-number">4.2.</span> <span class="nav-text">2、『这个任务我们自测（开发自提需求）』</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

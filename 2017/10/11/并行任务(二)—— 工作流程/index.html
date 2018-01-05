@@ -1,0 +1,788 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="本文主要介绍开发者工作流程的相关内容。希望能让你，明白流程的重要性，并对自己的情况对当前流程进行微调。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行任务(二)—— 工作流程">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/10/11/并行任务(二)—— 工作流程/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="本文主要介绍开发者工作流程的相关内容。希望能让你，明白流程的重要性，并对自己的情况对当前流程进行微调。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="并行任务(二)—— 工作流程">
+<meta name="twitter:description" content="本文主要介绍开发者工作流程的相关内容。希望能让你，明白流程的重要性，并对自己的情况对当前流程进行微调。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/10/11/并行任务(二)—— 工作流程/"/>
+
+
+
+
+
+  <title>并行任务(二)—— 工作流程 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/10/11/并行任务(二)—— 工作流程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                并行任务(二)—— 工作流程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T00:00:00+08:00">
+                2017-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要介绍开发者工作流程的相关内容。<br>希望能让你，明白流程的重要性，并对自己的情况对当前流程进行微调。</p>
+<a id="more"></a>
+<hr>
+<p>工作中，我们已经接触到了很多很多的流程，比如：请假流程、报销流程、任务评审、交互评审、等等。<br><strong>那么，</strong><br><strong>流程的基本定义是？</strong> 无论我们干什么事，无论在生活、休闲还是工作中，都有一个“先做什么、接着做什么，最后做什么”的先后顺序。  </p>
+<p><strong>流程的目的是？</strong> 流程的最终目的是提高工作效率，通过消除工作过程中多余的工作环节、合并同类活动，使工作流程更为经济、合理和简便。 </p>
+<p><strong>总体来说：</strong> 针对一件经常发生的事情，通过分解步骤，按照一定的先后顺序有节奏地去执行，最终达到提高工作效率的作用。</p>
+<p>不知，大家在平时的工作中，有没有对现有的流程进行过梳理或者思考，思考过流程在我们工作中是否起到了作用。      </p>
+<p>接下来，将从以下3点来进行讲述流程</p>
+<blockquote>
+<ol>
+<li>3个主要流程介绍</li>
+<li><strong>排期最为关键(<em>自认为精华加星</em>)</strong></li>
+<li>流程可以改变调整，适合自己的才是最好的</li>
+</ol>
+</blockquote>
+<hr>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="一、3个主要流程介绍"><a href="#一、3个主要流程介绍" class="headerlink" title="一、3个主要流程介绍"></a><strong>一、3个主要流程介绍</strong></h2><blockquote>
+<ul>
+<li>交互稿【产品】</li>
+<li>开发过程</li>
+<li>提交测试【QA】</li>
+</ul>
+<p>每个流程从步骤、目的、违背的坏处、注意点，4个部分来介绍</p>
+</blockquote>
+<h3 id="1-交互稿"><a href="#1-交互稿" class="headerlink" title="1. 交互稿"></a>1. 交互稿</h3><p>步骤：</p>
+<ul>
+<li>交互稿自评(寻找需要修改的点以及遗漏的点，带着疑问)</li>
+<li>交互稿评审(和产品确认修改和补充)</li>
+<li>交互稿定稿</li>
+<li>中间有变动应及时更新交互稿同时通知QA</li>
+</ul>
+<p>步骤对应目的：</p>
+<ul>
+<li>了解交互稿的内容以及不足，罗列好问题，能减少在评审时的时间，以及避免对交互稿内容的部分遗漏。其中了解下涉及到的业务逻辑也是很有必要的。</li>
+<li>在评审时提出自己的疑问，以及更适合的交互方案。减少在开发过程中的返工以及避免和交互稿有歧义。</li>
+<li>根据评审结果，确保产品修改交互稿至最新。因为QA是根据交互稿来进行测试。</li>
+<li>有逻辑变动时，需要通知产品和QA。确保交互稿和测试用例一致。</li>
+</ul>
+<p>违背的坏处：</p>
+<ul>
+<li>延长交互评审的时间</li>
+<li>在开发过程中碰到交互问题需要花费额外的时间去理解以及解决</li>
+</ul>
+<p>注意：<br><strong>！</strong> 交互稿定稿后，原则上不再接受新增逻辑和功能。交互稿较大变动，需要发邮件说明并抄送相关人员。同时，开发时间需要适当进行延长。</p>
+<h3 id="2-开发过程："><a href="#2-开发过程：" class="headerlink" title="2. 开发过程："></a>2. 开发过程：</h3><p>步骤：</p>
+<ul>
+<li>评估任务开发量人日</li>
+<li>确定排期</li>
+<li>前后端定义接口</li>
+<li>前后端分离开发</li>
+<li>联调</li>
+<li><strong>提测前对照一遍交互</strong></li>
+<li><strong>反思任务</strong></li>
+</ul>
+<p>步骤对应目的：</p>
+<ul>
+<li>开发前精准地估算出整体的开发工作量，是的之后的排期能更精准。</li>
+<li>根据工作量，合理地计算出任务排期，保证开发质量。同时排期是对各方的承诺。</li>
+<li>根据技术方案进行提前确定前后端接口与数据交互，减少在开发阶段互相讨论所占去的时间。</li>
+<li>在底打扰的环境下开发，提高开发效率。</li>
+<li>在真实环境下进行前后端接口联调。</li>
+<li>查漏补缺，避免低级错误。</li>
+<li>任务完成后需要对开发过程中有一个反思的过程，从中吸取工作经验。</li>
+</ul>
+<p>违背的坏处：</p>
+<ul>
+<li>把控不了整体的进度</li>
+<li>开发时间评估不准确会给别人一种不专业的感觉</li>
+<li>不定义接口，开发过程中变化的情况需要额外时间去进行代码修改</li>
+<li>频繁地和人交谈沟通，降低开发效率</li>
+</ul>
+<p>注意：<br>！当开发有风险时，要尽早提出来，通知各方，寻找解决方法。如果有能力尽量在开发中期提出来。杜绝在开发末期才发现风险。</p>
+<h3 id="3-提交测试："><a href="#3-提交测试：" class="headerlink" title="3. 提交测试："></a>3. 提交测试：</h3><p>步骤：</p>
+<ul>
+<li>用例评审</li>
+<li>开发冒烟，提测</li>
+<li>集中修复bug</li>
+<li>产品验收</li>
+</ul>
+<p>步骤对应目的：</p>
+<ul>
+<li>用例评审过程中，产品、开发、QA对交互的理解达成一致。同时对于一些交互上的改动进行同步。以及帮助开发发现遗漏点。</li>
+<li>在测试环境上冒烟，保证开发质量，走通主要流程。减少打断QA测试过程的情况。</li>
+<li>把一些次要bug放在1个时间段内修复，提高效率。</li>
+<li>产品应该尽早介入。产品有时候会提些改动需求，避免上线风险。</li>
+</ul>
+<p>违背的坏处：</p>
+<ul>
+<li>开发、QA、产品对需求的理解不一致</li>
+<li>QA测试过程中会出现更多的bug</li>
+</ul>
+<p>注意：<br>！当交互或者视觉稿有改动的时候，一定要通知到QA</p>
+<hr>
+<p><strong>以上的流程如果有什么不正确的地方，欢迎指正</strong></p>
+<hr>
+<h2 id="二、开发前的排期，最为关键"><a href="#二、开发前的排期，最为关键" class="headerlink" title="二、开发前的排期，最为关键"></a><strong>二、开发前的排期，最为关键</strong></h2><p>对于开发者，任务排期一定不会陌生。<br>因为所有的任务都需要进行排期后，才能进入实质地开发阶段。    </p>
+<p>排期，顾名思义就是“排列日期”，由一个个日期(时间节点)组成的。   </p>
+<p>开发者的排期，简单来说由3个时间点组成：<strong>开始开发时间、开始联调时间、任务提测时间</strong>。<br>通过排期，合理安排3个时间点之间的时间段，同时在开发过程中和各方配合，最终按照预定目标完成任务。</p>
+<p>为什么说排期是最为关键的一环？<br>这是因为，在整个工作流程中，排期有着<strong>承上启下</strong>的作用：   </p>
+<blockquote>
+<ul>
+<li>之前的需求评审、技术评审是为了能更精准地预估出详细的开发时间。</li>
+<li>之后的具体开发提测阶段，则需要遵守先前排期上的时间节点来完成。  </li>
+<li>现在进行任务版本化，准确的排期能为之后的任务排期减少风险。</li>
+</ul>
+</blockquote>
+<p>和其他任何事情一样。好的排期能带来好的效果(比如促进开发效率)，反之，不好的排期则会引起各种灾难。<br>那么，怎样得出一个好的排期？<br>简单的一句话概括：<strong>尽可能地细分需求成一个个耦合性不高的模块，评估每个模块的开发时长。同时不要忘记给自己预留缓存时间。</strong></p>
+<p><strong>排期就像分生日蛋糕。把每个不同的模块当做分发蛋糕的对象。切出来的每一块蛋糕代表细分后的时间段。</strong><br>下刀之前，我们需要确定要分给几个人。<br>尽可能地了解每个人对蛋糕的喜欢以及胃口，喜欢吃的多分点，不喜欢的则少点。方便能切出合适的大小。<br>因为下刀之后，没有像电视的回放功能那样可以重新切分。</p>
+<p>另外，排期是一种承诺。在工作中，亲口给出的承诺一定需要做到，要给他人靠谱的感觉。<br>因此，对于整个流程，由于合作方的关系导致任务有风险。在这个过程中，我们有义务去推动进程，有责任主动去告知每个关系方遇到的风险。</p>
+<hr>
+<h2 id="三、流程不是不可改变，适合自己的才是最好的"><a href="#三、流程不是不可改变，适合自己的才是最好的" class="headerlink" title="三、流程不是不可改变，适合自己的才是最好的"></a><strong>三、流程不是不可改变，适合自己的才是最好的</strong></h2><p>流程是不断完善的，每一个人都可以提出自己的建议，来完善当前的流程。使得流程能适应更多的场景，让整个部门的工作能够愈加顺畅。<br>同时，根据每个人不同的情况，对其中的一些流程进行适当修改或调整，使得能更符合自己的开发习惯。<br>比如：开发一个后端代码复杂，前端逻辑简单的任务。<br>可以把交互稿流程改成：<br>1、交互稿自评<br>2、私下找产品确定交互稿细节      </p>
+<p><strong>TIP：</strong><br>流程不仅仅用来规范我们的开发步骤，同时我们也可以通过流程来解决碰到的阻碍。<br>比如：<br>1、当2个任务碰撞在一起的时候，可以把两边的产品拉在一起让产品确定开发优先级<br>2、当QA测试时间不够的时候，可以和产品、QA、开发一起制定分批提测      </p>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>读完这篇文章后，如果能使您：<br>对现有的流程有自己的思考和理解，<br>同时能激发你的积极性，即使只有一点、两点。 </p>
+<p>那么，便达到了这篇文章的目的。<br><strong>自我思考是工作中一个很重要的技巧。</strong>   </p>
+<p>by jiangren</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/07/HTTPS协议浅析/" rel="next" title="HTTPS协议浅析">
+                <i class="fa fa-chevron-left"></i> HTTPS协议浅析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/25/一起来聊聊table组件的固定列/" rel="prev" title="一起来聊聊table组件的固定列">
+                一起来聊聊table组件的固定列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、3个主要流程介绍"><span class="nav-number">1.1.</span> <span class="nav-text">一、3个主要流程介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-交互稿"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 交互稿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-开发过程："><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 开发过程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-提交测试："><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 提交测试：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、开发前的排期，最为关键"><span class="nav-number">1.2.</span> <span class="nav-text">二、开发前的排期，最为关键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、流程不是不可改变，适合自己的才是最好的"><span class="nav-number">1.3.</span> <span class="nav-text">三、流程不是不可改变，适合自己的才是最好的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

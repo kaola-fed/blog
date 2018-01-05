@@ -1,0 +1,794 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="正则表达式一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。核心是 匹配，匹配位置或者匹配字符">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js 的正则表达式">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/08/10/js 的正则表达式/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="正则表达式一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。核心是 匹配，匹配位置或者匹配字符">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-c487b9402a935625be4dd4b0e4f5fe5f_r.png">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-946e41a0f5167f52304ca2ff821f8247_r.png">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-3fd92f44ca68589a15ffbf110c6dea4e_r.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js 的正则表达式">
+<meta name="twitter:description" content="正则表达式一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。核心是 匹配，匹配位置或者匹配字符">
+<meta name="twitter:image" content="https://pic4.zhimg.com/v2-c487b9402a935625be4dd4b0e4f5fe5f_r.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/08/10/js 的正则表达式/"/>
+
+
+
+
+
+  <title>js 的正则表达式 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/08/10/js 的正则表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                js 的正则表达式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-10T00:00:00+08:00">
+                2017-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。<br>核心是 匹配，匹配位置或者匹配字符</p>
+<a id="more"></a>
+<h3 id="先简单的介绍一下语法"><a href="#先简单的介绍一下语法" class="headerlink" title="先简单的介绍一下语法"></a>先简单的介绍一下语法</h3><h4 id="基本元字符"><a href="#基本元字符" class="headerlink" title="基本元字符"></a>基本元字符</h4><ol>
+<li><code>.</code> ： 匹配除了换行符之外的任何单个字符</li>
+<li><code>\</code> ： 在非特殊字符之前的反斜杠表示下一个字符是特殊的，不能从字面上解释。例如，没有前\的’b’通常匹配小写’b’，无论它们出现在哪里。如果加了’\’,这个字符变成了一个特殊意义的字符，反斜杠也可以将其后的特殊字符，转义为字面量。例如，模式 <code>/a*/</code> 代表会匹配 0 个或者多个 a。相反，模式 <code>/a\*/</code> 将 ‘*‘ 的特殊性移除，从而可以匹配像 <code>&quot;a*&quot;</code> 这样的字符串。</li>
+<li><code>|</code> ： 逻辑或操作符</li>
+<li><code>[]</code> ：定义一个字符集合，匹配字符集合中的一个字符，在字符集合里面像 <code>.</code>，<code>\</code>这些字符都表示其本身</li>
+<li><code>[^]</code>：对上面一个集合取非</li>
+<li><code>-</code> ：定义一个区间，例如<code>[A-Z]</code>，其首尾字符在 ASCII 字符集里面<h4 id="数量元字符"><a href="#数量元字符" class="headerlink" title="数量元字符"></a>数量元字符</h4></li>
+<li><code>{m,n}</code> ：匹配前面一个字符至少 m 次至多 n 次重复，还有<code>{m}</code>表示匹配 m 次，<code>{m,}</code>表示至少 m 次</li>
+<li><code>+</code> ： 匹配前面一个表达式一次或者多次，相当于 <code>{1,}</code>，记忆方式追加(+)，起码得有一次</li>
+<li><code>*</code> ： 匹配前面一个表达式零次或者多次，相当于 <code>{0,}</code>，记忆方式乘法(*)，可以一次都没有</li>
+<li><code>?</code> ： 单独使用匹配前面一个表达式零次或者一次，相当于 <code>{0,1}</code>，记忆方式，有吗？，有(1)或者没有(1)，如果跟在任何量词<code>*</code>,<code>+</code>,<code>?</code>,<code>{}</code>后面的时候将会使量词变为非贪婪模式（尽量匹配少的字符），默认是使用贪婪模式。比如对 “123abc” 应用 <code>/\d+/</code> 将会返回 “123”，如果使用 <code>/\d+?/</code>,那么就只会匹配到 “1”。<h4 id="位置元字符"><a href="#位置元字符" class="headerlink" title="位置元字符"></a>位置元字符</h4></li>
+<li><code>^</code> ： 单独使用匹配表达式的开始</li>
+<li>\$ ： 匹配表达式的结束</li>
+<li><code>\b</code>：匹配单词边界</li>
+<li><code>\B</code>：匹配非单词边界</li>
+<li><code>(?=p)</code>：匹配 p 前面的位置</li>
+<li><code>(?!p)</code>：匹配不是 p 前面的位置<h4 id="特殊元字符"><a href="#特殊元字符" class="headerlink" title="特殊元字符"></a>特殊元字符</h4></li>
+<li><code>\d</code>：<code>[0-9]</code>，表示一位数字，记忆方式 digit</li>
+<li><code>\D</code>：<code>[^0-9]</code>，表示一位非数字</li>
+<li><code>\s</code>：<code>[\t\v\n\r\f]</code>，表示空白符，包括空格，水平制表符（<code>\t</code>），垂直制表符（<code>\v</code>），换行符（<code>\n</code>），回车符（<code>\r</code>），换页符（<code>\f</code>），记忆方式 space character</li>
+<li><code>\S</code>：<code>[^\t\v\n\r\f]</code>，表示非空白符</li>
+<li><code>\w</code>：<code>[0-9a-zA-Z]</code>，表示数字大小写字母和下划线，记忆方式 word</li>
+<li><code>\W</code>：<code>[^0-9a-zA-Z]</code>，表示非单词字符<h4 id="标志字符"><a href="#标志字符" class="headerlink" title="标志字符"></a>标志字符</h4></li>
+<li><code>g</code> : 全局搜索 记忆方式global</li>
+<li><code>i</code> ：不区分大小写 记忆方式 ignore</li>
+<li><code>m</code> ：多行搜索</li>
+</ol>
+<h3 id="在-js-中的使用"><a href="#在-js-中的使用" class="headerlink" title="在 js 中的使用"></a>在 js 中的使用</h3><h4 id="支持正则的-String-对象的方法"><a href="#支持正则的-String-对象的方法" class="headerlink" title="支持正则的 String 对象的方法"></a>支持正则的 String 对象的方法</h4><ol>
+<li>search<br>search 接受一个正则作为参数，如果参入的参数不是正则会隐式的使用 new RegExp(obj)将其转换成一个正则，返回匹配到子串的起始位置，匹配不到返回-1</li>
+<li>match<br>接受参数和上面的方法一致。返回值是依赖传入的正则是否包含 g ，如果没有 g 标识，那么 match 方法对 string 做一次匹配，如果没有找到任何匹配的文本时，match 会返回 null ，否则，会返回一个数组，数组第 0 个元素包含匹配到的文本，其余元素放的是正则捕获的文本，数组还包含两个对象，index 表示匹配文本在字符串中的位置，input 表示被解析的原始字符串。如果有 g 标识，则返回一个数组，包含每一次的匹配结果<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">var str = &apos;For more information, see Chapter 3.4.5.1&apos;;</div><div class="line">var re = /see (chapter \d+(\.\d)*)/i;</div><div class="line">var found = str.match(re);</div><div class="line"></div><div class="line">console.log(found);</div><div class="line"></div><div class="line"></div><div class="line">// (3) [&quot;see Chapter 3.4.5.1&quot;, &quot;Chapter 3.4.5.1&quot;, &quot;.1&quot;, index: 22, input: &quot;For more information, see Chapter 3.4.5.1&quot;]</div><div class="line">// 0:&quot;see Chapter 3.4.5.1&quot;</div><div class="line">// 1:&quot;Chapter 3.4.5.1&quot;</div><div class="line">// 2:&quot;.1&quot;</div><div class="line">// index:22</div><div class="line">// input:&quot;For more information, see Chapter 3.4.5.1&quot;</div><div class="line">// length:3</div><div class="line">// __proto__:Array(0)</div><div class="line"></div><div class="line">// &apos;see Chapter 3.4.5.1&apos; 是整个匹配。</div><div class="line">// &apos;Chapter 3.4.5.1&apos; 被&apos;(chapter \d+(\.\d)*)&apos;捕获。</div><div class="line">// &apos;.1&apos; 是被&apos;(\.\d)&apos;捕获的最后一个值。</div><div class="line">// &apos;index&apos; 属性(22) 是整个匹配从零开始的索引。</div><div class="line">// &apos;input&apos; 属性是被解析的原始字符串。</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var str = &apos;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&apos;;</div><div class="line">var regexp = /[A-E]/gi;</div><div class="line">var matches_array = str.match(regexp);</div><div class="line"></div><div class="line">console.log(matches_array);</div><div class="line">// [&apos;A&apos;, &apos;B&apos;, &apos;C&apos;, &apos;D&apos;, &apos;E&apos;, &apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure>
+<ol>
+<li>replace<br>接受两个参数，第一个是要被替换的文本，可以是正则也可以是字符串，如果是字符串的时候不会被转换成正则，而是作为检索的直接量文本。第二个是替换成的文本，可以是字符串或者函数，字符串可以使用一些特殊的变量来替代前面捕获到的子串<br>变量名 | 代表的值<br>—|—<br>$$ | 插入一个 “$”。<br>$&amp; | 插入匹配的子串。<br>$` | 插入当前匹配的子串左边的内容。<br>$’ | 插入当前匹配的子串右边的内容。<br>$n | 假如第一个参数是 RegExp对象，并且 n 是个小于100的非负整数，那么插入第 n 个括号匹配的字符串。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var re = /(\w+)\s(\w+)/;</div><div class="line">var str = &quot;John Smith&quot;;</div><div class="line">var newstr = str.replace(re, &quot;$2, $1&quot;);</div><div class="line">// Smith, John</div><div class="line">console.log(newstr);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果是函数的话，函数入参如下，返回替换成的文本<br>变量名 | 代表的值<br>—|—<br>match | 匹配的子串。（对应于上述的$&amp;。）<br>p1,p2,… | 假如replace()方法的第一个参数是一个RegExp 对象，则代表第n个括号匹配的字符串。（对应于上述的$1，$2等。）<br>offset | 匹配到的子字符串在原字符串中的偏移量。（比如，如果原字符串是“abcd”，匹配到的子字符串是“bc”，那么这个参数将是1）<br>string | 被匹配的原字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">function replacer(match, p1, p2, p3, offset, string) &#123;</div><div class="line">  // p1 is nondigits, p2 digits, and p3 non-alphanumerics</div><div class="line">  return [p1, p2, p3].join(&apos; - &apos;);</div><div class="line">&#125;</div><div class="line">var newString = &apos;abc12345#$*%&apos;.replace(/([^\d]*)(\d*)([^\w]*)/, replacer);</div><div class="line">// newString   abc - 12345 - #$*%</div></pre></td></tr></table></figure></p>
+<ol>
+<li>split<br>接受两个参数，返回一个数组。第一个是用来分割字符串的字符或者正则，如果是空字符串则会将元字符串中的每个字符以数组形式返回，第二个参数可选作为限制分割多少个字符，也是返回的数组的长度限制。有一个地方需要注意，用捕获括号的时候会将匹配结果也包含在返回的数组中<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var myString = &quot;Hello 1 word. Sentence number 2.&quot;;</div><div class="line">var splits = myString.split(/\d/);</div><div class="line"></div><div class="line">console.log(splits);</div><div class="line">// [ &quot;Hello &quot;, &quot; word. Sentence number &quot;, &quot;.&quot; ]</div><div class="line"></div><div class="line">splits = myString.split(/(\d)/);</div><div class="line">console.log(splits);</div><div class="line">// [ &quot;Hello &quot;, &quot;1&quot;, &quot; word. Sentence number &quot;, &quot;2&quot;, &quot;.&quot; ]</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="正则对象的方法"><a href="#正则对象的方法" class="headerlink" title="正则对象的方法"></a>正则对象的方法</h4><ol>
+<li>test<br>接受一个字符串参数，如果正则表达式与指定的字符串匹配返回 true 否则返回 false</li>
+<li>exec<br>同样接受一个字符串为参数，返回一个数组，其中存放匹配的结果。如果未找到匹配，则返回值为 null。<br>匹配时，返回值跟 match 方法没有 g 标识时是一样的。数组第 0 个表示与正则相匹配的文本，后面 n 个是对应的 n 个捕获的文本，最后两个是对象 index 和 input<br>同时它会在正则实例的 lastIndex 属性指定的字符处开始检索字符串 string。当 exec() 找到了与表达式相匹配的文本时，在匹配后，它将把正则实例的 lastIndex 属性设置为匹配文本的最后一个字符的下一个位置。<br>有没有 g 标识对单词执行 exec 方法是没有影响的，只是有 g 标识的时候可以反复调用 exec() 方法来遍历字符串中的所有匹配文本。当 exec() 再也找不到匹配的文本时，它将返回 null，并把 lastIndex 属性重置为 0。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var string = &quot;2017.06.27&quot;;</div><div class="line">var regex2 = /\b(\d+)\b/g;</div><div class="line">console.log( regex2.exec(string) );</div><div class="line">console.log( regex2.lastIndex);</div><div class="line">console.log( regex2.exec(string) );</div><div class="line">console.log( regex2.lastIndex);</div><div class="line">console.log( regex2.exec(string) );</div><div class="line">console.log( regex2.lastIndex);</div><div class="line">console.log( regex2.exec(string) );</div><div class="line">console.log( regex2.lastIndex);</div><div class="line">// =&gt; [&quot;2017&quot;, &quot;2017&quot;, index: 0, input: &quot;2017.06.27&quot;]</div><div class="line">// =&gt; 4</div><div class="line">// =&gt; [&quot;06&quot;, &quot;06&quot;, index: 5, input: &quot;2017.06.27&quot;]</div><div class="line">// =&gt; 7</div><div class="line">// =&gt; [&quot;27&quot;, &quot;27&quot;, index: 8, input: &quot;2017.06.27&quot;]</div><div class="line">// =&gt; 10</div><div class="line">// =&gt; null</div><div class="line">// =&gt; 0</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>其中正则实例lastIndex属性，表示下一次匹配开始的位置。</p>
+<p>比如第一次匹配了“2017”，开始下标是0，共4个字符，因此这次匹配结束的位置是3，下一次开始匹配的位置是4。</p>
+<p>从上述代码看出，在使用exec时，经常需要配合使用while循环：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var string = &quot;2017.06.27&quot;;</div><div class="line">var regex2 = /\b(\d+)\b/g;</div><div class="line">var result;</div><div class="line">while ( result = regex2.exec(string) ) &#123;</div><div class="line">	console.log( result, regex2.lastIndex );</div><div class="line">&#125;</div><div class="line">// =&gt; [&quot;2017&quot;, &quot;2017&quot;, index: 0, input: &quot;2017.06.27&quot;] 4</div><div class="line">// =&gt; [&quot;06&quot;, &quot;06&quot;, index: 5, input: &quot;2017.06.27&quot;] 7</div><div class="line">// =&gt; [&quot;27&quot;, &quot;27&quot;, index: 8, input: &quot;2017.06.27&quot;] 10</div></pre></td></tr></table></figure></p>
+<h3 id="正则的匹配"><a href="#正则的匹配" class="headerlink" title="正则的匹配"></a>正则的匹配</h3><h4 id="字符匹配"><a href="#字符匹配" class="headerlink" title="字符匹配"></a>字符匹配</h4><p>精确匹配就不说了，比如/hello/，也只能匹配字符串中的”hello”这个子串。<br>正则表达式之所以强大，是因为其能实现模糊匹配。  </p>
+<h5 id="匹配多种数量"><a href="#匹配多种数量" class="headerlink" title="匹配多种数量"></a>匹配多种数量</h5><p>用<code>{m,n}</code>来匹配多种数量，其他几种形式(<code>+*?</code>)都可以等价成这种。比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var regex = /ab&#123;2,5&#125;c/g;</div><div class="line">var string = &quot;abc abbc abbbc abbbbc abbbbbc abbbbbbc&quot;;</div><div class="line">console.log( string.match(regex) ); // [&quot;abbc&quot;, &quot;abbbc&quot;, &quot;abbbbc&quot;, &quot;abbbbbc&quot;]</div></pre></td></tr></table></figure></p>
+<p>贪婪和非贪婪:<br>默认贪婪<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var regex = /\d&#123;2,5&#125;/g;</div><div class="line">var string = &quot;123 1234 12345 123456&quot;;</div><div class="line">console.log( string.match(regex) ); // [&quot;123&quot;, &quot;1234&quot;, &quot;12345&quot;, &quot;12345&quot;]</div></pre></td></tr></table></figure></p>
+<p>两次后面加一个 ？ 就可以表示非贪婪，非贪婪时<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var regex = /\d&#123;2,5&#125;?/g;</div><div class="line">var string = &quot;123 1234 12345 123456&quot;;</div><div class="line">console.log( string.match(regex) ); // [&quot;12&quot;, &quot;12&quot;, &quot;34&quot;, &quot;12&quot;, &quot;34&quot;, &quot;12&quot;, &quot;34&quot;, &quot;56&quot;]</div></pre></td></tr></table></figure></p>
+<h5 id="匹配多种情况"><a href="#匹配多种情况" class="headerlink" title="匹配多种情况"></a>匹配多种情况</h5><p>用字符组<code>[]</code>来匹配多种情况，其他几种形式(<code>\d\D\s\S\w\W</code>)都可以等价成这种。比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var regex = /a[123]b/g;</div><div class="line">var string = &quot;a0b a1b a2b a3b a4b&quot;;</div><div class="line">console.log( string.match(regex) ); // [&quot;a1b&quot;, &quot;a2b&quot;, &quot;a3b&quot;]</div></pre></td></tr></table></figure></p>
+<p>如果字符组里面字符特别多的话可以用<code>-</code>来表示范围，比如[123456abcdefGHIJKLM]，可以写成[1-6a-fG-M]，用[^0-9]表示非除了数字以外的字符<br>多种情况还可以是多种分支，用管道符来连接<code>|</code>，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var regex = /good|goodbye/g;</div><div class="line">var string = &quot;goodbye&quot;;</div><div class="line">console.log( string.match(regex) ); // [&quot;good&quot;]</div></pre></td></tr></table></figure></p>
+<p>这个例子可以看出分支结构也是惰性的，匹配到了就不再往后尝试了。</p>
+<h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><p>掌握这两种方式就可以解决比较简单的正则问题了。</p>
+<ol>
+<li>最多保留2位小数的数字<br><code>/^([1-9]\d*|0)(\.\d{1,2})?$/</code></li>
+<li>电话号码<br><code>/(\+86)?1\d{10}/</code></li>
+<li>身份证<br><code>/^(\d{15}|\d{17}([xX]|\d))$/</code></li>
+</ol>
+<h4 id="位置匹配"><a href="#位置匹配" class="headerlink" title="位置匹配"></a>位置匹配</h4><h5 id="什么是位置"><a href="#什么是位置" class="headerlink" title="什么是位置"></a>什么是位置</h5><p>位置是相邻字符之间的，比如，有一个字符串 <code>hello</code> ，这个字符串一共有6个位置 <code>*h*e*l*l*o*</code> ， *代表位置<br><img src="https://pic4.zhimg.com/v2-c487b9402a935625be4dd4b0e4f5fe5f_r.png" alt="image"><br>上面说到了 6 种位置元字符</p>
+<ol>
+<li><code>^</code>，<code>$</code> 匹配字符的开头和结尾，比如<br><code>/^hello$/</code> 匹配一个字符串，要符合这样的条件，字符串开头的位置，紧接着是 h 然后是 e,l,l,o 最后是字符串结尾的位置<br>位置还可以被替换成字符串，比如<br><code>&#39;hello&#39;.replace(/^|$/g, &#39;#&#39;)</code> 结果是 <code>#hello#</code></li>
+<li><code>/b</code>，<code>/B</code> 匹配单词边界和非单词边界，单词边界具体指 <code>\w</code>(<code>[a-zA-Z0-9_]</code>) 和 <code>\W</code> 之间的位置，包括 <code>\w</code> 和 <code>^</code> 以及 <code>$</code> 之间的位置，比如<br><code>&#39;hello word [js]_reg.exp-01&#39;.replace(/\b/g, &#39;#&#39;)</code> 结果是 <code>#hello# #word# [#js#]#_reg#.#exp#-#01#</code></li>
+<li><code>(?=p)</code>，<code>(?!p)</code> 匹配 p 前面的位置和不是 p 前面位置，比如<br><code>&#39;hello&#39;.replace(/(?=l)/g, &#39;#&#39;)</code> 结果是 <code>he#l#lo</code><br><code>&#39;hello&#39;.replace(/(?!l)/g, &#39;#&#39;)</code> 结果是 <code>#h#ell#o#</code>  <h5 id="位置的特性"><a href="#位置的特性" class="headerlink" title="位置的特性"></a>位置的特性</h5>字符与字符之间的位置可以是多个。在理解上可以将位置理解成空字符串 ‘’，比如<br><code>hello</code> 可以是一般的 <code>&#39;&#39; + &#39;h&#39; + &#39;e&#39; + &#39;l&#39; + &#39;l&#39; + &#39;o&#39; + &#39;&#39;</code>，也可以是 <code>&#39;&#39; + &#39;&#39; + &#39;&#39; + &#39;&#39; + &#39;h&#39; + &#39;e&#39; + &#39;l&#39; + &#39;l&#39; + &#39;o&#39; + &#39;&#39;</code>，<br>所以<code>/^h\Be\Bl\Bl\Bo$/.test(&#39;hello&#39;)</code> 结果是 true，<code>/^^^h\B\B\Be\Bl\Bl\Bo$$$/.test(&#39;hello&#39;)</code> 结果也是 true<h5 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h5></li>
+<li>千分位，将 123123123 转换成 123,123,123<br>数字是从后往前数，也就是以一个或者多个3位数字结尾的位置换成 ‘,’ 就好了，写成正则就是<br><code>123123213.replace(/(?=(\d{3})+$)/g, &#39;,&#39;)</code> 但是这样的话会在最前面也加一个 ‘,’ 这明显是不对的。所以还得继续改一下正则<br>要求匹配到的位置不是开头，可以用 <code>/(?!^)(?=(\d{3})+$)/g</code> 来表示。<br>换种思路来想，能不能是以数字开头然后加上上面的条件呢，得出这个正则 <code>/\d(?=(\d{3})+$)/g</code>，但是这个正则匹配的结果是 <code>12,12,123</code>，发现这个正则匹配的不是位置而是字符，将数字换成了 ‘,’  可以得出结论，如果要求一个正则是匹配位置的话，那么所有的条件必须都是位置。</li>
+</ol>
+<h4 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h4><p>分组主要是括号的使用</p>
+<h4 id="分组和分支结构"><a href="#分组和分支结构" class="headerlink" title="分组和分支结构"></a>分组和分支结构</h4><p>在分支结构中，括号是用来表示一个整体的，(p1|p2)，比如要匹配下面的字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">I love JavaScript</div><div class="line">I love Regular Expression</div></pre></td></tr></table></figure></p>
+<p>可以用正则<code>/^I love (JavaScript|Regular Expression)$/</code> 而不是 <code>/^I love JavaScript|Regular Expression$/</code><br>表示一个整体还比如 <code>/(abc)+/</code> 一个或者多个 abc 字符串<br>上面这些使用 () 包起来的地方就叫做分组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&apos;I love JavaScript&apos;.match(/^I love (JavaScript|Regular Expression)$/)</div><div class="line">// [&quot;I love JavaScript&quot;, &quot;JavaScript&quot;, index: 0, input: &quot;I love JavaScript&quot;]</div></pre></td></tr></table></figure></p>
+<p>输出的数组第二个元素，”JavaScript” 就是分组匹配到的内容</p>
+<h4 id="引用分组"><a href="#引用分组" class="headerlink" title="引用分组"></a>引用分组</h4><h5 id="提取数据"><a href="#提取数据" class="headerlink" title="提取数据"></a>提取数据</h5><p>比如我们要用正则来匹配一个日期格式，yyyy-mm-dd，可以写出简单的正则<code>/\d{4}-\d{2}-\d{2}/</code>，这个正则还可以改成分组形式的<code>/(\d{4})-(\d{2})-(\d{2})/</code><br>这样我们可以分别提取出一个日期的年月日，用 String 的 match 方法或者用正则的 exec 方法都可以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var regex = /(\d&#123;4&#125;)-(\d&#123;2&#125;)-(\d&#123;2&#125;)/;</div><div class="line">var string = &quot;2017-08-09&quot;;</div><div class="line">console.log( string.match(regex) ); </div><div class="line">// =&gt; [&quot;2017-08-09&quot;, &quot;2017&quot;, &quot;08&quot;, &quot;09&quot;, index: 0, input: &quot;2017-08-09&quot;]</div></pre></td></tr></table></figure></p>
+<p>也可以用正则对象构造函数的全局属性 $1 - $9 来获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">var regex = /(\d&#123;4&#125;)-(\d&#123;2&#125;)-(\d&#123;2&#125;)/;</div><div class="line">var string = &quot;2017-08-09&quot;;</div><div class="line"></div><div class="line">regex.test(string); // 正则操作即可，例如</div><div class="line">//regex.exec(string);</div><div class="line">//string.match(regex);</div><div class="line"></div><div class="line">console.log(RegExp.$1); // &quot;2017&quot;</div><div class="line">console.log(RegExp.$2); // &quot;08&quot;</div><div class="line">console.log(RegExp.$3); // &quot;09&quot;</div></pre></td></tr></table></figure></p>
+<h5 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h5><p>如果想要把 yyyy-mm-dd 替换成格式 mm/dd/yyyy 应该怎么做。<br>String 的 replace 方法在第二个参数里面可以用 $1 - $9 来指代相应的分组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var regex = /(\d&#123;4&#125;)-(\d&#123;2&#125;)-(\d&#123;2&#125;)/;</div><div class="line">var string = &quot;2017-08-09&quot;;</div><div class="line">var result = string.replace(regex, &quot;$2/$3/$1&quot;);</div><div class="line">console.log(result); // &quot;08/09/2017&quot;</div><div class="line">等价</div><div class="line">var result = string.replace(regex, function() &#123;</div><div class="line">	return RegExp.$2 + &quot;/&quot; + RegExp.$3 + &quot;/&quot; + RegExp.$1;</div><div class="line">&#125;);</div><div class="line">console.log(result); // &quot;08/09/2017&quot;</div><div class="line">等价</div><div class="line">var regex = /(\d&#123;4&#125;)-(\d&#123;2&#125;)-(\d&#123;2&#125;)/;</div><div class="line">var string = &quot;2017-08-09&quot;;</div><div class="line">var result = string.replace(regex, function(match, year, month, day) &#123;</div><div class="line">	return month + &quot;/&quot; + day + &quot;/&quot; + year;</div><div class="line">&#125;);</div><div class="line">console.log(result); // &quot;08/09/2017&quot;</div></pre></td></tr></table></figure></p>
+<h4 id="反向引用"><a href="#反向引用" class="headerlink" title="反向引用"></a>反向引用</h4><p>之前匹配日期的正则在使用的时候发现还有另外两种写法，一共三种<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">2017-08-09</div><div class="line"></div><div class="line">2017/08/09</div><div class="line"></div><div class="line">2017.08.09</div></pre></td></tr></table></figure></p>
+<p>要匹配这三种应该怎么写正则，第一反应肯定是把上面那个正则改一下<code>/(\d{4})[-/.](\d{2})[-/.](\d{2})/</code>，把 - 改成 [-/.] 这三种都可以<br>看上去没问题，我们多想想就会发现，这个正则把 <code>2017-08.09</code> 这种字符串也匹配到了，这个肯定是不符合预期的。<br>这个时候我们就需要用到反向引用了，反向引用可以在匹配阶段捕获到分组的内容 <code>/(\d{4})([-/.])(\d{2})\2(\d{2})/</code>  </p>
+<h5 id="那么出现括号嵌套怎么办，比如"><a href="#那么出现括号嵌套怎么办，比如" class="headerlink" title="那么出现括号嵌套怎么办，比如"></a>那么出现括号嵌套怎么办，比如</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var regex = /^((\d)(\d(\d)))\1\2\3\4$/;</div><div class="line">var string = &quot;1231231233&quot;;</div><div class="line">console.log( regex.test(string) ); // true</div><div class="line">console.log( RegExp.$1 ); // 123</div><div class="line">console.log( RegExp.$2 ); // 1</div><div class="line">console.log( RegExp.$3 ); // 23</div><div class="line">console.log( RegExp.$4 ); // 3</div></pre></td></tr></table></figure>
+<p>嵌套的括号以左括号为准</p>
+<h5 id="引用了不存在的分组呢"><a href="#引用了不存在的分组呢" class="headerlink" title="引用了不存在的分组呢"></a>引用了不存在的分组呢</h5><p>如果在正则里面引用了前面不存在的分组，这个时候正则会匹配字符本身，比如<code>\1</code>就匹配<code>\1</code></p>
+<h4 id="非捕获分组"><a href="#非捕获分组" class="headerlink" title="非捕获分组"></a>非捕获分组</h4><p>我们有时候只是想用括号原本的功能而不想捕获他们。这个时候可以用<code>(?:p)</code>表示一个非捕获分组</p>
+<h4 id="例子-2"><a href="#例子-2" class="headerlink" title="例子"></a>例子</h4><ol>
+<li><p>驼峰改短横</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function dash(str) &#123;</div><div class="line">  return str.replace(/([A-Z])/g, &apos;-$1&apos;).toLowerCase();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>获取链接的 search 值<br>链接：<code>https://www.baidu.com?name=jawil&amp;age=23</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function getParamName(attr) &#123;</div><div class="line"></div><div class="line">  let match = RegExp(`[?&amp;]$&#123;attr&#125;=([^&amp;]*)`) //分组运算符是为了把结果存到exec函数返回的结果里</div><div class="line">    .exec(window.location.search)</div><div class="line">  //[&quot;?name=jawil&quot;, &quot;jawil&quot;, index: 0, input: &quot;?name=jawil&amp;age=23&quot;]</div><div class="line">  return match &amp;&amp; decodeURIComponent(match[1].replace(/\+/g, &apos; &apos;)) // url中+号表示空格,要替换掉</div><div class="line">&#125;</div><div class="line">  </div><div class="line">console.log(getParamName(&apos;name&apos;))  // &quot;jawil&quot;</div></pre></td></tr></table></figure>
+</li>
+<li><p>去掉字符串前后的空格</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function trim(str) &#123;</div><div class="line">    return str.replace(/(^\s*)|(\s*$)/g, &quot;&quot;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>判断一个数是否是质数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function isPrime(num) &#123;</div><div class="line">  return !/^1?$|^(11+?)\1+$/.test(Array(num+1).join(&apos;1&apos;))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这里首先是把一个数字变成1组成的字符串，比如11就是 ‘1111111111’ 11个1<br>然后正则分两部分，第一部分是匹配空字符串或者1<br>第二部分是先匹配两个或者多个1，非贪婪模式，那么先会匹配两个1，然后将匹配的两个1分组，后面就是匹配一个或者多个 ‘2个1’，就相当于整除2，如果匹配成功就证明不是质数，如果不成功就会匹配3个1，然后匹配多个3个1，相当于整除3，这样一直下去会一直整除到自己本身。如果还是不行就证明这个数字是质数。  </p>
+<h4 id="回溯"><a href="#回溯" class="headerlink" title="回溯"></a>回溯</h4><h5 id="正则是怎么匹配的"><a href="#正则是怎么匹配的" class="headerlink" title="正则是怎么匹配的"></a>正则是怎么匹配的</h5><p>有这么一个字符串 ‘abbbc’ 和这么一个正则 <code>/ab{1,3}bbc/</code><br><code>/ab{1,3}bbc/.test(&#39;abbbc&#39;)</code> 我们一眼可以看出来是 true，但是 JavaScript 是怎么匹配的呢<br><img src="https://pic4.zhimg.com/v2-946e41a0f5167f52304ca2ff821f8247_r.png" alt="image"></p>
+<h5 id="回溯-1"><a href="#回溯-1" class="headerlink" title="回溯"></a>回溯</h5><p>例如我们上面的例子，回溯的思想是，从问题的某一种状态（初始状态）出发，搜索从这种状态出发所能达到的所有“状态”，当一条路走到“尽头”的时候（不能再前进），再后退一步或若干步，从另一种可能“状态”出发，继续搜索，直到所有的“路径”（状态）都试探过。这种不断“前进”、不断“回溯”寻找解的方法，就称作“回溯法”<br>贪婪和非贪婪的匹配都会产生回溯，不同的是贪婪的是先尽量多的匹配，如果不行就吐出一个然后继续匹配，再不行就再吐出一个，非贪婪的是先尽量少的匹配。如果不行就再多匹配一个，再不行就再来一个<br>分支结构也会产生回溯，比如<br><code>/^(test|te)sts$/.test(&#39;tests&#39;)</code> 前面括号里面的匹配过程是先匹配到 test 然后继续往后匹配匹配到字符 <code>s</code> 的时候还是成功的，匹配到 <code>st</code> 的时候发现不能匹配， 所以会回到前面的分支结构的其他分支继续匹配，如果不行的话再换其他分支。</p>
+<h4 id="读正则"><a href="#读正则" class="headerlink" title="读正则"></a>读正则</h4><p>读懂其他人写的正则也是一个很重要的方面。</p>
+<h5 id="结构和操作符"><a href="#结构和操作符" class="headerlink" title="结构和操作符"></a>结构和操作符</h5><p>结构：<code>字符字面量、字符组、量词、锚字符、分组、选择分支、反向引用。</code><br>操作符：</p>
+<ol>
+<li>转义符 \</li>
+<li>括号和方括号 (…)、(?:…)、(?=…)、(?!…)、[…]</li>
+<li>量词限定符 {m}、{m,n}、{m,}、?、*、+</li>
+<li>位置和序列 ^ 、$、 \元字符、 一般字符</li>
+<li>管道符（竖杠） |  </li>
+</ol>
+<p>操作符的优先级是从上到下，由高到低的，所以在分析正则的时候可以根据优先级来拆分正则，比如<br><code>/ab?(c|de*)+|fg/</code></p>
+<ol>
+<li>因为括号是一个整体，所以<code>/ab?()+|fg/</code>,括号里面具体是什么可以放到后面再分析</li>
+<li>根据量词和管道符的优先级，所以<code>a</code>, <code>b?</code>, <code>()+</code>和管道符后面的<code>f</code>, <code>g</code></li>
+<li>同理分析括号里面的<code>c|de*</code> =&gt; <code>c</code>和<code>d</code>, <code>e*</code></li>
+<li>综上，这个正则描述的是<img src="https://pic3.zhimg.com/v2-3fd92f44ca68589a15ffbf110c6dea4e_r.png" alt="image"><br>以这种模式来分析，再复杂的正则都可以看懂。有一个可视化的<a href="https://jex.im/regulex" target="_blank" rel="noopener">正则分析网站</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/06/组件的一些思考/" rel="next" title="组件的一些思考">
+                <i class="fa fa-chevron-left"></i> 组件的一些思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/10/HTTP请求中的Form Data与Request Payload的区别/" rel="prev" title="HTTP请求中的Form Data与Request Payload的区别">
+                HTTP请求中的Form Data与Request Payload的区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式"><span class="nav-number">1.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#先简单的介绍一下语法"><span class="nav-number">1.1.</span> <span class="nav-text">先简单的介绍一下语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本元字符"><span class="nav-number">1.1.1.</span> <span class="nav-text">基本元字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数量元字符"><span class="nav-number">1.1.2.</span> <span class="nav-text">数量元字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#位置元字符"><span class="nav-number">1.1.3.</span> <span class="nav-text">位置元字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特殊元字符"><span class="nav-number">1.1.4.</span> <span class="nav-text">特殊元字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标志字符"><span class="nav-number">1.1.5.</span> <span class="nav-text">标志字符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-js-中的使用"><span class="nav-number">1.2.</span> <span class="nav-text">在 js 中的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#支持正则的-String-对象的方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">支持正则的 String 对象的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则对象的方法"><span class="nav-number">1.2.2.</span> <span class="nav-text">正则对象的方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则的匹配"><span class="nav-number">1.3.</span> <span class="nav-text">正则的匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#字符匹配"><span class="nav-number">1.3.1.</span> <span class="nav-text">字符匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#匹配多种数量"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">匹配多种数量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#匹配多种情况"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">匹配多种情况</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#例子"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#位置匹配"><span class="nav-number">1.3.2.</span> <span class="nav-text">位置匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#什么是位置"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">什么是位置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#位置的特性"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">位置的特性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#例子-1"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分组"><span class="nav-number">1.3.3.</span> <span class="nav-text">分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分组和分支结构"><span class="nav-number">1.3.4.</span> <span class="nav-text">分组和分支结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用分组"><span class="nav-number">1.3.5.</span> <span class="nav-text">引用分组</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#提取数据"><span class="nav-number">1.3.5.1.</span> <span class="nav-text">提取数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#替换"><span class="nav-number">1.3.5.2.</span> <span class="nav-text">替换</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反向引用"><span class="nav-number">1.3.6.</span> <span class="nav-text">反向引用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#那么出现括号嵌套怎么办，比如"><span class="nav-number">1.3.6.1.</span> <span class="nav-text">那么出现括号嵌套怎么办，比如</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#引用了不存在的分组呢"><span class="nav-number">1.3.6.2.</span> <span class="nav-text">引用了不存在的分组呢</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非捕获分组"><span class="nav-number">1.3.7.</span> <span class="nav-text">非捕获分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子-2"><span class="nav-number">1.3.8.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回溯"><span class="nav-number">1.3.9.</span> <span class="nav-text">回溯</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#正则是怎么匹配的"><span class="nav-number">1.3.9.1.</span> <span class="nav-text">正则是怎么匹配的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#回溯-1"><span class="nav-number">1.3.9.2.</span> <span class="nav-text">回溯</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#读正则"><span class="nav-number">1.3.10.</span> <span class="nav-text">读正则</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#结构和操作符"><span class="nav-number">1.3.10.1.</span> <span class="nav-text">结构和操作符</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

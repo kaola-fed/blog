@@ -1,0 +1,734 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="翻译自：A crash course in memory management 这是图解 SharedArrayBuffers 系列的第一篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「译」内存管理碰撞课程">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/21/「译」内存管理碰撞课程/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="翻译自：A crash course in memory management 这是图解 SharedArrayBuffers 系列的第一篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.int64ago.org/3n5m7fgi.png">
+<meta property="og:image" content="https://cdn.int64ago.org/594m1bom.png">
+<meta property="og:image" content="https://cdn.int64ago.org/7urjy5ok.png">
+<meta property="og:image" content="https://cdn.int64ago.org/068sp5n.png">
+<meta property="og:image" content="https://cdn.int64ago.org/y40v3kpp.png">
+<meta property="og:image" content="https://cdn.int64ago.org/g6j7yhjq.png">
+<meta property="og:image" content="https://cdn.int64ago.org/3b638f1.png">
+<meta property="og:image" content="https://cdn.int64ago.org/romv4dg.png">
+<meta property="og:image" content="https://cdn.int64ago.org/ehxx010a.png">
+<meta property="og:image" content="https://cdn.int64ago.org/5bc73o9.png">
+<meta property="og:image" content="https://cdn.int64ago.org/4sb1t17.png">
+<meta property="og:image" content="https://cdn.int64ago.org/vca4bnwux.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="「译」内存管理碰撞课程">
+<meta name="twitter:description" content="翻译自：A crash course in memory management 这是图解 SharedArrayBuffers 系列的第一篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta name="twitter:image" content="https://cdn.int64ago.org/3n5m7fgi.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/21/「译」内存管理碰撞课程/"/>
+
+
+
+
+
+  <title>「译」内存管理碰撞课程 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/21/「译」内存管理碰撞课程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                「译」内存管理碰撞课程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T00:00:00+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>翻译自：<a href="https://hacks.mozilla.org/2017/06/a-crash-course-in-memory-management/" target="_blank" rel="noopener">A crash course in memory management</a></p>
+<p>这是图解 SharedArrayBuffers 系列的第一篇：</p>
+<ol>
+<li>内存管理碰撞课程</li>
+<li><a href="https://github.com/kaola-fed/blog/issues/71" target="_blank" rel="noopener">图解 ArrayBuffers 和 SharedArrayBuffers</a></li>
+<li><p><a href="https://github.com/kaola-fed/blog/issues/72" target="_blank" rel="noopener">用 Atomics 避免 SharedArrayBuffers 竞争条件</a></p>
+<a id="more"></a>
+</li>
+</ol>
+<p>为了更好地理解 JavaScript 里的 ArrayBuffer 和 SharedArrayBuffer，首先应该了解点内存管理知识</p>
+<p>你可以把一个机器的内存想成一个一个的盒子，我把它们当作办公室的邮箱或者幼儿园里放小孩东西的格子</p>
+<p>如果你想把某个东西留给某个小孩，你就把东西放到格子里</p>
+<p><img src="https://cdn.int64ago.org/3n5m7fgi.png" alt=""></p>
+<p>每个盒子旁边都有一个编号，这就是内存地址，用于告诉别人如何去找到你留的东西</p>
+<p>每个盒子大小都一样，可以存放特定容量东西。盒子的具体容量取决于机器，这个大小我们称为字长，一般为 32 位或者 64 位。不过，为了展示方便，我这里字长用 8 位</p>
+<p><img src="https://cdn.int64ago.org/594m1bom.png" alt=""></p>
+<p>如果你想把数字 2 放到盒子里，这很容易做到，因为数字<a href="https://www.khanacademy.org/math/algebra-home/alg-intro-to-algebra/algebra-alternate-number-bases/v/decimal-to-binary" target="_blank" rel="noopener">很容易用二进制表示</a></p>
+<p><img src="https://cdn.int64ago.org/7urjy5ok.png" alt=""></p>
+<p>但是如果你想放一个非数字类型的呢？比如字母 H？</p>
+<p>我们需要一种方式可以用数字来表示它，这需要借助编码技术，类似 <a href="https://en.wikipedia.org/wiki/UTF-8" target="_blank" rel="noopener">UTF-8</a> 。首先，我们需要一个东西可以把字母转为数字……类似一个编码环，接下来就可以存储了</p>
+<p><img src="https://cdn.int64ago.org/068sp5n.png" alt=""></p>
+<p>当我们从盒子里取回的时候，我们需要把取出的数字放到解码环里翻译回字母 H</p>
+<h2 id="自动内存管理"><a href="#自动内存管理" class="headerlink" title="自动内存管理"></a>自动内存管理</h2><p>如果你是写 JavaScript 的，实际上你根本不需要关心内存，它对用户是透明的，这意味着你无法直接操纵内存</p>
+<p>与此相对的， JS 引擎扮演着中间人角色，它为你管理好内存</p>
+<p><img src="https://cdn.int64ago.org/y40v3kpp.png" alt=""></p>
+<p>我们用 React 举个例子，比如创建一个变量</p>
+<p><img src="https://cdn.int64ago.org/g6j7yhjq.png" alt=""></p>
+<p>JS 引擎通过一个编码器得到这个变量的二进制表示</p>
+<p><img src="https://cdn.int64ago.org/3b638f1.png" alt=""></p>
+<p>然后，它会找到内存中可以放这个值的位置，这个过程称为内存分配</p>
+<p><img src="https://cdn.int64ago.org/romv4dg.png" alt=""></p>
+<p>紧接着，引擎会持续追踪这个变量，看其是否还在程序中被使用。如果这个变量已经没有引用了，这块内存会被回收，JS 引擎就又可以在这里放新的值了</p>
+<p><img src="https://cdn.int64ago.org/ehxx010a.png" alt=""></p>
+<p>追踪内存中的变量（字符串、对象以及其它类型）并且在没有引用的时候清除它们的过程我们称作垃圾回收</p>
+<p>类似 JavaScript 这种代码无法直接处理内存的语言叫做自动内存管理（memory-managed）语言</p>
+<p>内存自动管理确实让开发者省了不少心，但是这也会带来额外的开销，这些额外开销会让程序的性能无法评估</p>
+<h2 id="手动内存管理"><a href="#手动内存管理" class="headerlink" title="手动内存管理"></a>手动内存管理</h2><p>手动内存管理的语言不太一样，继续上面例子，看 React 用 C 写的话（借助 <a href="https://hacks.mozilla.org/2017/02/a-cartoon-intro-to-webassembly/" target="_blank" rel="noopener">WebAssembly</a> 是 <a href="https://www.youtube.com/watch?v=3GHJ4cbxsVQ" target="_blank" rel="noopener">可能的</a>）会如何处理内存</p>
+<p>不像 JavaScript，C 没有单独的内存管理抽象层，相反，你得直接与内存打交道。你可以从内存中直接拿东西，也可以直接往内存里存东西</p>
+<p><img src="https://cdn.int64ago.org/5bc73o9.png" alt=""></p>
+<p>当你把 C 或者其它语言编译为 WebAssembly 时，编译工具会在 WebAssembly 里增加一些辅助代码。比如，它会加入编解码的代码，这些代码我们称为运行时环境，运行时环境会帮助处理一些类似 JS 引擎帮 JS 做的事</p>
+<p><img src="https://cdn.int64ago.org/4sb1t17.png" alt=""></p>
+<p>但是，对于手动管理内存的语言，运行时不会包括垃圾回收</p>
+<p>这并不意味着你需要完全由自己处理内存，即使在这类语言里，运行时你依然会得到一些辅助。比如，C 语言运行时会在一个 free list 里追踪可以使用的内存地址</p>
+<p><img src="https://cdn.int64ago.org/vca4bnwux.png" alt=""></p>
+<p>你可以使用 malloc 函数（内存分配的简称）向运行时发出可以满足你数据存储需要的内存请求，这些内存会被从 free list 拿下来。当你用完了，需要调用 free 去释放内存，这些内存会被加回 free list</p>
+<p>你必须清楚知道什么时候去调用这些函数，这就是为什么我们叫手动内存管理</p>
+<p>作为一个开发者，知道什么时候去释放什么地方的内存是一件困难的事。如果你在错误时机处理了，这很可能会导致 BUG，甚至安全漏洞；如果你不处理，就会导致内存泄露</p>
+<p>这就是为什么很多语言选择自动内存管理去避免人为错误，但是这牺牲了性能，<a href="https://github.com/kaola-fed/blog/issues/71" target="_blank" rel="noopener">下篇文章</a>我还会谈到这些</p>
+<p>By <a href="https://github.com/int64ago" target="_blank" rel="noopener">Cody</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/21/「译」用 Atomics 避免 SharedArrayBuffers 竞争条件/" rel="next" title="「译」用 Atomics 避免 SharedArrayBuffers 竞争条件">
+                <i class="fa fa-chevron-left"></i> 「译」用 Atomics 避免 SharedArrayBuffers 竞争条件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/21/「译」图解 ArrayBuffers 和 SharedArrayBuffers/" rel="prev" title="「译」图解 ArrayBuffers 和 SharedArrayBuffers">
+                「译」图解 ArrayBuffers 和 SharedArrayBuffers <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动内存管理"><span class="nav-number">1.</span> <span class="nav-text">自动内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手动内存管理"><span class="nav-number">2.</span> <span class="nav-text">手动内存管理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

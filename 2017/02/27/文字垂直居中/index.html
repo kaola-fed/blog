@@ -1,0 +1,728 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="文字垂直居中方案在工作中，我们经常碰到“文字垂直居中”的问题，需要居中的文字有单行，也有多行，在各种情况下的垂直居中分别该怎么解决?">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文字垂直居中">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/02/27/文字垂直居中/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="文字垂直居中方案在工作中，我们经常碰到“文字垂直居中”的问题，需要居中的文字有单行，也有多行，在各种情况下的垂直居中分别该怎么解决?">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://gacha.nosdn.127.net/3154f4d2e8564ff083df9df6b8cab893.png?imageView">
+<meta property="og:image" content="http://i1.piimg.com/567571/c2bed35835684072.jpg">
+<meta property="og:image" content="http://i1.piimg.com/567571/73244f032f162036.gif">
+<meta property="og:image" content="http://p1.bpimg.com/567571/8a834e2013083b2c.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/bd0c48ba5b92c870.jpg">
+<meta property="og:image" content="http://i1.piimg.com/567571/179129950446b2ba.jpg">
+<meta property="og:image" content="http://p1.bqimg.com/567571/dcb951c306329dd0.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.394Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文字垂直居中">
+<meta name="twitter:description" content="文字垂直居中方案在工作中，我们经常碰到“文字垂直居中”的问题，需要居中的文字有单行，也有多行，在各种情况下的垂直居中分别该怎么解决?">
+<meta name="twitter:image" content="http://gacha.nosdn.127.net/3154f4d2e8564ff083df9df6b8cab893.png?imageView">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/02/27/文字垂直居中/"/>
+
+
+
+
+
+  <title>文字垂直居中 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/02/27/文字垂直居中/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                文字垂直居中
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-27T00:00:00+08:00">
+                2017-02-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="文字垂直居中方案"><a href="#文字垂直居中方案" class="headerlink" title="文字垂直居中方案"></a>文字垂直居中方案</h1><p>在工作中，我们经常碰到“文字垂直居中”的问题，需要居中的文字有单行，也有多行，在各种情况下的垂直居中分别该怎么解决?</p>
+<a id="more"></a>
+<h2 id="单行文字"><a href="#单行文字" class="headerlink" title="单行文字"></a>单行文字</h2><ul>
+<li>容器高度固定 height + line-height</li>
+</ul>
+<p>在固定高度的容器中，单行文字垂直居中，只需要将文字的行距设置成容器的高度即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">.vertical-line &#123;</div><div class="line">   height: 100px;</div><div class="line">   line-height: 100px;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="http://codepen.io/realign/pen/QdRZbN" target="_blank" rel="noopener">DEMO</a></p>
+<hr>
+<ul>
+<li>容器高度不定 table + table-cell + vertical-align: middle</li>
+</ul>
+<p>当盛放单行文字的容器高度不固定，上面的方法就不起作用了，此时就只能采用表格样式了。其实这种方法也适用于多行文字的情况。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">div &#123;</div><div class="line"> display: table;</div><div class="line">&#125;</div><div class="line"></div><div class="line">p &#123;</div><div class="line"> display: table-cell;</div><div class="line"> vertical-align: middle;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;div&gt;</div><div class="line"> &lt;p&gt;</div><div class="line">   p的高度随div高度变化而变化，单行文字垂直居中</div><div class="line"> &lt;/p&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p><a href="http://codepen.io/realign/pen/ggJBPV" target="_blank" rel="noopener">DEMO</a></p>
+<hr>
+<h2 id="多行文字"><a href="#多行文字" class="headerlink" title="多行文字"></a>多行文字</h2><p>多行文字垂直居中相比单行文字来说，就有点复杂了，最先想到的，就是上面所说的容器高度不固定下的居中方法。</p>
+<p>接下来，对于垂直居中，我们能想到的属性是vertical-align:middle，再配合display: inline-block，应该是可以的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;div&gt;</div><div class="line">    &lt;p&gt;</div><div class="line">        多行文字垂直居中&lt;br&gt;</div><div class="line">        多行文字垂直居中&lt;br&gt;</div><div class="line">        多行文字垂直居中</div><div class="line">    &lt;/p&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">p &#123;</div><div class="line">    display: inline-block;</div><div class="line">    vertical-align: middle;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然而写出来，并没有垂直居中的效果:</p>
+<p><img src="http://gacha.nosdn.127.net/3154f4d2e8564ff083df9df6b8cab893.png?imageView" alt=""></p>
+<p><a href="http://codepen.io/realign/pen/jyoQqz" target="_blank" rel="noopener">DEMO</a></p>
+<hr>
+<p>其实，vertical-align的对齐，在非display:table下，是需要有参照物的，所以我们想到在容器里边添加一个高度等于容器高度、宽度为0的参照物，哎，对了，:before要登场了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">div:before &#123;</div><div class="line">    content: &apos;&apos;;</div><div class="line">    display: inline-block;</div><div class="line">    vertical-align: middle;</div><div class="line">    width: 0;</div><div class="line">    height: 100%;</div><div class="line">&#125;</div><div class="line">p &#123;</div><div class="line">    display: inline-block;</div><div class="line">    vertical-align: middle;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然而，想法是美好的，现实是残酷的，本来想着垂直居中的文字，直接出去了：</p>
+<p><img src="http://i1.piimg.com/567571/c2bed35835684072.jpg" alt=""></p>
+<p>这个时候可能想到是不是文字内容区域太宽了，好，开始调整宽度：</p>
+<p><img src="http://i1.piimg.com/567571/73244f032f162036.gif" alt=""></p>
+<p>但是当选中之后，却发现，文字区域前面有间距：</p>
+<p><img src="http://p1.bpimg.com/567571/8a834e2013083b2c.jpg" alt=""></p>
+<p>why？还能不能好好渲染了，哎，等会，前面的before好像算文字哎，难道是font-size的问题？把外层容器的font-size设为0：</p>
+<p><img src="http://p1.bqimg.com/567571/bd0c48ba5b92c870.jpg" alt=""></p>
+<p>果然，这样就很和谐了嘛 <a href="http://codepen.io/realign/pen/YZXxaK" target="_blank" rel="noopener">DEMO</a></p>
+<hr>
+<p>当然，上面的方法兼容性是很好的，IE8+都是没有问题的，但是table布局不方便，display: inline-block + vertical-align:middle 处理方式有点繁琐。如果你做的需求可以不用管低版本浏览器，那好，往下看：</p>
+<p>css3的flex是为布局为布局而生的，先拿它试试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">display: flex;</div><div class="line">align-items: center;</div><div class="line">justify-content: center;</div></pre></td></tr></table></figure>
+<p><img src="http://i1.piimg.com/567571/179129950446b2ba.jpg" alt=""></p>
+<p>对于，长宽已知的元素，水平垂直居中可以采用下面的方式来居中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//假设 width:100px,height:60px;</div><div class="line">position: absolute;</div><div class="line">top: 50%;</div><div class="line">margin-top: -30px;</div><div class="line">left: 50%;</div><div class="line">margin-left: -50px;</div></pre></td></tr></table></figure>
+<p>可能现在有人会想到 <figure class="highlight plain"><figcaption><span>-50%```,不好意思，这个50%是父元素的，这样写等于又把它放回去了。但是，```transform: translate```好像平移的是自己，试试？</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<p>position: absolute;<br>top: 50%;<br>left: 50%;<br>transform: translate(-50%, -50%);<br>```</p>
+<p><img src="http://p1.bqimg.com/567571/dcb951c306329dd0.jpg" alt=""></p>
+<p>没毛病！</p>
+<p>以上差不多就是几种常见的未知高度垂直居中的方法，时间仓促，多提意见。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/05/浏览器页面资源加载过程与优化/" rel="next" title="浏览器页面资源加载过程与优化">
+                <i class="fa fa-chevron-left"></i> 浏览器页面资源加载过程与优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/28/聊聊 Chrome DevTools 之 快捷键 (shortcuts)/" rel="prev" title="聊聊 Chrome DevTools 之 快捷键 (shortcuts)">
+                聊聊 Chrome DevTools 之 快捷键 (shortcuts) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文字垂直居中方案"><span class="nav-number">1.</span> <span class="nav-text">文字垂直居中方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单行文字"><span class="nav-number">1.1.</span> <span class="nav-text">单行文字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多行文字"><span class="nav-number">1.2.</span> <span class="nav-text">多行文字</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

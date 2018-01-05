@@ -1,0 +1,752 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="chrome插件开发简介（一）——开发入门 chrome作为目前最流行的浏览器，备受前端推崇，原因除了其对于前端标准的支持这一大核心原因之外，还有就是其强大的扩展性，基于其开发规范实现的插件如今已经非常庞大，在国内也是欣欣向荣，如天猫开发了大量的扩展，用于检测页面质量以及页面性能，淘宝开发了许多的扩展以供运营工具的优化等等。其强大性不言而喻。  这里我们来讲一下其插件开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chrome插件开发简介（一）——开发入门">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/31/chrome插件开发简介（一）——开发入门/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="chrome插件开发简介（一）——开发入门 chrome作为目前最流行的浏览器，备受前端推崇，原因除了其对于前端标准的支持这一大核心原因之外，还有就是其强大的扩展性，基于其开发规范实现的插件如今已经非常庞大，在国内也是欣欣向荣，如天猫开发了大量的扩展，用于检测页面质量以及页面性能，淘宝开发了许多的扩展以供运营工具的优化等等。其强大性不言而喻。  这里我们来讲一下其插件开发">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/Froguard/crxs/raw/master/doc/res/injectJsPath.jpg">
+<meta property="og:image" content="https://github.com/Froguard/crxs/raw/master/doc/res/injectCssPath.jpg">
+<meta property="og:image" content="https://github.com/Froguard/crxs/raw/master/doc/res/action_pos.jpg">
+<meta property="og:image" content="https://github.com/Froguard/crxs/raw/master/doc/res/pack.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="chrome插件开发简介（一）——开发入门">
+<meta name="twitter:description" content="chrome插件开发简介（一）——开发入门 chrome作为目前最流行的浏览器，备受前端推崇，原因除了其对于前端标准的支持这一大核心原因之外，还有就是其强大的扩展性，基于其开发规范实现的插件如今已经非常庞大，在国内也是欣欣向荣，如天猫开发了大量的扩展，用于检测页面质量以及页面性能，淘宝开发了许多的扩展以供运营工具的优化等等。其强大性不言而喻。  这里我们来讲一下其插件开发">
+<meta name="twitter:image" content="https://github.com/Froguard/crxs/raw/master/doc/res/injectJsPath.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/31/chrome插件开发简介（一）——开发入门/"/>
+
+
+
+
+
+  <title>chrome插件开发简介（一）——开发入门 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/31/chrome插件开发简介（一）——开发入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                chrome插件开发简介（一）——开发入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-31T00:00:00+08:00">
+                2017-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="chrome插件开发简介（一）——开发入门"><a href="#chrome插件开发简介（一）——开发入门" class="headerlink" title="chrome插件开发简介（一）——开发入门"></a>chrome插件开发简介（一）——开发入门</h1><blockquote>
+<p>chrome作为目前最流行的浏览器，备受前端推崇，原因除了其对于前端标准的支持这一大核心原因之外，还有就是其强大的扩展性，<br>基于其开发规范实现的插件如今已经非常庞大，在国内也是欣欣向荣，<br>如天猫开发了大量的扩展，用于检测页面质量以及页面性能，淘宝开发了许多的扩展以供运营工具的优化等等。其强大性不言而喻。</p>
+</blockquote>
+<p>这里我们来讲一下其插件开发</p>
+<a id="more"></a>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><ol>
+<li>与chrome应用类似，chrome扩展主要是用于扩充chrome浏览器的功能。他体现为一些文件的集合，包括前端文件（html/css/js）,配置文件manifest.json。<br>主要采用JavaScript语言进行编写。</li>
+</ol>
+<blockquote>
+<p>个别扩展可能会用到DLL和so动态库，不过出于安全以及职责分离的考虑，在后续的标准中，将会被舍弃，这里不再赘述</p>
+</blockquote>
+<ol>
+<li>chrome扩展能做的事情：</li>
+</ol>
+<ul>
+<li>基于浏览器本身窗口的交互界面</li>
+<li>操作用户页面：操作用户页面里的dom</li>
+<li>管理浏览器：书签，cookie，历史，扩展和应用本身的管理，其中甚至修改chrome的一些默认页面，地址栏关键字等，包括浏览器外观主题都是可以更改的<blockquote>
+<p>这里需要着重提一下，前端开发者喜欢的DevTools工具，在这里也能进行自定义</p>
+</blockquote>
+</li>
+<li>网络通信：http，socket，UDP/TCP等</li>
+<li>跨域请求不受限制：</li>
+<li>常驻后台运行</li>
+<li>数据存储：采用3种方式（localStorage，Web SQL DB，chrome提供的存储API（文件系统））</li>
+<li>扩展页面间可进行通信：提供runtime相关接口</li>
+<li>其他功能：下载，代理，系统信息，媒体库，硬件相关（如usb设备操作，串口通信等），国际化</li>
+</ul>
+<ol>
+<li>chrome扩展的限制：</li>
+</ol>
+<ul>
+<li><p>环境限制：基本上功能性操作都需要通过chrome提供的API来完成，这跟实际的页面js又有一些差异，看上去并没有那么的完全自由。<br>如chrome扩展的页面脚本，可以获取并操作页面dom，但是，出于安全性的考虑，页面脚本的域是独立区分开来的，即js成员变量不共享。<br>即：插入到用户页面的js脚本可执行，但是与原始脚本不同执行域，互相不会影响。<br>content_script不能使用除了chrome.extension之外的chrome.* 的接口,不能访问它所在扩展中定义的函数和变量,不能访问web页面或其它content script中定义的函数和变量,不能做cross-site XMLHttpRequests</p>
+</li>
+<li><p>chrome扩展，其功能受限于chrome的API，比如说文件系统，必须通过chrome的fileSystem接口，而这些接口仅仅只是对html5已有的文件系统接口的扩展，<br>它允许Chrome应用读写硬盘中用户选择的任意位置，而HTML5本身提供的文件系统接口则只能在沙箱中读写文件，并不能获取用户磁盘中真正的目录。</p>
+</li>
+</ul>
+<h2 id="举个栗子-apple"><a href="#举个栗子-apple" class="headerlink" title="举个栗子:apple:"></a>举个栗子:apple:</h2><blockquote>
+<p>下面以一个简单的例子来简述一下我们开发扩展过程中会遇到哪些问题</p>
+<p>这个栗子主要用于去自定义用户页面的样式（比如此处为改滚动条样式），插入一个自定义的脚本到用户页面中执行（此处为输出一些简单信息）</p>
+</blockquote>
+<h3 id="1-编辑扩展程序所需要的主要文件夹"><a href="#1-编辑扩展程序所需要的主要文件夹" class="headerlink" title="1.编辑扩展程序所需要的主要文件夹"></a>1.编辑扩展程序所需要的主要文件夹</h3><h4 id="文件结构说明"><a href="#文件结构说明" class="headerlink" title="文件结构说明"></a>文件结构说明</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">./</div><div class="line">├─ manifest.json //扩展的配置项</div><div class="line">├─ Custom.js     //自定义js脚本</div><div class="line">├─ Custom.css    //自定义css样式</div><div class="line">├─ icon.png      //扩展程序的icon</div><div class="line">└─ popup.html    //扩展的展示弹窗</div></pre></td></tr></table></figure>
+<ul>
+<li>自定义js脚本：浏览器中执行，但并非真正意义上的“插入”，与原来页面的js域隔离开<blockquote>
+<p>例如，custom.js中的window跟页面js中的window不是同一个对象，变量也无法共享。</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'执行init'</span>);</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.title);</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.getElementById(<span class="string">"abc"</span>));</div><div class="line"><span class="comment">// 实例函数，可以供popup.html中调用</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">helloWorld</span>(<span class="params">name</span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;name&#125;</span> say 'hello world!'`</span>);</div><div class="line">    alert(<span class="string">`<span class="subst">$&#123;name&#125;</span> say 'hello world!'`</span>);</div><div class="line">&#125;</div><div class="line"><span class="comment">//...</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>这样的脚本路径将以 chrome://extensions/扩展的id串码/path/to/you/js/xxx.js出现在控制台调试时候。</p>
+</blockquote>
+<p><img src="https://github.com/Froguard/crxs/raw/master/doc/res/injectJsPath.jpg" alt="image"></p>
+<ul>
+<li>自定义样式：同样，css也不是真正的插入到页面的document中，而是浏览器的样式生效策略中会加入这些样式规则</li>
+</ul>
+<p><img src="https://github.com/Froguard/crxs/raw/master/doc/res/injectCssPath.jpg" alt="image"></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* 重置滚动条 */</span></div><div class="line"><span class="selector-pseudo">::-webkit-scrollbar</span> &#123;<span class="attribute">width</span>:<span class="number">4px</span><span class="meta">!important</span>;<span class="attribute">height</span>:<span class="number">7px</span>;&#125;</div><div class="line"><span class="selector-pseudo">::-webkit-scrollbar-button</span> &#123;<span class="attribute">display</span>:none;&#125;</div><div class="line"><span class="selector-pseudo">::-webkit-scrollbar-thumb</span> &#123;<span class="attribute">border-radius</span>:<span class="number">3px</span>;<span class="attribute">background</span>: <span class="number">#45A5DB</span>;&#125;</div><div class="line"><span class="selector-pseudo">::-webkit-scrollbar-track</span> &#123;<span class="attribute">width</span>:<span class="number">4px</span>;<span class="attribute">height</span>:<span class="number">7px</span>;<span class="attribute">background</span>:transparent;&#125;</div><div class="line"><span class="selector-pseudo">::-webkit-scrollbar-track-piece</span> &#123;<span class="attribute">background</span>:transparent;&#125;</div><div class="line"></div><div class="line"><span class="comment">/* ... */</span></div></pre></td></tr></table></figure>
+<ul>
+<li>小窗口popup.html：这里面是一个按钮，点击后去调用custom.js里面的helloWorld函数</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!doctype html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello world<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>hello world<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"dealClick('王小明')"</span>&gt;</span>按钮<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line">        <span class="function"><span class="keyword">function</span> <span class="title">dealClick</span>(<span class="params">name</span>)</span>&#123;</div><div class="line">            <span class="comment">//这里值得注意，大部分功能性操作，比如执行脚本，执行函数，都是不可以直接执行，而需要通过chrome.*这样方式进行</span></div><div class="line">            chrome.tabs.executeScript(</div><div class="line">                <span class="literal">null</span>,</div><div class="line">                &#123;</div><div class="line">                    <span class="attr">code</span>: <span class="string">`helloWorld('<span class="subst">$&#123;name&#125;</span>')`</span> <span class="comment">// 这里调用的是上面的custom.js重定义好的function</span></div><div class="line">                &#125;</div><div class="line">            );</div><div class="line">        &#125;</div><div class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li><strong>核心配置文件manifest.json</strong>：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"name"</span>: <span class="string">"扩展名称"</span>,</div><div class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="string">"manifest_version"</span>: <span class="number">2</span>,</div><div class="line">  <span class="string">"description"</span>: <span class="string">"扩展描述"</span>,</div><div class="line">  <span class="string">"icons"</span> : &#123;           <span class="comment">// 扩展的icon</span></div><div class="line">    <span class="string">"16"</span> : <span class="string">"icon.png"</span>,</div><div class="line">    <span class="string">"48"</span> : <span class="string">"icon.png"</span>,</div><div class="line">    <span class="string">"128"</span> : <span class="string">"icon.png"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="string">"browser_action"</span>: &#123;   <span class="comment">// browser_action表示程序图标会出现在地址栏右侧，若要出现在地址栏，则写成page_action</span></div><div class="line">    <span class="string">"default_title"</span>: <span class="string">"日报工具"</span>,</div><div class="line">    <span class="string">"default_icon"</span>: <span class="string">"icon.png"</span>,</div><div class="line">    <span class="string">"default_popup"</span>: <span class="string">"popup.html"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="string">"content_scripts"</span>: [  <span class="comment">//content_scripts是在Web页面内运行的javascript脚本。</span></div><div class="line">                        <span class="comment">//通过使用标准的DOM，它们可以获取浏览器所访问页面的详细信息，并可以修改这些信息。</span></div><div class="line">    &#123;                   <span class="comment">//这里的值是数组，可以针对多个站点进行不同的操作配置</span></div><div class="line">      <span class="string">"matches"</span>: [</div><div class="line">        <span class="string">"http://www.google.com/*"</span></div><div class="line">      ],</div><div class="line">      <span class="string">"css"</span>: [</div><div class="line">        <span class="string">"custom.css"</span></div><div class="line">      ],</div><div class="line">      <span class="string">"js"</span>: [</div><div class="line">        <span class="string">"custom.js"</span></div><div class="line">      ],</div><div class="line">      <span class="string">"all_frames"</span>: <span class="literal">true</span>,</div><div class="line">      <span class="string">"run_at"</span>: <span class="string">"document_idle"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="string">"permissions"</span>: [   <span class="comment">//一些权限的配置，</span></div><div class="line">    <span class="string">"cookies"</span>,       <span class="comment">//比如cookie权限，比如系统通知权限，类似于notify这样的东西，在window系统上未右下角的小气泡</span></div><div class="line">    <span class="string">"notifications"</span></div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>page_action，browser_action类型的扩展对应位置</p>
+<p><img src="https://github.com/Froguard/crxs/raw/master/doc/res/action_pos.jpg" alt="image"></p>
+<h3 id="2-打包生成插件包"><a href="#2-打包生成插件包" class="headerlink" title="2.打包生成插件包"></a>2.打包生成插件包</h3><p>浏览器打开 <a href="chrome://extensions/" target="_blank" rel="noopener">chrome://extensions/</a>（或者‘更过工具-&gt;扩展程序’）,左上角有一个 <code>打包扩展程序</code> 按钮</p>
+<p><img src="https://github.com/Froguard/crxs/raw/master/doc/res/pack.jpg" alt="image"></p>
+<p>然后，将生成的*.crx文件拖到浏览器即可完成安装。</p>
+<blockquote>
+<p>到这步插件其实已经差不多了，当然，这里的功能都比较简单，你可以自己尝试一些更高级的功能</p>
+<p>由于自己DIY的扩展是没有发布到web app store的，所以下次打开浏览器时会被禁掉，解决方法见第二篇文章《chrome插件开发简介（二）——如何添“加浏览器扩展白名单”》</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/31/chrome插件开发简介（二）——如何添“加浏览器扩展白名单”/" rel="next" title="chrome插件开发简介（二）——如何添“加浏览器扩展白名单”">
+                <i class="fa fa-chevron-left"></i> chrome插件开发简介（二）——如何添“加浏览器扩展白名单”
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/31/EyeDropper 开发实践/" rel="prev" title="EyeDropper 开发实践">
+                EyeDropper 开发实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#chrome插件开发简介（一）——开发入门"><span class="nav-number">1.</span> <span class="nav-text">chrome插件开发简介（一）——开发入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念"><span class="nav-number">1.1.</span> <span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举个栗子-apple"><span class="nav-number">1.2.</span> <span class="nav-text">举个栗子:apple:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-编辑扩展程序所需要的主要文件夹"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.编辑扩展程序所需要的主要文件夹</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件结构说明"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">文件结构说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-打包生成插件包"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.打包生成插件包</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

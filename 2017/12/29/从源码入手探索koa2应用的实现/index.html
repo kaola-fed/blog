@@ -1,0 +1,822 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="koa2特性 A Koa application is an object containing an array of middleware functions which are composed and executed in a stack-like manner upon request.   只提供封装好http上下文、请求、响应，以及基于async/await的中间件容器 基于koa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码入手探索koa2应用的实现">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/12/29/从源码入手探索koa2应用的实现/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="koa2特性 A Koa application is an object containing an array of middleware functions which are composed and executed in a stack-like manner upon request.   只提供封装好http上下文、请求、响应，以及基于async/await的中间件容器 基于koa">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://camo.githubusercontent.com/707ab384df1cffd60ba1c19f188fd6edbce34d3d/687474703a2f2f62657277696e2e6769746875622e696f2f707074732f6b6f612f696d672f6b6f612d666c6f772e6a7067">
+<meta property="og:image" content="https://camo.githubusercontent.com/270554efef8e3112443c22e695b401ba7e8847bd/687474703a2f2f62657277696e2e6769746875622e696f2f707074732f6b6f612f696d672f636f6e746578742e706e67">
+<meta property="og:image" content="https://sfault-image.b0.upaiyun.com/135/226/1352261008-594a32c87b693_articlex">
+<meta property="og:image" content="https://camo.githubusercontent.com/d80cf3b511ef4898bcde9a464de491fa15a50d06/68747470733a2f2f7261772e6769746875622e636f6d2f66656e676d6b322f6b6f612d67756964652f6d61737465722f6f6e696f6e2e706e67">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.386Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从源码入手探索koa2应用的实现">
+<meta name="twitter:description" content="koa2特性 A Koa application is an object containing an array of middleware functions which are composed and executed in a stack-like manner upon request.   只提供封装好http上下文、请求、响应，以及基于async/await的中间件容器 基于koa">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/707ab384df1cffd60ba1c19f188fd6edbce34d3d/687474703a2f2f62657277696e2e6769746875622e696f2f707074732f6b6f612f696d672f6b6f612d666c6f772e6a7067">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/12/29/从源码入手探索koa2应用的实现/"/>
+
+
+
+
+
+  <title>从源码入手探索koa2应用的实现 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/12/29/从源码入手探索koa2应用的实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                从源码入手探索koa2应用的实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-29T00:00:00+08:00">
+                2017-12-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="koa2特性"><a href="#koa2特性" class="headerlink" title="koa2特性"></a>koa2特性</h2><blockquote>
+<p>A Koa application is an object containing an array of middleware functions which are composed and executed in a stack-like manner upon request.</p>
+</blockquote>
+<ul>
+<li>只提供封装好http上下文、请求、响应，以及基于async/await的中间件容器</li>
+<li>基于koa的app是由一系列中间件组成，原来是generator中间件，现在被async/await代替（generator中间件，需要通过中间件koa-convert封装一下才能使用）</li>
+<li>按照app.use(middleware)顺序依次执行中间件数组中的方法</li>
+</ul>
+<a id="more"></a>
+<blockquote>
+<p>1.0 版本是通过组合不同的 generator，可以免除重复繁琐的回调函数嵌套，并极大地提升错误处理的效率。</p>
+<p>2.0版本Koa放弃了generator，采用Async 函数实现组件数组瀑布流式（Cascading）的开发模式。</p>
+</blockquote>
+<h2 id="源码文件"><a href="#源码文件" class="headerlink" title="源码文件"></a>源码文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">├── lib</div><div class="line">│   ├── application.js</div><div class="line">│   ├── context.js</div><div class="line">│   ├── request.js</div><div class="line">│   └── response.js</div><div class="line">└── package.json</div></pre></td></tr></table></figure>
+<p>核心代码就是lib目录下的四个文件</p>
+<ul>
+<li>application.js 是整个koa2 的入口文件，封装了context，request，response，以及最核心的中间件处理流程。</li>
+<li>context.js 处理应用上下文，里面直接封装部分request.js和response.js的方法</li>
+<li>request.js 处理http请求</li>
+<li>response.js 处理http响应</li>
+</ul>
+<h2 id="koa流程"><a href="#koa流程" class="headerlink" title="koa流程"></a>koa流程</h2><p><img src="https://camo.githubusercontent.com/707ab384df1cffd60ba1c19f188fd6edbce34d3d/687474703a2f2f62657277696e2e6769746875622e696f2f707074732f6b6f612f696d672f6b6f612d666c6f772e6a7067" alt="koa总体流程图"></p>
+<p>koa的流程分为三个部分：<strong>初始化 -&gt; 启动Server -&gt; 请求响应</strong></p>
+<ul>
+<li><p>初始化</p>
+<ul>
+<li>初始化koa对象之前我们称为初始化</li>
+</ul>
+</li>
+<li><p>启动server</p>
+<ul>
+<li>初始化中间件(中间件建立联系)</li>
+<li>启动服务,监听特定端口,并生成一个新的上下文对象</li>
+</ul>
+</li>
+<li><p>请求响应</p>
+<ul>
+<li>接受请求,初始化上下文对象</li>
+<li>执行中间件</li>
+<li>将body返回给客户端</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3></blockquote>
+<p>定义了三个对象，<code>context</code>, <code>response</code>, <code>request</code></p>
+<ul>
+<li><code>request</code> 定义了一些set/get访问器，用于设置和获取请求报文和url信息，例如获取query数据，获取请求的url（详细API参见<a href="http://koajs.com/#request" target="_blank" rel="noopener">Koa-request文档</a>）</li>
+<li><code>response</code> 定义了一些set/get操作和获取响应报文的方法（详细API参见<a href="http://koajs.com/#response" target="_blank" rel="noopener">Koa-response 文档</a>）</li>
+<li><p><code>context</code> 通过第三方模块 delegate 将 koa 在 Response 模块和 Request 模块中定义的方法委托到了 context 对象上，所以以下的一些写法是等价的：</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//在每次请求中，this 用于指代此次请求创建的上下文 context(ctx)</span></div><div class="line"><span class="keyword">this</span>.body ==&gt; <span class="keyword">this</span>.response.body</div><div class="line"><span class="keyword">this</span>.status ==&gt; <span class="keyword">this</span>.response.status</div><div class="line"><span class="keyword">this</span>.href ==&gt; <span class="keyword">this</span>.request.href</div><div class="line"><span class="keyword">this</span>.host ==&gt; <span class="keyword">this</span>.request.host</div><div class="line">......</div></pre></td></tr></table></figure>
+<p>  为了方便使用，许多上下文属性和方法都被委托代理到他们的 <code>ctx.request</code> 或 <code>ctx.response</code>，比如访问 <code>ctx.type</code> 和 <code>ctx.length</code> 将被代理到 <code>response</code> 对象，<code>ctx.path</code> 和 <code>ctx.method</code> 将被代理到 <code>request</code> 对象。</p>
+<p>  每一个请求都会创建一段上下文，在控制业务逻辑的中间件中，<code>ctx</code>被寄存在<code>this</code>中（详细API参见 <a href="http://koajs.com/#context" target="_blank" rel="noopener">Koa-context 文档</a>）</p>
+</li>
+</ul>
+<blockquote>
+<h3 id="启动Server"><a href="#启动Server" class="headerlink" title="启动Server"></a>启动Server</h3><ol>
+<li>初始化一个koa对象实例</li>
+<li>监听端口</li>
+</ol>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</div><div class="line"><span class="keyword">var</span> app = koa()</div><div class="line"></div><div class="line">app.listen(<span class="number">9000</span>)</div></pre></td></tr></table></figure>
+<blockquote>
+<h4 id="解析启动流程，分析源码"><a href="#解析启动流程，分析源码" class="headerlink" title="解析启动流程，分析源码"></a>解析启动流程，分析源码</h4></blockquote>
+<h4 id="application-js是koa的入口文件"><a href="#application-js是koa的入口文件" class="headerlink" title="application.js是koa的入口文件"></a><code>application.js</code>是koa的入口文件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 暴露出来class，`class Application extends Emitter`，用new新建一个koa应用。</span></div><div class="line"><span class="built_in">module</span>.exports = <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">extends</span> <span class="title">Emitter</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="keyword">super</span>();</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.proxy = <span class="literal">false</span>; <span class="comment">// 是否信任proxy header，默认false // TODO</span></div><div class="line">        <span class="keyword">this</span>.middleware = [];   <span class="comment">// 保存通过app.use(middleware)注册的中间件</span></div><div class="line">        <span class="keyword">this</span>.subdomainOffset = <span class="number">2</span>;</div><div class="line">        <span class="keyword">this</span>.env = process.env.NODE_ENV || <span class="string">'development'</span>;   <span class="comment">// 环境参数，默认为 NODE_ENV 或 ‘development’</span></div><div class="line">        <span class="keyword">this</span>.context = <span class="built_in">Object</span>.create(context);  <span class="comment">// context模块，通过context.js创建</span></div><div class="line">        <span class="keyword">this</span>.request = <span class="built_in">Object</span>.create(request);  <span class="comment">// request模块，通过request.js创建</span></div><div class="line">        <span class="keyword">this</span>.response = <span class="built_in">Object</span>.create(response);    <span class="comment">// response模块，通过response.js创建</span></div><div class="line">    &#125;</div><div class="line">    ...</div></pre></td></tr></table></figure>
+<p><code>Application.js</code> 除了上面的的构造函数外，还暴露了一些公用的api，比如常用的 <code>listen</code>和<code>use</code>（use放在后面讲）。</p>
+<h4 id="listen"><a href="#listen" class="headerlink" title="listen"></a>listen</h4><blockquote>
+<p>作用： <strong>启动koa server</strong></p>
+<p>语法糖</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 用koa启动server</span></div><div class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</div><div class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</div><div class="line">app.listen(<span class="number">3000</span>);</div><div class="line"></div><div class="line"><span class="comment">// 等价于</span></div><div class="line"></div><div class="line"><span class="comment">// node原生启动server</span></div><div class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</div><div class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</div><div class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</div><div class="line">http.createServer(app.callback()).listen(<span class="number">3000</span>);</div><div class="line">https.createServer(app.callback()).listen(<span class="number">3001</span>); <span class="comment">// on mutilple address</span></div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// listen</span></div><div class="line">listen(...args) &#123;</div><div class="line">    <span class="keyword">const</span> server = http.createServer(<span class="keyword">this</span>.callback());</div><div class="line">    <span class="keyword">return</span> server.listen(...args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>封装了nodejs的创建http server，在监听端口之前会先执行<code>this.callback()</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// callback</span></div><div class="line"></div><div class="line">callback() &#123;</div><div class="line">    <span class="comment">// 使用koa-compose(后面会讲) 串联中间件堆栈中的middleware，返回一个函数</span></div><div class="line">    <span class="comment">// fn接受两个参数 (context, next)</span></div><div class="line">    <span class="keyword">const</span> fn = compose(<span class="keyword">this</span>.middleware);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.listeners(<span class="string">'error'</span>).length) <span class="keyword">this</span>.on(<span class="string">'error'</span>, <span class="keyword">this</span>.onerror);</div><div class="line"></div><div class="line">    <span class="comment">// this.callback()返回一个函数handleReqwuest，请求过来的时候，回调这个函数</span></div><div class="line">    <span class="comment">// handleReqwuest接受参数 (req, res)</span></div><div class="line">    <span class="keyword">const</span> handleRequest = <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</div><div class="line">        <span class="comment">// 为每一个请求创建ctx，挂载请求相关信息</span></div><div class="line">        <span class="keyword">const</span> ctx = <span class="keyword">this</span>.createContext(req, res);</div><div class="line">        <span class="comment">// handleRequest的解析在【请求响应】部分</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.handleRequest(ctx, fn);</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> handleRequest;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>const ctx = this.createContext(req, res);</code>创建一个最终可用版的<code>context</code></p>
+<p><img src="https://camo.githubusercontent.com/270554efef8e3112443c22e695b401ba7e8847bd/687474703a2f2f62657277696e2e6769746875622e696f2f707074732f6b6f612f696d672f636f6e746578742e706e67" alt=""></p>
+<p>ctx上包含5个属性，分别是request，response，req，res，app</p>
+<p>request和response也分别有5个箭头指向它们，所以也是同样的逻辑</p>
+<blockquote>
+<p>补充了解 各对象之间的关系</p>
+</blockquote>
+<p><img src="https://sfault-image.b0.upaiyun.com/135/226/1352261008-594a32c87b693_articlex" alt=""></p>
+<blockquote>
+<p>最左边一列表示每个文件的导出对象</p>
+<p>中间一列表示每个Koa应用及其维护的属性</p>
+<p>右边两列表示对应每个请求所维护的一些列对象</p>
+<p>黑色的线表示实例化</p>
+<p>红色的线表示原型链</p>
+<p>蓝色的线表示属性</p>
+<h3 id="请求响应"><a href="#请求响应" class="headerlink" title="请求响应"></a>请求响应</h3></blockquote>
+<p>回顾一下，koa启动server的代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">app.listen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> server = http.createServer(<span class="keyword">this</span>.callback());</div><div class="line">    <span class="keyword">return</span> server.listen.apply(server, <span class="built_in">arguments</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// callback</span></div><div class="line">callback() &#123;</div><div class="line">    <span class="keyword">const</span> fn = compose(<span class="keyword">this</span>.middleware);</div><div class="line">    ...</div><div class="line">    const handleRequest = <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</div><div class="line">        <span class="keyword">const</span> ctx = <span class="keyword">this</span>.createContext(req, res);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.handleRequest(ctx, fn);</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">return</span> handleRequest;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>callback()</code>返回了一个请求处理函数<code>this.handleRequest(ctx, fn)</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// handleRequest</span></div><div class="line"></div><div class="line">handleRequest(ctx, fnMiddleware) &#123;</div><div class="line">    <span class="keyword">const</span> res = ctx.res;</div><div class="line"></div><div class="line">    <span class="comment">// 请求走到这里标明成功了，http respond code设为默认的404 TODO 为什么？</span></div><div class="line">    res.statusCode = <span class="number">404</span>;</div><div class="line"></div><div class="line">    <span class="comment">// koa默认的错误处理函数，它处理的是错误导致的异常结束</span></div><div class="line">    <span class="keyword">const</span> onerror = <span class="function"><span class="params">err</span> =&gt;</span> ctx.onerror(err);</div><div class="line"></div><div class="line">    <span class="comment">// respond函数里面主要是一些收尾工作，例如判断http code为空如何输出，http method是head如何输出，body返回是流或json时如何输出</span></div><div class="line">    <span class="keyword">const</span> handleResponse = <span class="function"><span class="params">()</span> =&gt;</span> respond(ctx);</div><div class="line"></div><div class="line">    <span class="comment">// 第三方函数，用于监听 http response 的结束事件，执行回调</span></div><div class="line">    <span class="comment">// 如果response有错误，会执行ctx.onerror中的逻辑，设置response类型，状态码和错误信息等</span></div><div class="line">    onFinished(res, onerror);</div><div class="line"></div><div class="line">    <span class="comment">// 执行中间件，监听中间件执行结果</span></div><div class="line">    <span class="comment">// 成功：执行response</span></div><div class="line">    <span class="comment">// 失败，捕捉错误信息，执行对应处理</span></div><div class="line">    <span class="comment">// 返回Promise对象</span></div><div class="line">    <span class="keyword">return</span> fnMiddleware(ctx).then(handleResponse).catch(onerror);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="Koa处理请求的过程：当请求到来的时候，会通过-req-和-res-来创建一个-context-ctx-，然后执行中间件"><a href="#Koa处理请求的过程：当请求到来的时候，会通过-req-和-res-来创建一个-context-ctx-，然后执行中间件" class="headerlink" title="Koa处理请求的过程：当请求到来的时候，会通过 req 和 res 来创建一个 context (ctx) ，然后执行中间件"></a>Koa处理请求的过程：当请求到来的时候，会通过 req 和 res 来创建一个 context (ctx) ，然后执行中间件</h5><h4 id="koa中另一个常用API-use"><a href="#koa中另一个常用API-use" class="headerlink" title="koa中另一个常用API - use"></a>koa中另一个常用API - use</h4><blockquote>
+<p>作用：  <strong>将函数推入middleware数组</strong></p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">use(fn) &#123;</div><div class="line">    <span class="comment">// 首先判断传进来的参数，传进来的不是一个函数，报错</span></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> fn !== <span class="string">'function'</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">'middleware must be a function!'</span>);</div><div class="line">    <span class="comment">// 判断这个函数是不是 generator</span></div><div class="line">    <span class="comment">// koa 后续的版本推荐使用 await/async 的方式处理异步</span></div><div class="line">    <span class="comment">// 所以会慢慢不支持 koa1 中的 generator，不再推荐大家使用 generator</span></div><div class="line">    <span class="keyword">if</span> (isGeneratorFunction(fn)) &#123;</div><div class="line">        deprecate(<span class="string">'Support for generators will be removed in v3. '</span> +</div><div class="line">        <span class="string">'See the documentation for examples of how to convert old middleware '</span> +</div><div class="line">        <span class="string">'https://github.com/koajs/koa/blob/master/docs/migration.md'</span>);</div><div class="line">        <span class="comment">// 如果是 generator，控制台警告，然后将函数进行包装</span></div><div class="line">        fn = convert(fn);</div><div class="line">    &#125;</div><div class="line">    debug(<span class="string">'use %s'</span>, fn._name || fn.name || <span class="string">'-'</span>);</div><div class="line">    <span class="comment">// 将函数推入 middleware 这个数组，后面要依次调用里面的每一个中间件</span></div><div class="line">    <span class="keyword">this</span>.middleware.push(fn);</div><div class="line">    <span class="comment">// 保证链式调用</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="koa-compose"><a href="#koa-compose" class="headerlink" title="koa-compose"></a>koa-compose</h4><p><code>const fn = compose(this.middleware)</code></p>
+<p>app.use([MW])仅仅是将函数推入middleware数组，真正让这一系列函数组合成为中间件的，是koa-compose，koa-compose是Koa框架中间件执行的发动机</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span></div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = compose</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">compose</span> (<span class="params">middleware</span>) </span>&#123;</div><div class="line">    <span class="comment">// 传入的 middleware 必须是一个数组, 否则报错</span></div><div class="line">    <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(middleware)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">'Middleware stack must be an array!'</span>)</div><div class="line">    <span class="comment">// 循环遍历传入的 middleware， 每一个元素都必须是函数，否则报错</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> fn <span class="keyword">of</span> middleware) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> fn !== <span class="string">'function'</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">'Middleware must be composed of functions!'</span>)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">context, next</span>) </span>&#123;</div><div class="line">        <span class="comment">// last called middleware #</span></div><div class="line">        <span class="keyword">let</span> index = <span class="number">-1</span></div><div class="line">        <span class="keyword">return</span> dispatch(<span class="number">0</span>)</div><div class="line">        <span class="function"><span class="keyword">function</span> <span class="title">dispatch</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span> (i &lt;= index) <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'next() called multiple times'</span>))</div><div class="line">            index = i</div><div class="line">            <span class="keyword">let</span> fn = middleware[i]</div><div class="line">            <span class="keyword">if</span> (i === middleware.length) fn = next</div><div class="line">            <span class="comment">// 如果中间件中没有 await next ，那么函数直接就退出了，不会继续递归调用</span></div><div class="line">            <span class="keyword">if</span> (!fn) <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve()</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(fn(context, <span class="function"><span class="keyword">function</span> <span class="title">next</span> (<span class="params"></span>) </span>&#123;</div><div class="line">                    <span class="keyword">return</span> dispatch(i + <span class="number">1</span>)</div><div class="line">                &#125;))</div><div class="line">            &#125; <span class="keyword">catch</span> (err) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(err)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Koa2.x的compose方法虽然从纯generator函数执行修改成了基于Promise.all，但是中间件加载的中心思想没有发生改变，依旧是从第一个中间件开始，遇到await/yield next，就中断本中间件的代码执行，跳转到对应的下一个中间件执行期内的代码…一直到最后一个中间件，然后逆序回退到倒数第二个中间件await/yield next下部分的代码执行，完成后继续会退…一直会退到第一个中间件await/yield next下部分的代码执行完成，中间件全部执行结束</p>
+<blockquote>
+<p>级联的流程，V型加载机制</p>
+</blockquote>
+<p><img src="https://camo.githubusercontent.com/d80cf3b511ef4898bcde9a464de491fa15a50d06/68747470733a2f2f7261772e6769746875622e636f6d2f66656e676d6b322f6b6f612d67756964652f6d61737465722f6f6e696f6e2e706e67" alt="洋葱结构"></p>
+<h2 id="koa2常用中间件"><a href="#koa2常用中间件" class="headerlink" title="koa2常用中间件"></a>koa2常用中间件</h2><blockquote>
+<h3 id="koa-router-路由"><a href="#koa-router-路由" class="headerlink" title="koa-router 路由"></a>koa-router 路由</h3></blockquote>
+<p>对其实现机制有兴趣的可以戳看看 -&gt; <a href="http://www.nodepeixun.com/a/nodekuangjia/20170114/126.html" target="_blank" rel="noopener">Koa-router路由中间件API详解</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">const Koa = require(&apos;koa&apos;)</div><div class="line">const fs = require(&apos;fs&apos;)</div><div class="line">const app = new Koa()</div><div class="line"></div><div class="line">const Router = require(&apos;koa-router&apos;)</div><div class="line"></div><div class="line">// 子路由1</div><div class="line">let home = new Router()</div><div class="line">home.get(&apos;/&apos;, async ( ctx )=&gt;&#123;</div><div class="line">  let html = `</div><div class="line">    &lt;ul&gt;</div><div class="line">      &lt;li&gt;&lt;a href=&quot;/page/helloworld&quot;&gt;/page/helloworld&lt;/a&gt;&lt;/li&gt;</div><div class="line">      &lt;li&gt;&lt;a href=&quot;/page/404&quot;&gt;/page/404&lt;/a&gt;&lt;/li&gt;</div><div class="line">    &lt;/ul&gt;</div><div class="line">  `</div><div class="line">  ctx.body = html</div><div class="line">&#125;)</div><div class="line"></div><div class="line">// 子路由2</div><div class="line">let page = new Router()</div><div class="line">page.get(&apos;hello&apos;, async (ctx) =&gt; &#123;</div><div class="line">    ctx.body = &apos;Hello World Page!&apos;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">// 装载所有子路由的中间件router</div><div class="line">let router = new Router()</div><div class="line">router.use(&apos;/&apos;, home.routes(), home.allowedMethods())</div><div class="line">router.use(&apos;/page&apos;, page.routes(), page.allowedMethods())</div><div class="line"></div><div class="line">// 加载router</div><div class="line">app.use(router.routes()).use(router.allowedMethods())</div><div class="line"></div><div class="line">app.listen(3000, () =&gt; &#123;</div><div class="line">  console.log(&apos;[demo] route-use-middleware is starting at port 3000&apos;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="koa-bodyparser-请求数据获取"><a href="#koa-bodyparser-请求数据获取" class="headerlink" title="koa-bodyparser 请求数据获取"></a>koa-bodyparser 请求数据获取</h3></blockquote>
+<h4 id="GET请求数据获取"><a href="#GET请求数据获取" class="headerlink" title="GET请求数据获取"></a>GET请求数据获取</h4><p>获取GET请求数据有两个途径</p>
+<ol>
+<li><p>是从上下文中直接获取</p>
+<ul>
+<li>请求对象ctx.query，返回如 { a:1, b:2 }</li>
+<li>请求字符串 ctx.querystring，返回如 a=1&amp;b=2</li>
+</ul>
+</li>
+<li><p>是从上下文的request对象中获取</p>
+<ul>
+<li>请求对象ctx.request.query，返回如 { a:1, b:2 }</li>
+<li>请求字符串 ctx.request.querystring，返回如 a=1&amp;b=2</li>
+</ul>
+</li>
+</ol>
+<h4 id="POST请求数据获取"><a href="#POST请求数据获取" class="headerlink" title="POST请求数据获取"></a>POST请求数据获取</h4><blockquote>
+<p>对于POST请求的处理，koa2没有封装获取参数的方法需要通过解析上下文context中的原生node.js请求对象req，将POST表单数据解析成query string（例如：a=1&amp;b=2&amp;c=3），再将query string 解析成JSON格式（例如：{“a”:”1”, “b”:”2”, “c”:”3”}）</p>
+</blockquote>
+<p>对于POST请求的处理，koa-bodyparser中间件可以把koa2上下文的formData数据解析到ctx.request.body中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">const bodyParser = require(&apos;koa-bodyparser&apos;)</div><div class="line"></div><div class="line">app.use(bodyParser())</div><div class="line"></div><div class="line">app.use( async ( ctx ) =&gt; &#123;</div><div class="line"></div><div class="line">  if ( ctx.url === &apos;/&apos; &amp;&amp; ctx.method === &apos;POST&apos; ) &#123;</div><div class="line">    // 当POST请求的时候，中间件koa-bodyparser解析POST表单里的数据，并显示出来</div><div class="line">    let postData = ctx.request.body</div><div class="line">    ctx.body = postData</div><div class="line">  &#125; else &#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">app.listen(3000, () =&gt; &#123;</div><div class="line">  console.log(&apos;[demo] request post is starting at port 3000&apos;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="koa-static-静态资源加载"><a href="#koa-static-静态资源加载" class="headerlink" title="koa-static 静态资源加载"></a>koa-static 静态资源加载</h3></blockquote>
+<p>为静态资源访问创建一个服务器，根据url访问对应的文件夹、文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">const static = require(&apos;koa-static&apos;)</div><div class="line">const app = new Koa()</div><div class="line"></div><div class="line">// 静态资源目录对于相对入口文件index.js的路径</div><div class="line">const staticPath = &apos;./static&apos;</div><div class="line"></div><div class="line">app.use(static(</div><div class="line">  path.join( __dirname,  staticPath)</div><div class="line">))</div><div class="line"></div><div class="line"></div><div class="line">app.use( async ( ctx ) =&gt; &#123;</div><div class="line">  ctx.body = &apos;hello world&apos;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">app.listen(3000, () =&gt; &#123;</div><div class="line">  console.log(&apos;[demo] static-use-middleware is starting at port 3000&apos;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
+<li><a href="http://koajs.com/#" target="_blank" rel="noopener">koa文档</a></li>
+<li><a href="https://github.com/snailTJ/Blog/issues/2" target="_blank" rel="noopener">深入浅出koa #2</a></li>
+<li><a href="https://github.com/snailTJ/Blog/issues/11" target="_blank" rel="noopener">深入浅出koa2 #11</a></li>
+<li><a href="https://www.jianshu.com/p/7c795c28e8ec" target="_blank" rel="noopener">Node.js Koa 之Async中间件</a></li>
+<li><a href="https://github.com/guo-yu/koa-guide" target="_blank" rel="noopener">koa中文文档</a></li>
+<li><a href="https://dongliang1993.github.io/2017/12/06/koa2-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%80/" target="_blank" rel="noopener">koa2 源码分析 (一)</a></li>
+<li><a href="https://mrsunny123.github.io/2017/06/21/Koa2-Code/" target="_blank" rel="noopener">Koa2源码阅读笔记</a></li>
+<li><a href="https://chenshenhai.github.io/koa2-note/" target="_blank" rel="noopener">Koa2进阶学习笔记</a></li>
+<li><a href="http://www.nodepeixun.com/a/nodekuangjia/20170114/126.html" target="_blank" rel="noopener">Koa-router路由中间件API详解</a></li>
+<li><a href="https://cnodejs.org/topic/5780e12e69d72f545483ca69" target="_blank" rel="noopener">跨入Koa2.0，从Compose开始</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/25/一起来聊聊table组件的固定列/" rel="next" title="一起来聊聊table组件的固定列">
+                <i class="fa fa-chevron-left"></i> 一起来聊聊table组件的固定列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#koa2特性"><span class="nav-number">1.</span> <span class="nav-text">koa2特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码文件"><span class="nav-number">2.</span> <span class="nav-text">源码文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#koa流程"><span class="nav-number">3.</span> <span class="nav-text">koa流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">3.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动Server"><span class="nav-number">3.2.</span> <span class="nav-text">启动Server</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解析启动流程，分析源码"><span class="nav-number">3.2.1.</span> <span class="nav-text">解析启动流程，分析源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#application-js是koa的入口文件"><span class="nav-number">3.2.2.</span> <span class="nav-text">application.js是koa的入口文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#listen"><span class="nav-number">3.2.3.</span> <span class="nav-text">listen</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求响应"><span class="nav-number">3.3.</span> <span class="nav-text">请求响应</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Koa处理请求的过程：当请求到来的时候，会通过-req-和-res-来创建一个-context-ctx-，然后执行中间件"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">Koa处理请求的过程：当请求到来的时候，会通过 req 和 res 来创建一个 context (ctx) ，然后执行中间件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#koa中另一个常用API-use"><span class="nav-number">3.3.1.</span> <span class="nav-text">koa中另一个常用API - use</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#koa-compose"><span class="nav-number">3.3.2.</span> <span class="nav-text">koa-compose</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#koa2常用中间件"><span class="nav-number">4.</span> <span class="nav-text">koa2常用中间件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#koa-router-路由"><span class="nav-number">4.1.</span> <span class="nav-text">koa-router 路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#koa-bodyparser-请求数据获取"><span class="nav-number">4.2.</span> <span class="nav-text">koa-bodyparser 请求数据获取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GET请求数据获取"><span class="nav-number">4.2.1.</span> <span class="nav-text">GET请求数据获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#POST请求数据获取"><span class="nav-number">4.2.2.</span> <span class="nav-text">POST请求数据获取</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#koa-static-静态资源加载"><span class="nav-number">4.3.</span> <span class="nav-text">koa-static 静态资源加载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-number">4.3.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

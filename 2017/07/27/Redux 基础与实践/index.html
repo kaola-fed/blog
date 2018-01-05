@@ -1,0 +1,737 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="之前写过一篇 Regular 组件开发的一些建议 的文章提到了日常开发Regular组件的一些槽点，并提出了在简单需求，不使用状态管理框架时的一些替代方案。本文的目的便是填前文的一个坑，即较复杂需求下 Redux 引入方案。 关于 Redux Redux 是 JavaScript 状态容器，提供可预测化的状态管理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redux 基础与实践">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/27/Redux 基础与实践/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="之前写过一篇 Regular 组件开发的一些建议 的文章提到了日常开发Regular组件的一些槽点，并提出了在简单需求，不使用状态管理框架时的一些替代方案。本文的目的便是填前文的一个坑，即较复杂需求下 Redux 引入方案。 关于 Redux Redux 是 JavaScript 状态容器，提供可预测化的状态管理。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/b9190c99-f5a3-4637-890e-9a597f2099f4.jpeg">
+<meta property="og:image" content="https://haitao.nos.netease.com/d8d909af-b660-48bb-a197-542421332ecc.jpeg">
+<meta property="og:image" content="https://haitao.nos.netease.com/b9190c99-f5a3-4637-890e-9a597f2099f4.jpeg">
+<meta property="og:image" content="https://haitao.nos.netease.com/6f685b72-19bd-4dfd-a191-0de7d0dfa10e.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.372Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redux 基础与实践">
+<meta name="twitter:description" content="之前写过一篇 Regular 组件开发的一些建议 的文章提到了日常开发Regular组件的一些槽点，并提出了在简单需求，不使用状态管理框架时的一些替代方案。本文的目的便是填前文的一个坑，即较复杂需求下 Redux 引入方案。 关于 Redux Redux 是 JavaScript 状态容器，提供可预测化的状态管理。">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/b9190c99-f5a3-4637-890e-9a597f2099f4.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/27/Redux 基础与实践/"/>
+
+
+
+
+
+  <title>Redux 基础与实践 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/27/Redux 基础与实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redux 基础与实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T22:27:31+08:00">
+                2017-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前写过一篇 <a href="https://github.com/kaola-fed/blog/issues/103" target="_blank" rel="noopener">Regular 组件开发的一些建议</a> 的文章提到了日常开发Regular组件的一些槽点，并提出了在简单需求，不使用状态管理框架时的一些替代方案。本文的目的便是填前文的一个坑，即较复杂需求下 Redux 引入方案。</p>
+<h1 id="关于-Redux"><a href="#关于-Redux" class="headerlink" title="关于 Redux"></a><a href="http://cn.redux.js.org/index.html" target="_blank" rel="noopener">关于 Redux</a></h1><blockquote>
+<p>Redux 是 JavaScript 状态容器，提供可预测化的状态管理。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="看一个简单的-DEMO"><a href="#看一个简单的-DEMO" class="headerlink" title="看一个简单的 DEMO"></a>看一个简单的 DEMO</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> store = redux.createStore(<span class="function"><span class="keyword">function</span>(<span class="params">prevState, action</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!prevState) &#123;</div><div class="line">        prevState = &#123;</div><div class="line">            <span class="attr">count</span>: <span class="number">0</span></div><div class="line">        &#125;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">switch</span>(action.type) &#123;</div><div class="line">        <span class="keyword">case</span> <span class="string">'REQUEST'</span>:</div><div class="line">            <span class="keyword">return</span> &#123;</div><div class="line">                <span class="attr">count</span>: prevState.count + <span class="number">1</span></div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> prevState;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">store.dispatch(&#123;</div><div class="line">    <span class="attr">type</span>: <span class="string">'REQUEST'</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">store.subscribe(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(store.getState());</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>理解他，我们可以结合后端 MVC 的 web 模型<br><img src="https://haitao.nos.netease.com/b9190c99-f5a3-4637-890e-9a597f2099f4.jpeg" alt="web架构"><br><img src="https://haitao.nos.netease.com/d8d909af-b660-48bb-a197-542421332ecc.jpeg" alt="redux架构"></p>
+<h1 id="演员表"><a href="#演员表" class="headerlink" title="演员表"></a>演员表</h1><h2 id="Store-饰演-应用服务器"><a href="#Store-饰演-应用服务器" class="headerlink" title="Store 饰演 应用服务器"></a>Store 饰演 应用服务器</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> store = redux.createStore(f);</div></pre></td></tr></table></figure>
+<p>createStore 这个 API 会创建一台应用服务器，包含数据库存储，以及一个 web Server</p>
+<h2 id="State-饰演-DataBase"><a href="#State-饰演-DataBase" class="headerlink" title="State 饰演 DataBase"></a>State 饰演 DataBase</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> state = store.getState()</div></pre></td></tr></table></figure>
+<p>getState 操作会返回当前的服务器数据库数据，这台数据库 bind 了 0.0.0.0（闭包），所以外界无法操作关于数据库的信息，只能通过内部的服务对数据库做修改</p>
+<h2 id="Action-饰演请求"><a href="#Action-饰演请求" class="headerlink" title="Action 饰演请求"></a>Action 饰演请求</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">store.dispatch(&#123;</div><div class="line">    <span class="attr">type</span>: <span class="string">'type'</span>,</div><div class="line">    <span class="attr">payload</span>: &#123;&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>dispatch(action) 的操作就像是往服务器发送请求。action.type 就像是请求的 uri，action.payload 就像是请求的 body/query。</p>
+<h2 id="Reducer-饰演-Controller-Service-DAO"><a href="#Reducer-饰演-Controller-Service-DAO" class="headerlink" title="Reducer 饰演 Controller + Service + DAO"></a>Reducer 饰演 Controller + Service + DAO</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> reducer = <span class="function"><span class="keyword">function</span> (<span class="params">prevState, action</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!prevState) &#123;</div><div class="line">        <span class="keyword">return</span> &#123;&#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">switch</span>(action.type) &#123;</div><div class="line">        <span class="comment">// 分发处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> prevState;</div><div class="line">&#125;</div><div class="line">redux.createStore(reducer);</div></pre></td></tr></table></figure>
+<p>相应请求会进入对应的控制器（就像 reducer 的 switch 判断），而控制器内也会对请求携带的信息(payload)做分析，来实现对数据库的增删改查。</p>
+<h1 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h1><h2 id="单一数据源"><a href="#单一数据源" class="headerlink" title="单一数据源"></a>单一数据源</h2><blockquote>
+<p>整个应用的 state 被储存在一棵 object tree 中，并且这个 object tree 只存在于唯一一个 store 中。</p>
+</blockquote>
+<p>一般情况下 createStore 创建的 store ，将作用于整个应用</p>
+<h2 id="State-是只读的"><a href="#State-是只读的" class="headerlink" title="State 是只读的"></a>State 是只读的</h2><blockquote>
+<p>唯一改变 state 的方法就是触发 action，action 是一个用于描述已发生事件的普通对象。</p>
+</blockquote>
+<p>避免人为的操作 state 变量，造成状态变化不可预测的情况，人为修改 state 的方式被切断了。</p>
+<p>至于如何实现，<a href="https://github.com/ImHype/tiny-redux/blob/master/src/createStore.js#L5" target="_blank" rel="noopener">点我看源码</a></p>
+<p><code>createStore</code> 的操作，会创建一个内部变量 state, 由于 return 出来的 <code>dispatch</code> 和 <code>subscribe</code> 方法保持了对 state 变量的引用，所以 state 会以闭包的形式存活下来。</p>
+<h2 id="使用纯函数来执行修改"><a href="#使用纯函数来执行修改" class="headerlink" title="使用纯函数来执行修改"></a>使用纯函数来执行修改</h2><blockquote>
+<p>为了描述 action 如何改变 state tree ，你需要编写 reducers。</p>
+</blockquote>
+<p>使用纯函数，可测试性和可维护性得到了保障。</p>
+<h1 id="完成与视图层的绑定"><a href="#完成与视图层的绑定" class="headerlink" title="完成与视图层的绑定"></a>完成与视图层的绑定</h1><p>Redux 职责是状态管理，并非只限定于前端开发，要使用到 web 开发当中，还缺少一个部分，完成 MVC 中剩下的一些操作（渲染页面）。</p>
+<p><img src="https://haitao.nos.netease.com/b9190c99-f5a3-4637-890e-9a597f2099f4.jpeg" alt="web架构"><br><img src="https://haitao.nos.netease.com/6f685b72-19bd-4dfd-a191-0de7d0dfa10e.jpg" alt="v-redux架构"></p>
+<h2 id="两个重要的-API"><a href="#两个重要的-API" class="headerlink" title="两个重要的 API"></a>两个重要的 API</h2><ul>
+<li>store.subscribe(f) - 发布订阅模型， 方法 f 会在 dispatch 触发后执行</li>
+<li>store.getState() - return 出当前完整的 state 树</li>
+</ul>
+<h2 id="简单粗暴的方式"><a href="#简单粗暴的方式" class="headerlink" title="简单粗暴的方式"></a>简单粗暴的方式</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> store = redux.createStore(reducer);</div><div class="line"><span class="keyword">const</span> ComponentA = Regular.extend(&#123;</div><div class="line">    config() &#123;</div><div class="line">        <span class="keyword">const</span> ctx = <span class="keyword">this</span>;</div><div class="line">        store.subscribe(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">const</span> state = store.getState();</div><div class="line">            <span class="keyword">const</span> mapData = &#123;</div><div class="line">                <span class="attr">clicked</span>: state.clicked,</div><div class="line">            &#125;</div><div class="line">            <span class="built_in">Object</span>.assign(ctx.data, mapData);</div><div class="line">            ctx.$update();</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="两个问题"><a href="#两个问题" class="headerlink" title="两个问题"></a>两个问题</h2><ol>
+<li>Store 获取</li>
+<li>mapData 与 $update 操作不可复用</li>
+</ol>
+<h2 id="更优雅的绑定方式"><a href="#更优雅的绑定方式" class="headerlink" title="更优雅的绑定方式"></a>更优雅的绑定方式</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">StoreProvier</span> <span class="attr">store</span>=<span class="string">&#123;store&#125;</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Component</span>&gt;</span><span class="tag">&lt;/<span class="name">Component</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">StoreProvier</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Component = connect(&#123;</div><div class="line">    mapState(state) &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            <span class="attr">clicked</span>: state.clicked,</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;)(Regular.extend(&#123;</div><div class="line">    config() &#123;</div><div class="line">    &#125;</div><div class="line">&#125;))</div></pre></td></tr></table></figure>
+<h3 id="1-StoreProvier"><a href="#1-StoreProvier" class="headerlink" title="1. StoreProvier"></a>1. <a href="https://github.com/ImHype/regular-redux-connector/blob/master/src/StoreProvider.js" target="_blank" rel="noopener">StoreProvier</a></h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Regular.extend(&#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'StoreProvider'</span>,</div><div class="line">    <span class="attr">template</span>: <span class="string">'&#123;#include this.$body&#125;'</span>,</div><div class="line">    config(&#123;store&#125; = <span class="keyword">this</span>.data) &#123;</div><div class="line">       <span class="keyword">if</span> (!store) &#123;</div><div class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Provider expected data.store to be store instance created by redux.createStore()'</span>)</div><div class="line">       &#125;</div><div class="line">       </div><div class="line">       store.subscribe(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">           <span class="keyword">this</span>.$update();</div><div class="line">       &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="2-connect"><a href="#2-connect" class="headerlink" title="2. connect"></a>2. <a href="https://github.com/ImHype/regular-redux-connector/blob/master/src/connect.js" target="_blank" rel="noopener">connect</a></h3><blockquote>
+<p>统一从最外层的 StoreProvider 组件获取 store，保证单一数据源</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getStore</span>(<span class="params">ctx</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> parent = ctx.$parent;</div><div class="line">    <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (!parent) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Expected root Component be Provider!'</span>)</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (parent.data.store) &#123;</div><div class="line">            <span class="keyword">return</span> parent.data.store;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        parent = parent.$parent;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params">&#123;</span></span></div><div class="line">    mapState = () =&gt; (<span class="params">&#123;&#125;</span>),</div><div class="line">    <span class="title">dispatch</span></div><div class="line">&#125; = &#123;&#125;) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">Component</span>) =&gt;</span> Component.implement(&#123;</div><div class="line">        <span class="attr">events</span>: &#123;</div><div class="line">            $config(data = <span class="keyword">this</span>.data) &#123;</div><div class="line">                <span class="keyword">const</span> store = getStore(<span class="keyword">this</span>);</div><div class="line">                <span class="keyword">const</span> mapStateFn = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">                    <span class="keyword">const</span> state = store.getState();</div><div class="line">                    <span class="keyword">const</span> mappedData = mapState.call(<span class="keyword">this</span>, state);</div><div class="line">                    mappedData &amp;&amp; <span class="built_in">Object</span>.assign(<span class="keyword">this</span>.data, mappedData);</div><div class="line">                &#125;</div><div class="line">                mapStateFn();</div><div class="line"></div><div class="line">                <span class="keyword">const</span> unSubscribe = store.subscribe(mapStateFn);</div><div class="line">                </div><div class="line">                <span class="keyword">if</span> (dispatch) &#123;</div><div class="line">                    <span class="keyword">this</span>.$dispatch = store.dispatch;</div><div class="line">                &#125;</div><div class="line">                </div><div class="line">                <span class="keyword">this</span>.$on(<span class="string">'destroy'</span>, unSubscribe);</div><div class="line">            &#125; </div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>至此回过头看 regualr-redux 的架构图，发现正是 <code>StoreProvier</code> 和 <code>connect</code> 操作帮助 <code>redux</code> 完成了与 MVC 相差的更新视图操作。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>借助 redux 与特定框架的连接器，我们会发现，对特定 MVVM 框架的要求会变得很低 – mapState 操作可以完成 类似 Vue 中 computed/filter 的操作。</p>
+<p>所以，如今还在半残废中的微信小程序也很适合基于这套思路来结合 redux (逃)。</p>
+<p>带来的好处是，你可以安心维护你的模型层，不用担心 <code>data</code> 过大导致的脏值检查缓慢，也不需要考虑一些逻辑相关的数据不放入 <code>data</code> 那该放入何处。</p>
+<p>相信阅读此文，你会对 <code>Redux</code> 解决问题的方式有了一定的认识，而继续深入的一些方向有:</p>
+<ul>
+<li><a href="http://cn.redux.js.org/docs/advanced/Middleware.html" target="_blank" rel="noopener">middleway</a> 实现原理，redux-logger 和 redux-thunk 等实现方案；</li>
+<li><a href="http://cn.redux.js.org/docs/recipes/reducers/NormalizingStateShape.html" target="_blank" rel="noopener">State 范式化</a>；</li>
+<li><a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0" target="_blank" rel="noopener">Presentational and Container Components</a></li>
+<li>单页的 redux 架构设计</li>
+</ul>
+<p>全文完 ；）</p>
+<p>by <a href="http://github.com/imhype/" target="_blank" rel="noopener">君羽</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/26/不同加载方式的js脚本执行顺序的观察/" rel="next" title="不同加载方式的js脚本执行顺序的观察">
+                <i class="fa fa-chevron-left"></i> 不同加载方式的js脚本执行顺序的观察
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/27/Regular 组件开发的一些建议/" rel="prev" title="Regular 组件开发的一些建议">
+                Regular 组件开发的一些建议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于-Redux"><span class="nav-number">1.</span> <span class="nav-text">关于 Redux</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#看一个简单的-DEMO"><span class="nav-number">2.</span> <span class="nav-text">看一个简单的 DEMO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#演员表"><span class="nav-number">3.</span> <span class="nav-text">演员表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Store-饰演-应用服务器"><span class="nav-number">3.1.</span> <span class="nav-text">Store 饰演 应用服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State-饰演-DataBase"><span class="nav-number">3.2.</span> <span class="nav-text">State 饰演 DataBase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Action-饰演请求"><span class="nav-number">3.3.</span> <span class="nav-text">Action 饰演请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducer-饰演-Controller-Service-DAO"><span class="nav-number">3.4.</span> <span class="nav-text">Reducer 饰演 Controller + Service + DAO</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计原则"><span class="nav-number">4.</span> <span class="nav-text">设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单一数据源"><span class="nav-number">4.1.</span> <span class="nav-text">单一数据源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State-是只读的"><span class="nav-number">4.2.</span> <span class="nav-text">State 是只读的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用纯函数来执行修改"><span class="nav-number">4.3.</span> <span class="nav-text">使用纯函数来执行修改</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完成与视图层的绑定"><span class="nav-number">5.</span> <span class="nav-text">完成与视图层的绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#两个重要的-API"><span class="nav-number">5.1.</span> <span class="nav-text">两个重要的 API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单粗暴的方式"><span class="nav-number">5.2.</span> <span class="nav-text">简单粗暴的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个问题"><span class="nav-number">5.3.</span> <span class="nav-text">两个问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更优雅的绑定方式"><span class="nav-number">5.4.</span> <span class="nav-text">更优雅的绑定方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-StoreProvier"><span class="nav-number">5.4.1.</span> <span class="nav-text">1. StoreProvier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-connect"><span class="nav-number">5.4.2.</span> <span class="nav-text">2. connect</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

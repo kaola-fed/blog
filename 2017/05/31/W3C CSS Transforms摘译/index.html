@@ -1,0 +1,799 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="CSS Transforms可以对一个元素进行二维平面或三维空间的变换，如translate, rotate, scale和skew等变换。 下面是对W3C官网CSS Transforms模块的部分摘译，为了理解的连贯性，调整了W3C规范中相关章节的顺序。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W3C CSS Transforms摘译">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/31/W3C CSS Transforms摘译/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="CSS Transforms可以对一个元素进行二维平面或三维空间的变换，如translate, rotate, scale和skew等变换。 下面是对W3C官网CSS Transforms模块的部分摘译，为了理解的连贯性，调整了W3C规范中相关章节的顺序。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.w3.org/TR/css-transforms-1/3x3matrix.png">
+<meta property="og:image" content="https://www.w3.org/TR/css-transforms-1/coordinates.svg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.374Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="W3C CSS Transforms摘译">
+<meta name="twitter:description" content="CSS Transforms可以对一个元素进行二维平面或三维空间的变换，如translate, rotate, scale和skew等变换。 下面是对W3C官网CSS Transforms模块的部分摘译，为了理解的连贯性，调整了W3C规范中相关章节的顺序。">
+<meta name="twitter:image" content="https://www.w3.org/TR/css-transforms-1/3x3matrix.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/31/W3C CSS Transforms摘译/"/>
+
+
+
+
+
+  <title>W3C CSS Transforms摘译 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/31/W3C CSS Transforms摘译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                W3C CSS Transforms摘译
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-31T00:00:00+08:00">
+                2017-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+-->
+<hr>
+<p><strong>CSS Transforms</strong>可以对一个元素进行二维平面或三维空间的变换，如translate, rotate, scale和skew等变换。</p>
+<p>下面是对W3C官网CSS Transforms模块的部分摘译，为了理解的连贯性，调整了W3C规范中相关章节的顺序。</p>
+<a id="more"></a>
+<hr>
+<h3 id="5-二维子集（Two-Dimensional-Subset）"><a href="#5-二维子集（Two-Dimensional-Subset）" class="headerlink" title="5. 二维子集（Two Dimensional Subset）"></a>5. 二维子集（Two Dimensional Subset）</h3><p>用户浏览器（UAs）可能不总能渲染出三维变换，那么它们就只能支持该规范的一个二维子集。在这种情况下，三维变换和<strong>transform-style、perspective、perspective-origin</strong>以及<strong>backface-visibility</strong>属性将不被支持。三维相关的变换渲染也不会起作用。</p>
+<blockquote>
+<p>对于二维变换情况，矩阵分解采用<strong>Graphics Gems II（Jim Arvo著）</strong>书中<strong><a href="https://github.com/erich666/GraphicsGems/blob/master/gemsii/unmatrix.c" target="_blank" rel="noopener">unmatrix</a></strong>算法的二维简化版本。下面是一个二维的3x3变换矩阵，其中6个参数a~f，分别对应二维变换函数<strong>matrix(a, b, c, d, e, f)</strong>的6个参数。</p>
+<p><img src="https://www.w3.org/TR/css-transforms-1/3x3matrix.png" alt="二维变换的3x3矩阵"></p>
+<p>图1 二维变换3x3矩阵</p>
+<p>开发者可以很简单的为不支持三维变换的浏览器提供备选变换方案。下面的例子中，<strong>transform</strong>属性有两次赋值定义。第一次定义包括了两个二维变换函数，第二次定义包括一个二维变换和一个三维变换。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt; div &#123;</div><div class="line">&gt;   transform: scale(2) rotate(45deg);</div><div class="line">&gt;   transform: scale(2) rotate3d(0, 0, 1, 45deg);</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure></p>
+<p>当浏览器支持三维变换时，第二次属性定义将覆盖第一次的定义，当不支持三维变换时，第二次定义将会失效，浏览器会使用第一种定义。</p>
+<p><a href="http://www.useragentman.com/blog/2011/01/07/css3-matrix-transform-for-the-mathematically-challenged/" target="_blank" rel="noopener">常见的变换矩阵以及计算示例</a></p>
+</blockquote>
+<h3 id="6-变换渲染模型（The-Transform-Rendering-Model）"><a href="#6-变换渲染模型（The-Transform-Rendering-Model）" class="headerlink" title="6. 变换渲染模型（The Transform Rendering Model）"></a>6. 变换渲染模型（The Transform Rendering Model）</h3><p>当为元素的<strong>transform</strong>属性指定了一个非<strong>none</strong>属性值时，就会在该元素上建立了一个<strong>本地坐标系（local coordinate system）</strong>。从元素最初始的渲染（未指定<strong>transform</strong>属性值）到<strong>本地坐标系</strong>的映射由该元素的<strong>变换矩阵（transformation matrix）</strong>给定。变换是可累积的，也就是说，元素是在它们祖先的坐标系中建立自己的<strong>本地坐标系</strong>。从用户的角度来看，就是一个元素会累积应用所有它祖先<strong>‘transform’</strong>属性设置的变换，以及自身<strong>“transform”</strong>属性设置的变换，规范中将这些变换的累积称为元素<strong>当前变换矩阵（current transformation matrix, CTM）</strong>。</p>
+<p>坐标空间是一个有两个轴的坐标系：X轴是水平向右增加，Y轴是垂直向下增加。三维变换函数将这个坐标空间扩展到三维，增加了垂直于屏幕平面一个Z轴，并且指向观察者。</p>
+<blockquote>
+<p><img src="https://www.w3.org/TR/css-transforms-1/coordinates.svg" alt="初始坐标空间示例"></p>
+<p>图2 初始坐标空间示例</p>
+</blockquote>
+<p>变换矩阵是基于<strong>‘transform’</strong>和<strong>‘transform-origin’</strong>属性，按照以下步骤计算而来：</p>
+<ol>
+<li>从单位矩阵开始</li>
+<li>首先按照<strong>‘transform-origin’</strong>属性的X，Y，Z 值进行位移</li>
+<li>从左至右依次乘以<strong>‘transform’</strong>属性中指定的各个变换函数</li>
+<li>最后再按照<strong>‘transform-origin’</strong>属性的X，Y，Z 值的负值进行位移</li>
+</ol>
+<blockquote>
+<p>注意，变换只是影响了元素的显示，不影响元素自身CSS的布局。意味着变化不会影响<strong>getClientRects()</strong>及<strong>getBoundingClientRect()</strong>的值。对于基于CSS盒模型布局定位的元素，如果该元素的<strong>transform</strong>属性为<strong>非none</strong>，则该元素将成为其所有fixed定位的后代元素的<strong>包含块（Containing Block）</strong>。</p>
+<p><strong><a href="http://codepen.io/llwanghong/pen/yOvrOZ?editors=1111" target="_blank" rel="noopener">示例1</a>，<a href="http://codepen.io/llwanghong/pen/wGyZxQ?editors=1111" target="_blank" rel="noopener">示例2</a>，<a href="http://codepen.io/llwanghong/pen/YqeMBY" target="_blank" rel="noopener">示例3</a></strong></p>
+</blockquote>
+<h3 id="18-变换函数的元和派生（Transform-function-primitives-and-derivatives）"><a href="#18-变换函数的元和派生（Transform-function-primitives-and-derivatives）" class="headerlink" title="18. 变换函数的元和派生（Transform function primitives and derivatives）"></a>18. 变换函数的元和派生（Transform function primitives and derivatives）</h3><p>transform中一些变换函数的效果可以通过更具体的变换函数来实现，比如translate的一些操作可以用translateX来实现。此时称translate为<strong>元变换</strong>，translateX为<strong>派生变换</strong>。</p>
+<p>下面列出了所有二维和三维的元变换以及相应的派生变换。</p>
+<p>####二维元变换以及相应的派生变换</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元变换</th>
+<th style="text-align:left">派生变换</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">translate()</td>
+<td style="text-align:left">translateX(), translateY(), translate()</td>
+</tr>
+<tr>
+<td style="text-align:left">rotate()带三个参数</td>
+<td style="text-align:left">rotate()带一个或三个参数</td>
+</tr>
+<tr>
+<td style="text-align:left">scale()</td>
+<td style="text-align:left">scaleX(), scaleY()，scale()</td>
+</tr>
+</tbody>
+</table>
+<p>####三维元变换以及相应的派生变换</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元变换</th>
+<th style="text-align:left">派生变换</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">translate3d()</td>
+<td style="text-align:left">translateX(), translateY(), translateZ(), translate()</td>
+</tr>
+<tr>
+<td style="text-align:left">scale3d()</td>
+<td style="text-align:left">scaleX(), scaleY(), scaleZ(), scale()</td>
+</tr>
+<tr>
+<td style="text-align:left">rotate3d()</td>
+<td style="text-align:left">rotate(), roateX(), rotateY(), rotateZ()</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>对于同时具有二维和三维元变换的派生变换，具体是使用二维元变换或三维的元变换，是由上下文环境来决定。</p>
+</blockquote>
+<h3 id="19-元变换函数和派生变换函数的插值（Interpolation-of-primitives-and-derived-transform-functions）"><a href="#19-元变换函数和派生变换函数的插值（Interpolation-of-primitives-and-derived-transform-functions）" class="headerlink" title="19. 元变换函数和派生变换函数的插值（Interpolation of primitives and derived transform functions）"></a>19. 元变换函数和派生变换函数的插值（Interpolation of primitives and derived transform functions）</h3><p>两个具有相同数量参数的变换函数，会直接进行数值的插值计算，而不需要转换为相同的元变换。插值计算的结果即是带有相同参数的相同变换。对于<strong>rotate3d(), matrix(), matrix3d(), perspective()</strong>有特殊的插值计算规则。</p>
+<blockquote>
+<p>例如，对于变换函数<strong>translate(0)</strong>和<strong>translate(100px)</strong>，就是两个具有相同数量参数的相同变换，所以它们会直接进行数值上的插值计算。但是对于变换函数<strong>translateX(100px)</strong>和<strong>translate(100px, 0)</strong>，两个变换既不是相同的变换，使用的参数数量也不同，所以它们就需要先转换为元变换函数，然后才能进行数值上的插值计算。</p>
+</blockquote>
+<p>两个不同的变换，但都是从相同的元变换派生出来的（即相同的派生变换），或者相同的变换，但使用了不同数量的参数，此时两个变换可以进行数值插值计算。需要先将两种变换转换为相同的元变换，然后才能进行数值插值计算。插值计算的结果相当于使用了相同数量参数的相同元变换。</p>
+<blockquote>
+<p>下面的例子，当div发生鼠标hover事件时，会发生从<strong>translateX(100px)</strong>到<strong>translateY(100px)</strong>的3秒过渡变换。此时两个变换都是从相同的元变换translate()派生的，所以需要先将两个变换转换为<strong>translate()</strong>元变换，然后才能进行数值插值计算。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; div &#123;</div><div class="line">&gt;   transform: translateX(100px);</div><div class="line">&gt; &#125;</div><div class="line">&gt; </div><div class="line">&gt; div:hover &#123;</div><div class="line">&gt;   transform: translateY(100px);</div><div class="line">&gt;   transition: transform 3s;</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure></p>
+<p>当发生3秒的transition时，<strong>translateX(100px)</strong>将会转化为<strong>translate(100px, 0)</strong>，<strong>translateY(100px)</strong>会转化为<strong>translate(0, 100px)</strong>，然后两个变换才能进行数值的插值计算。</p>
+</blockquote>
+<p>如果两个变换都可以从同一个二维元变换派生，则都会转换为二维元变换。如果其中一个是或者都是三维变换，则会都转换为三维元变换。</p>
+<blockquote>
+<p>下面的例子中，一个二维变换函数经过3秒过渡变换到三维变换函数。两个变换函数的公共元变换为<strong>translate3d()</strong>。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; div &#123;</div><div class="line">&gt;   transform: translateX(100px);</div><div class="line">&gt; &#125;</div><div class="line">&gt; </div><div class="line">&gt; div:hover &#123;</div><div class="line">&gt;   transform: translateZ(100px);</div><div class="line">&gt;   transition: transform 3s;</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure></p>
+<p>当发生3s的transition时，<strong>translateX(100px)</strong>会转化为<strong>translate3d(100px, 0, 0)</strong>，<strong>translateZ(100px)</strong>会转化为<strong>translate3d(0, 0, 100px)</strong>，然后两个变换才能进行数值的插值计算。</p>
+</blockquote>
+<p>对于<strong>matrix(), matrix3d(), perspective()</strong>三种变换将会首先被转化为4x4的矩阵，然后进行矩阵的插值计算。<br>对于<strong>rotate3d()</strong>的插值计算，首先会得到两个变换的单位方向向量，如果相等，则可以直接进行数值的插值计算；否则，就需要先将两种变换转化为4x4的矩阵，然后对矩阵进行插值计算。</p>
+<h3 id="17-变换的插值（Interpolation-of-Transforms）"><a href="#17-变换的插值（Interpolation-of-Transforms）" class="headerlink" title="17. 变换的插值（Interpolation of Transforms）"></a>17. 变换的插值（Interpolation of Transforms）</h3><p>当变换函数之间发生过渡时（比如对transforms施加transition属性），就需要对变换函数进行插值计算。从一个初始的变换（<strong>from-transform</strong>）到一个结束的变换（<strong>to-transform</strong>），如何进行插值计算需要遵循下面的规则。</p>
+<h4 id="I-当from-transform和to-transform的值都为none"><a href="#I-当from-transform和to-transform的值都为none" class="headerlink" title="I. 当from-transform和to-transform的值都为none"></a>I. 当from-transform和to-transform的值都为none</h4><p>此时没有必要进行计算，保持原值。</p>
+<h4 id="当from-transform和to-transform中有一个的值为none"><a href="#当from-transform和to-transform中有一个的值为none" class="headerlink" title="||. 当from-transform和to-transform中有一个的值为none"></a>||. 当from-transform和to-transform中有一个的值为none</h4><p>值为<strong>none</strong>的那个将被替换为<strong>恒等变化（Identity Transform functions）</strong>，然后继续按照下面的规则进行插值计算。</p>
+<blockquote>
+<p> <strong>恒等变换（Identity Transform functions）</strong> 就是标准里给出的一系列特殊的变换函数，类似线性代数里面的单位矩阵（Identity Matrix），无论怎么施加多少次变换，都不会改变原有的变换，标准里面给出的恒等变换有<strong>translate(0)、translate3d(0, 0, 0)、translateX(0)、translateY(0)、translateZ(0)、scale(1)、scaleX(1)、scaleY(1)、scaleZ(1)、rotate(0)、rotate3d(1, 1, 1, 0)、rotateX(0)、rotateY(0)、rotateZ(0)、skew(0, 0)、skewX(0)、skewY(0)、matrix(1, 0, 0, 1, 0, 0)</strong>和<strong>matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)</strong>。一种特殊的情况是<strong>透视(perspective): perspective(infinity)</strong>，此时<strong>M34</strong>的值变得无穷小，因此假定它等于单位矩阵。</p>
+<p>例如，<strong>from-transform</strong>为<strong>scale(2)</strong>，<strong>to-transform</strong>为<strong>none</strong>， 则<strong>none</strong>将会被替换为<strong>scale(1)</strong>，然后继续按照下面的规则进行插值。类似的，如果<strong>from-transform</strong>为<strong>none</strong>，<strong>to-transform</strong>为<strong>scale(2) rotate(50deg)</strong>，则<strong>from-transform</strong>会被替换为<strong>scale(1) rotate(0)</strong>。</p>
+</blockquote>
+<h4 id="III-如果from-transform和to-transform中都使用了相同数量的变换函数，并且各个对应的变化是相同的变换或是从相同的元变换派生的变换。"><a href="#III-如果from-transform和to-transform中都使用了相同数量的变换函数，并且各个对应的变化是相同的变换或是从相同的元变换派生的变换。" class="headerlink" title="III. 如果from-transform和to-transform中都使用了相同数量的变换函数，并且各个对应的变化是相同的变换或是从相同的元变换派生的变换。"></a>III. 如果from-transform和to-transform中都使用了相同数量的变换函数，并且各个对应的变化是相同的变换或是从相同的元变换派生的变换。</h4><p>按照<strong>元变换函数和派生变换函数的插值</strong>里面的步骤，对<strong>from-transform</strong>和<strong>to-transform</strong>对应的变换进行插值。计算出的结果作为最终的变换。</p>
+<blockquote>
+<p>例如，<strong>from-transform</strong>为<strong>scale(1) translate(0)</strong>，<strong>to-transform</strong>为<strong>translate(100px) scale(2)</strong>，虽然都是用了scale和translate变换，但是对应的变换既不相同也不是从相同的元变换派生出来的，此时就不能按照本条规则来进行插值计算。 </p>
+</blockquote>
+<h4 id="IV-所有其他情况"><a href="#IV-所有其他情况" class="headerlink" title="IV. 所有其他情况"></a>IV. 所有其他情况</h4><p><strong>from-transform</strong>和<strong>to-transform</strong>中使用的变换都会被转化为4x4的矩阵，并进行相应的矩阵插值计算。如果<strong>from-transform</strong>和<strong>to-transform</strong>对应的变换矩阵都可以表示成3x2矩阵或者matrix3d矩阵，则元素就按照相应插值计算的矩阵进行变换渲染。在某些特殊的情况下，变化矩阵可能是一个奇异或不可逆矩阵，则元素将不会被渲染。</p>
+<h3 id="20-矩阵的插值（Interpolation-of-Matrices）"><a href="#20-矩阵的插值（Interpolation-of-Matrices）" class="headerlink" title="20. 矩阵的插值（Interpolation of Matrices）"></a>20. 矩阵的插值（Interpolation of Matrices）</h3><p>当对两个矩阵进行插值时，首先将矩阵分解为一系列变换操作的值，比如对应的translation、rotation、scale和skew的变换矩阵，然后对各个变换操作对应的矩阵进行数值插值计算，最后将各个变换矩阵重新组合为原始矩阵。</p>
+<blockquote>
+<p>下面的例子中，元素初始变换为rotate(45deg)，当发生hover时，将会在X轴和Y轴移动100像素，并旋转1170度。如果设计人员给出下面的写法，很可能是期望看到元素会顺时针旋转3.5圈（1170度）。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; &lt;style&gt;</div><div class="line">&gt; div &#123;</div><div class="line">&gt;   transform: rotate(45deg);</div><div class="line">&gt; &#125;</div><div class="line">&gt; div:hover &#123;</div><div class="line">&gt;   transform: translate(100px, 100px) rotate(1215deg);</div><div class="line">&gt;   transition: transform 3s;</div><div class="line">&gt; &#125;</div><div class="line">&gt; &lt;/style&gt;</div><div class="line">&gt; </div><div class="line">&gt; &lt;div&gt;&lt;/div&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure></p>
+<p>初始变换<strong>‘rotate(45deg)’</strong>和目标变换<strong><em>‘translate(100px, 100px) rotate(1125deg)’</em>完全不同，按照*</strong>变换的插值<strong><em> 最后一条规则，两个变换都需要进行矩阵的插值计算。但需要注意，将变换转化为矩阵的过程中，旋转3圈的信息将会丢失掉，所以最终看到的效果只顺时针旋转了半圈（90度）。<br>为了达到期望的效果，只需要更新上述变换的写法，使前后两个变换满足</em></strong>变换的插值<strong>* 的第三条规则。初始变换改为</strong>‘translate(0, 0) rotate(45deg)’**，此时就会进行数值的插值计算，从而不会丢失旋转信息，达到期望的效果。</p>
+<p><strong><a href="http://codepen.io/llwanghong/pen/mPXgNj" target="_blank" rel="noopener">示例4</a></strong></p>
+</blockquote>
+<p>具体的decomposing和recomposing矩阵的算法，见<a href="http://www.amazon.com/Graphics-Gems-II-IBM-No/dp/0120644819" target="_blank" rel="noopener">Graphics Gems II</a>。</p>
+<p>译 by Hong</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/31/Flux与Redux浅析/" rel="next" title="Flux与Redux浅析">
+                <i class="fa fa-chevron-left"></i> Flux与Redux浅析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/31/css3 pointer-events 介绍/" rel="prev" title="css3 pointer-events">
+                css3 pointer-events <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-二维子集（Two-Dimensional-Subset）"><span class="nav-number">1.</span> <span class="nav-text">5. 二维子集（Two Dimensional Subset）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-变换渲染模型（The-Transform-Rendering-Model）"><span class="nav-number">2.</span> <span class="nav-text">6. 变换渲染模型（The Transform Rendering Model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-变换函数的元和派生（Transform-function-primitives-and-derivatives）"><span class="nav-number">3.</span> <span class="nav-text">18. 变换函数的元和派生（Transform function primitives and derivatives）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#19-元变换函数和派生变换函数的插值（Interpolation-of-primitives-and-derived-transform-functions）"><span class="nav-number">4.</span> <span class="nav-text">19. 元变换函数和派生变换函数的插值（Interpolation of primitives and derived transform functions）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-变换的插值（Interpolation-of-Transforms）"><span class="nav-number">5.</span> <span class="nav-text">17. 变换的插值（Interpolation of Transforms）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#I-当from-transform和to-transform的值都为none"><span class="nav-number">5.1.</span> <span class="nav-text">I. 当from-transform和to-transform的值都为none</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#当from-transform和to-transform中有一个的值为none"><span class="nav-number">5.2.</span> <span class="nav-text">||. 当from-transform和to-transform中有一个的值为none</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#III-如果from-transform和to-transform中都使用了相同数量的变换函数，并且各个对应的变化是相同的变换或是从相同的元变换派生的变换。"><span class="nav-number">5.3.</span> <span class="nav-text">III. 如果from-transform和to-transform中都使用了相同数量的变换函数，并且各个对应的变化是相同的变换或是从相同的元变换派生的变换。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IV-所有其他情况"><span class="nav-number">5.4.</span> <span class="nav-text">IV. 所有其他情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20-矩阵的插值（Interpolation-of-Matrices）"><span class="nav-number">6.</span> <span class="nav-text">20. 矩阵的插值（Interpolation of Matrices）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

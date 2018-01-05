@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="FormDataXMLHttpRequest Level 2添加了一个新的接口FormData.在开发中使用后，觉得是form表单的加强版。可以异步的，灵活的发送数据，并且包括上传二进制文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FormData介绍与使用">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/01/FormData介绍与使用/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="FormDataXMLHttpRequest Level 2添加了一个新的接口FormData.在开发中使用后，觉得是form表单的加强版。可以异步的，灵活的发送数据，并且包括上传二进制文件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.368Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FormData介绍与使用">
+<meta name="twitter:description" content="FormDataXMLHttpRequest Level 2添加了一个新的接口FormData.在开发中使用后，觉得是form表单的加强版。可以异步的，灵活的发送数据，并且包括上传二进制文件">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/01/FormData介绍与使用/"/>
+
+
+
+
+
+  <title>FormData介绍与使用 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/01/FormData介绍与使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                FormData介绍与使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T00:00:00+08:00">
+                2017-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="FormData"><a href="#FormData" class="headerlink" title="FormData"></a>FormData</h2><p>XMLHttpRequest Level 2添加了一个新的接口FormData.在开发中使用后，觉得是form表单的加强版。可以异步的，灵活的发送数据，并且包括上传二进制文件</p>
+<a id="more"></a>
+<h2 id="创建FormData"><a href="#创建FormData" class="headerlink" title="创建FormData"></a>创建FormData</h2><p>创建FormData的方式</p>
+<ul>
+<li><p>直接创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;companyName&apos;, &apos;test&apos;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>利用form节点初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;form enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; name=&quot;fileinfo&quot;&gt;</div><div class="line">  &lt;label&gt;Your email address:&lt;/label&gt;</div><div class="line">  &lt;input type=&quot;email&quot; autocomplete=&quot;on&quot; autofocus name=&quot;userid&quot; placeholder=&quot;email&quot; required size=&quot;32&quot; maxlength=&quot;64&quot; /&gt;&lt;br /&gt;</div><div class="line">  &lt;label&gt;Custom file label:&lt;/label&gt;</div><div class="line">  &lt;input type=&quot;text&quot; name=&quot;filelabel&quot; size=&quot;12&quot; maxlength=&quot;32&quot; /&gt;&lt;br /&gt;</div><div class="line">  &lt;label&gt;File to stash:&lt;/label&gt;</div><div class="line">  &lt;input type=&quot;file&quot; name=&quot;file&quot; required /&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var fData = new FormData(document.forms.namedItem(&apos;fileinfo&apos;));</div></pre></td></tr></table></figure>
+<h2 id="method"><a href="#method" class="headerlink" title="method"></a>method</h2><h3 id="append"><a href="#append" class="headerlink" title="append"></a>append</h3><p>FormData.append()会添加一个新值到 FormData 对象内的一个已存在的键中，如果键不存在则会添加该键,如果存在则会加在原有的值后面.即类似于数组的2号位<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">formData.append(name,value);</div><div class="line">formData.append(name,value,fileName);</div></pre></td></tr></table></figure></p>
+<p>name: key(键)<br>value: 值<br>fileName: 当value为Blob或者file的时候,fileName为文件名</p>
+<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><p>FormData.delete()会删除一对键值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">formData.delete(name);</div></pre></td></tr></table></figure></p>
+<h3 id="entries"><a href="#entries" class="headerlink" title="entries"></a>entries</h3><p>FormData.entries()会返回一个iterator对象，我们可以通过它遍历FormData的键值.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;companyName&apos;, &apos;test&apos;);</div><div class="line">for(var pair of formData.entries()) &#123;</div><div class="line">   console.log(pair[0]+ &apos;, &apos;+ pair[1]); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">businessId, 3049</div><div class="line">companyName, test</div></pre></td></tr></table></figure></p>
+<h3 id="get"><a href="#get" class="headerlink" title="get"></a>get</h3><p>FormData.get()用于获取key所对应的value的首位值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3050&apos;);</div><div class="line">console.log(formData.get(&apos;businessId&apos;));</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">3049</div></pre></td></tr></table></figure></p>
+<h3 id="getAll"><a href="#getAll" class="headerlink" title="getAll"></a>getAll</h3><p>FormData.getAll()用于获取key所对应的value<br>的全部值。如果对应的值超过一个，则会返回一个数组.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3050&apos;);</div><div class="line">console.log(formData.get(&apos;businessId&apos;));`</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[&apos;3049&apos;,&apos;3050&apos;];</div></pre></td></tr></table></figure></p>
+<h3 id="has"><a href="#has" class="headerlink" title="has"></a>has</h3><p>FormData.has()用于检查是否含有指定的key。返回一个布尔值，true有，false即没有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.has(&apos;businessId&apos;); //false</div><div class="line">formData.append(&apos;businessId&apos;,&apos;3049&apos;);</div><div class="line">formData.has(&apos;businessId&apos;); //true</div></pre></td></tr></table></figure></p>
+<h3 id="keys"><a href="#keys" class="headerlink" title="keys"></a>keys</h3><p>FormData.keys()会返回一个iterator对象，对于遍历所有的key<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;companyName&apos;, &apos;test&apos;);</div><div class="line">for (var key of formData.keys()) &#123;</div><div class="line">   console.log(key); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">businessId</div><div class="line">companyName</div></pre></td></tr></table></figure></p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>FormData.set()方法会对FormData对象里的某个key设置一个新的值，如果该key不存在，则添加。如果存在，不管之前key所对应的值有几个，都会被完全覆盖。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3050&apos;);</div><div class="line">formData.set(&apos;businessId&apos;,&apos;3051&apos;);</div><div class="line">console.log(formData.getAll(&apos;businessId&apos;));</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[&apos;3051&apos;]</div></pre></td></tr></table></figure></p>
+<h3 id="values"><a href="#values" class="headerlink" title="values"></a>values</h3><p>FormData.values()会返回一个iterator对象，values<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var formData = new FormData();</div><div class="line">formData.append(&apos;businessId&apos;, &apos;3049&apos;);</div><div class="line">formData.append(&apos;companyName&apos;, &apos;test&apos;);</div><div class="line">for(var value of formData.values()) &#123;</div><div class="line">   console.log(value); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">3049</div><div class="line">test</div></pre></td></tr></table></figure></p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align:center">Chrome</th>
+<th style="text-align:center">Firfox(Gecko)</th>
+<th style="text-align:center">Intenet Explorer</th>
+<th style="text-align:center">Opera</th>
+<th style="text-align:center">Safari</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Basic support</td>
+<td style="text-align:center">7+</td>
+<td style="text-align:center">4.0(2.0)</td>
+<td style="text-align:center">10+</td>
+<td style="text-align:center">12+</td>
+<td style="text-align:center">5+</td>
+</tr>
+<tr>
+<td>append with filename</td>
+<td style="text-align:center">(Yes)</td>
+<td style="text-align:center">22.0(22.0)</td>
+<td style="text-align:center">?</td>
+<td style="text-align:center">?</td>
+<td style="text-align:center">?</td>
+</tr>
+<tr>
+<td>delete, get, getAll, has, set</td>
+<td style="text-align:center">Behind Flag</td>
+<td style="text-align:center">Not supported</td>
+<td style="text-align:center">Not supported</td>
+<td style="text-align:center">(Yes)</td>
+<td style="text-align:center">Not supported</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/31/EyeDropper 开发实践/" rel="next" title="EyeDropper 开发实践">
+                <i class="fa fa-chevron-left"></i> EyeDropper 开发实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/01/Promise对象剖析/" rel="prev" title="Promise对象剖析">
+                Promise对象剖析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FormData"><span class="nav-number">1.</span> <span class="nav-text">FormData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建FormData"><span class="nav-number">2.</span> <span class="nav-text">创建FormData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method"><span class="nav-number">3.</span> <span class="nav-text">method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#append"><span class="nav-number">3.1.</span> <span class="nav-text">append</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#delete"><span class="nav-number">3.2.</span> <span class="nav-text">delete</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#entries"><span class="nav-number">3.3.</span> <span class="nav-text">entries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get"><span class="nav-number">3.4.</span> <span class="nav-text">get</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getAll"><span class="nav-number">3.5.</span> <span class="nav-text">getAll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#has"><span class="nav-number">3.6.</span> <span class="nav-text">has</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keys"><span class="nav-number">3.7.</span> <span class="nav-text">keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set"><span class="nav-number">3.8.</span> <span class="nav-text">set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#values"><span class="nav-number">3.9.</span> <span class="nav-text">values</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容性"><span class="nav-number">4.</span> <span class="nav-text">兼容性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

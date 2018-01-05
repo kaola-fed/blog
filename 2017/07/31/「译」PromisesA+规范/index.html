@@ -1,0 +1,809 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="官网原文 一份针对健全、通用JavaScript promises对象的开放标准 — 由实现者制定，供实现者参考。 一个 promise 对象代表一个异步操作的最终结果。与promise进行交互的主要方式是通过它的 then 方法，通过该方法注册回调函数，进而接受promise对象最终的值（value）或不能完成（fulfill）的原因（reason）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「译」Promises&#x2F;A+规范">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/31/「译」PromisesA+规范/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="官网原文 一份针对健全、通用JavaScript promises对象的开放标准 — 由实现者制定，供实现者参考。 一个 promise 对象代表一个异步操作的最终结果。与promise进行交互的主要方式是通过它的 then 方法，通过该方法注册回调函数，进而接受promise对象最终的值（value）或不能完成（fulfill）的原因（reason）。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.382Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="「译」Promises&#x2F;A+规范">
+<meta name="twitter:description" content="官网原文 一份针对健全、通用JavaScript promises对象的开放标准 — 由实现者制定，供实现者参考。 一个 promise 对象代表一个异步操作的最终结果。与promise进行交互的主要方式是通过它的 then 方法，通过该方法注册回调函数，进而接受promise对象最终的值（value）或不能完成（fulfill）的原因（reason）。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/31/「译」PromisesA+规范/"/>
+
+
+
+
+
+  <title>「译」Promises/A+规范 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/31/「译」PromisesA+规范/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                「译」Promises/A+规范
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-31T00:00:00+08:00">
+                2017-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://promisesaplus.com/" target="_blank" rel="noopener">官网原文</a></p>
+<p><strong>一份针对健全、通用JavaScript promises对象的开放标准 — 由实现者制定，供实现者参考。</strong></p>
+<p>一个 <em><code>promise</code></em> 对象代表一个异步操作的最终结果。与promise进行交互的主要方式是通过它的 <strong><code>then</code></strong> 方法，通过该方法注册回调函数，进而接受promise对象最终的值（value）或不能完成（fulfill）的原因（reason）。</p>
+<a id="more"></a>
+<p>本规范详细阐述了 <strong><code>then</code></strong> 方法的行为，给所有遵循本规范的promise实现提供了一份通用的实现基础。所以本规范可以认为是非常稳定的。尽管 Promises/A+ 组织可能偶尔会为了处理一些新发现的边界情况（corner cases）对本规范进行微小的向后兼容的修正，如果将要加入较大的不兼容的修正，我们一定会进行仔细详尽的考虑、讨论以及测试。</p>
+<p>从历史上看，本规范是对先前 <a href="http://wiki.commonjs.org/wiki/Promises/A" target="_blank" rel="noopener">Promises/A</a> 规范条款的澄清明确，一方面对其扩展进而覆盖 <em>事实(de facto)</em> 行为（译者注：事实行为应该代表Promise/A中那些已经被广泛采用实现并且规范化的事实标准）；另一方面删除了其中没有规范化或者存在问题的规范条款。</p>
+<p>最后，本规范的核心不会讨论如何创建（create）、完成（fulfill）或者拒绝（reject）promises对象，而是会专注于如何提供一个通用的 <strong><code>then</code></strong> 方法。其它相关规范的未来工作可能会涉及上面的三个主题。</p>
+<h2 id="1-术语（Terminology）"><a href="#1-术语（Terminology）" class="headerlink" title="1. 术语（Terminology）"></a>1. 术语（Terminology）</h2><p><strong>1.1</strong> “promise” 是一个遵循本规范、并拥有 <strong><code>then</code></strong> 方法的对象或函数。</p>
+<p><strong>1.2</strong> “thenable” 是一个定义了 <strong><code>then</code></strong> 方法的对象或函数。</p>
+<p><strong>1.3</strong> “value” 是JavaScript中任意一种合法值(包括 <strong><code>undefined</code></strong>，”thenable”以及”promise”)。</p>
+<p><strong>1.4</strong> “exception” 是一个使用 <strong><code>throw</code></strong> 语句抛出的值。</p>
+<p><strong>1.5</strong> “reason” 是一个指示了promise为何被拒绝（rejected）的值。</p>
+<h2 id="2-要求（Requirements）"><a href="#2-要求（Requirements）" class="headerlink" title="2. 要求（Requirements）"></a>2. 要求（Requirements）</h2><h3 id="2-1-Promise-的状态"><a href="#2-1-Promise-的状态" class="headerlink" title="2.1 Promise 的状态"></a>2.1 Promise 的状态</h3><p>一个 Promise 必须是以下三种状态之一：等待态（pending）、完成态（fulfilled）或拒绝态（rejected）。</p>
+<h4 id="2-1-1-处于等待态（pending）时，promise-对象："><a href="#2-1-1-处于等待态（pending）时，promise-对象：" class="headerlink" title="2.1.1 处于等待态（pending）时，promise 对象："></a>2.1.1 处于等待态（pending）时，promise 对象：</h4><ul>
+<li><strong>2.1.1.1</strong> 可以跳转至完成态或拒绝态</li>
+</ul>
+<h4 id="2-1-2-处于执行态（fulfilled）时，promise-对象："><a href="#2-1-2-处于执行态（fulfilled）时，promise-对象：" class="headerlink" title="2.1.2 处于执行态（fulfilled）时，promise 对象："></a>2.1.2 处于执行态（fulfilled）时，promise 对象：</h4><ul>
+<li><p><strong>2.1.2.1</strong> 不能跳转至任何其它状态</p>
+</li>
+<li><p><strong>2.1.2.2</strong> 必须拥有一个固定不可变的值(value)</p>
+</li>
+</ul>
+<h4 id="2-1-3-处于拒绝态（rejected），promise-对象："><a href="#2-1-3-处于拒绝态（rejected），promise-对象：" class="headerlink" title="2.1.3 处于拒绝态（rejected），promise 对象："></a>2.1.3 处于拒绝态（rejected），promise 对象：</h4><ul>
+<li><p><strong>2.1.3.1</strong> 不能跳转至任何其它状态</p>
+</li>
+<li><p><strong>2.1.3.2</strong> 必须拥有一个固定不可变的原因(reason)</p>
+</li>
+</ul>
+<blockquote>
+<p>这里的“固定不可变”指的是同一个值（identity）（例如，可通过 <strong><code>===</code></strong> 的比较），但并不意味深层次的同一性（译者注：对于复杂深层次对象，深层次属性值的更改不代表promise的值或原因的变化）。</p>
+</blockquote>
+<h3 id="2-2-then-方法"><a href="#2-2-then-方法" class="headerlink" title="2.2 then 方法"></a>2.2 <strong><code>then</code></strong> 方法</h3><p>一个 promise 对象必须提供一个 <strong><code>then</code></strong> 方法来访问其当前值、最终的值或原因。</p>
+<p>promise 对象的 <strong><code>then</code></strong> 方法接受两个参数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">promise.then(onFulfilled, onRejected)</div></pre></td></tr></table></figure>
+<h4 id="2-2-1-onFulfilled-和-onRejected-都是可选参数。"><a href="#2-2-1-onFulfilled-和-onRejected-都是可选参数。" class="headerlink" title="2.2.1 onFulfilled 和 onRejected 都是可选参数。"></a>2.2.1 <strong><code>onFulfilled</code></strong> 和 <strong><code>onRejected</code></strong> 都是可选参数。</h4><ul>
+<li><p><strong>2.2.1.1</strong> 如果 <strong><code>onFulfilled</code></strong> 不是函数，必须将其忽略</p>
+</li>
+<li><p><strong>2.2.1.2</strong> 如果 <strong><code>onRejected</code></strong> 不是函数，必须将其忽略</p>
+</li>
+</ul>
+<h4 id="2-2-2-如果-onFulfilled-是一个函数："><a href="#2-2-2-如果-onFulfilled-是一个函数：" class="headerlink" title="2.2.2 如果 onFulfilled 是一个函数："></a>2.2.2 如果 onFulfilled 是一个函数：</h4><ul>
+<li><p><strong>2.2.2.1</strong> 当 promise 完成（fulfilled）后必须对其调用，并且 promise 最终的值（value）作为第一个参数；</p>
+</li>
+<li><p><strong>2.2.2.2</strong>  promise 未完成（fulfilled）前，不能对其调用</p>
+</li>
+<li><p><strong>2.2.2.3</strong>  调用次数不可超过一次</p>
+</li>
+</ul>
+<h4 id="2-2-3-如果-onRejected-是一个函数："><a href="#2-2-3-如果-onRejected-是一个函数：" class="headerlink" title="2.2.3 如果 onRejected 是一个函数："></a>2.2.3 如果 onRejected 是一个函数：</h4><ul>
+<li><p><strong>2.2.3.1</strong> 当 promise 被拒绝（rejected）后必须对其调用，并且 promise 最终的原因（reason）作为第一个参数；</p>
+</li>
+<li><p><strong>2.2.3.2</strong> promise 未被拒绝（rejected）前，不能对其调用</p>
+</li>
+<li><p><strong>2.2.3.3</strong> 调用次数不可超过一次</p>
+</li>
+</ul>
+<h4 id="2-2-4-onFulfilled-和-onRejected-只有在执行上下文（execution-context）堆栈仅包含平台代码（platform-code）时才可被调用。-3-1"><a href="#2-2-4-onFulfilled-和-onRejected-只有在执行上下文（execution-context）堆栈仅包含平台代码（platform-code）时才可被调用。-3-1" class="headerlink" title="2.2.4 onFulfilled 和 onRejected 只有在执行上下文（execution context）堆栈仅包含平台代码（platform code）时才可被调用。[3.1]"></a>2.2.4 <strong><code>onFulfilled</code></strong> 和 <strong><code>onRejected</code></strong> 只有在<a href="https://es5.github.io/#x10.3" target="_blank" rel="noopener">执行上下文（execution context）</a>堆栈仅包含平台代码（platform code）时才可被调用。[<a href="#3.1">3.1</a>]</h4><h4 id="2-2-5-onFulfilled-和-onRejected-必须被作为函数调用（例如没有-this-值）。-3-2"><a href="#2-2-5-onFulfilled-和-onRejected-必须被作为函数调用（例如没有-this-值）。-3-2" class="headerlink" title="2.2.5 onFulfilled 和 onRejected  必须被作为函数调用（例如没有 this 值）。[3.2]"></a>2.2.5 <strong><code>onFulfilled</code></strong> 和 <strong><code>onRejected</code></strong>  必须被作为函数调用（例如没有 <strong><code>this</code></strong> 值）。[<a href="#3.2">3.2</a>]</h4><h4 id="2-2-6-then-方法可以被同一个promise对象调用多次。"><a href="#2-2-6-then-方法可以被同一个promise对象调用多次。" class="headerlink" title="2.2.6 then 方法可以被同一个promise对象调用多次。"></a>2.2.6 <strong><code>then</code></strong> 方法可以被同一个promise对象调用多次。</h4><ul>
+<li><p><strong>2.2.6.1</strong> 如果/当 <strong><code>promise</code></strong> 执行完成后，所有 <strong><code>onFulfilled</code></strong> 回调函数，必须按照其最初调用 <strong><code>then</code></strong> 的顺序依次执行。</p>
+</li>
+<li><p><strong>2.2.6.2</strong> 如果/当 <strong><code>promise</code></strong> 执行被拒绝后，所有 <strong><code>onRejected</code></strong> 回调函数，必须按照其最初调用 <strong><code>then</code></strong> 的顺序依次执行。</p>
+</li>
+</ul>
+<h4 id="2-2-7-then-方法必须返回一个promise对象-3-3"><a href="#2-2-7-then-方法必须返回一个promise对象-3-3" class="headerlink" title="2.2.7 then 方法必须返回一个promise对象 [3.3]"></a>2.2.7 <strong><code>then</code></strong> 方法必须返回一个promise对象 [<a href="#3.3">3.3</a>]</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">promise2 = promise1.then(onFulfilled, onRejected);</div></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>2.2.7.1</strong> 如果 <strong><code>onFulfilled</code></strong> 或者 <strong><code>onRejected</code></strong> 返回一个值 <strong><code>x</code></strong> ，运行 <em>Promise Resolution Procedure</em> <strong><code>[[Resolve]](promise2, x)</code></strong></p>
+</li>
+<li><p><strong>2.2.7.2</strong> 如果 <strong><code>onFulfilled</code></strong> 或者 <strong><code>onRejected</code></strong> 抛出一个异常 <strong><code>e</code></strong>，则 <strong><code>promise2</code></strong> 必须拒绝执行，并以 <strong><code>e</code></strong> 作为拒绝的原因。</p>
+</li>
+<li><p><strong>2.2.7.3</strong> 如果 <strong><code>onFulfilled</code></strong> 不是函数，并且 <strong><code>promise1</code></strong> 执行完成，<strong><code>promise2</code></strong> 必须成功完成并返回相同的值（value）。</p>
+</li>
+<li><p><strong>2.2.7.4</strong> 如果 <strong><code>onRejected</code></strong> 不是函数，并且 <strong><code>promise1</code></strong> 执行被拒绝，<strong><code>promise2</code></strong> 必须以相同的原因（reason）被拒绝执行。</p>
+</li>
+</ul>
+<h3 id="2-3-Promise-Resolution-Procedure（PRP）"><a href="#2-3-Promise-Resolution-Procedure（PRP）" class="headerlink" title="2.3 Promise Resolution Procedure（PRP）"></a>2.3 Promise Resolution Procedure（PRP）</h3><p><strong><code>Promise Resolution Procedure</code></strong> 是一个抽象的操作，以一个 promise 对象和一个值（value）作为输入参数，我们表示为 <strong><code>[[Resolve]](promise, x)</code></strong>。如果 <strong><code>x</code></strong> 是一个 <strong><code>thenable</code></strong> 的对象（即一个拥有 <strong><code>then</code></strong> 方法的函数或对象），并且其行为和一个promise对象至少有些许相似，PRP就会尝试让 <strong><code>promise</code></strong> 接受 <strong><code>x</code></strong> 的状态；否则，其用 <strong><code>x</code></strong> 的值来执行完成 <strong><code>promise</code></strong>。</p>
+<p>这种处理 <strong><code>thenables</code></strong> 的方式使得各种promise的实现可以互通，只要它们开放出一个与Promise/A+协议兼容的 <strong><code>then</code></strong> 方法即可。这也使得遵循 Promise/A+ 规范的实现可以 <strong><code>接受</code></strong> （译者注：这里的 <strong><code>接受</code></strong>, 原文使用了assimilate这个单词，原意为消化吸收，这里面指的就是可以接受其它非规范化实现的then方法）那些未遵循规范实现的合理的 <strong><code>then</code></strong> 方法。</p>
+<p>通过以下步骤来运行 <strong><code>[[Resolve]](promise, x)</code></strong>：</p>
+<ul>
+<li><strong>2.3.1</strong> 如果 <strong><code>promise</code></strong> 和 <strong><code>x</code></strong> 引用同一对象，以 <strong><code>TypeError</code></strong> 为原因拒绝执行 <strong><code>promise</code></strong>。</li>
+</ul>
+<ul>
+<li><p><strong>2.3.2</strong> 如果 <strong><code>x</code></strong> 是一个promise对象，则promise采纳 <strong><code>x</code></strong> 的状态 [<a href="#3.4">3.4</a>]：</p>
+<ul>
+<li><p><strong>2.3.2.1</strong> 如果 <strong><code>x</code></strong> 处于等待态（pending），<strong><code>promise</code></strong> 必须保持为等待态（pending）直到 <strong><code>x</code></strong> 完成（fulfilled）或 拒绝（rejected）。</p>
+</li>
+<li><p><strong>2.3.2.2</strong> 如果/当 <strong><code>x</code></strong> 已经完成（fulfilled），使用相同的值执行完成 <strong><code>promise</code></strong>。</p>
+</li>
+<li><p><strong>2.3.2.3</strong> 如果/当 <strong><code>x</code></strong> 被拒绝（rejected），使用相同的原因拒绝执行 <strong><code>promise</code></strong>。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>2.3.3</strong> 其它情况，如果 <strong><code>x</code></strong> 为一个对象或者函数：</p>
+<ul>
+<li><p><strong>2.3.3.1</strong> 把 <strong><code>then</code></strong> 赋值为 <strong><code>x.then</code></strong>[<a href="#3.5">3.5</a>]</p>
+</li>
+<li><p><strong>2.3.3.2</strong> 如果取 <strong><code>x.then</code></strong> 的值时抛出错误 <strong><code>e</code></strong>，则使用 <strong><code>e</code></strong> 为原因拒绝 <strong><code>promise</code></strong>。</p>
+</li>
+<li><p><strong>2.3.3.3</strong> 如果 <strong><code>then</code></strong> 是一个函数，则以 <strong><code>x</code></strong> 作为 <strong><code>this</code></strong> 的值对其进行调用，并以 <strong><code>resolvePromise</code></strong> 作为第一个参数，<strong><code>x</code></strong> 作为第二个参数，其中:</p>
+<ul>
+<li><p><strong>2.3.3.3.1</strong> 如果/当以 <strong><code>y</code></strong> 值为参数调用 <strong><code>resolvePromise</code></strong> 时，则运行 <strong><code>[[Resolve]](promise, y)</code></strong>。</p>
+</li>
+<li><p><strong>2.3.3.3.2</strong> 如果/当以 <strong><code>r</code></strong> 原因为参数调用 <strong><code>rejectPromise</code></strong> 时，则使用原因 <strong><code>r</code></strong> 拒绝执行 <strong><code>promise</code></strong>。</p>
+</li>
+<li><p><strong>2.3.3.3.3</strong> 如果 <strong><code>resolvePromise</code></strong> 和 <strong><code>rejectPromise</code></strong> 都被调用，或者被使用相同的参数调用了多次，则首次调用将被优先采用，其它调用将被忽略。</p>
+</li>
+<li><p><strong>2.3.3.3.4</strong> 如果调用 <strong><code>then</code></strong> 方法过程中抛出异常 <strong><code>e</code></strong>：</p>
+<ul>
+<li><p><strong>2.3.3.3.4.1</strong> 如果 <strong><code>resolvePromise</code></strong> 或 <strong><code>rejectPromise</code></strong> 都已经被调用，则忽略该异常。</p>
+</li>
+<li><p><strong>2.3.3.3.4.2</strong> 否则使用 <strong><code>e</code></strong> 为原因拒绝执行 <strong><code>promise</code></strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>2.3.3.4</strong> 如果 <strong><code>then</code></strong> 不是函数，以 <strong><code>x</code></strong> 为值完成 <strong><code>promise</code></strong>。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>2.3.4</strong> 如果 <strong><code>x</code></strong> 不是对象或者函数，以 <strong><code>x</code></strong> 为值完成 <strong><code>promise</code></strong>。</p>
+</li>
+</ul>
+<p>如果一个promise对象被一个处于循环thenable链中的thenable对象解决（resolve），由于 <strong><code>[[Resolve]](promise, thenable)</code></strong> 的递归本质会使得其再次被调用，按照上面的算法，这种情况将导致无限递归。本规范鼓励实现者检测这种递归情况的出现，并使用带有一定信息的 <strong><code>TypeError</code></strong> 作为原因拒绝执行 <strong><code>promise</code></strong> [<a href="#3.6">3.6</a>]，但规范不对此检测做强制要求。</p>
+<h2 id="3-注释"><a href="#3-注释" class="headerlink" title="3. 注释"></a>3. 注释</h2><ul>
+<li><p><strong>3.1</strong> 这里“平台代码”指的是引擎(engine)、环境(environment)以及 promise 的实现代码（implementation code）。实际上，这个要求确保了 <strong><code>onFulfilled</code></strong> 和 <strong><code>onRejected</code></strong> 方法能够异步执行，即在调用 <strong><code>then</code></strong> 方法的那个事件循环之后的新执行栈中异步执行。这个要求可以通过“宏任务（macro-task）”机制（例如 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#timers" target="_blank" rel="noopener"><strong><code>setTimeout</code></strong></a> 或者 <a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html#processingmodel" target="_blank" rel="noopener"><strong><code>setImmediate</code></strong></a>）或者“微任务（micro-task）”机制（例如 <a href="https://dom.spec.whatwg.org/#interface-mutationobserver" target="_blank" rel="noopener"><strong><code>MutationObserver</code></strong></a> 或者 <a href="http://nodejs.org/api/process.html#process_process_nexttick_callback" target="_blank" rel="noopener"><strong><code>process.nextTick</code></strong></a>）来实现。既然 promise 的实现代码本身也被认为是“平台代码”，所以其自身可能也会包含一种任务调度队列或者“trampoline”控制结构来对其处理程序进行调用。</p>
+</li>
+<li><p><strong>3.2</strong> 也就是说，<strong><code>this</code></strong> 的值，在严格模式（strict）下为 <strong><code>undefined</code></strong>；在非严格模式()下为全局对象（global object）。</p>
+</li>
+<li><p><strong>3.3</strong> 在满足所有要求的情况下，现实实现中可能允许 <strong><code>promise2 === promise1</code></strong>。每个实现都需要说明其是否允许出现 <strong><code>promise2 === promise1</code></strong>，以及在何种条件下出现。</p>
+</li>
+<li><p><strong>3.4</strong> 通常来说，只有当 <strong><code>x</code></strong> 是从当前实现中定义出来的，我们才知道它是一个真正的promise对象。这条规则允许使用特定实现中的方法去采用符合规范的promise对象的状态。</p>
+</li>
+<li><p><strong>3.5</strong> 这一步骤中，我们首先会存储一个指向 x.then 的引用，然后测试该调用，之后调用该引用，这一系列过程为了防止对 x.then 属性的多处访问。这些预防措施对于保证访问器属性的一致性至关重要，因为其值可能在多次取值期间发生变化。</p>
+</li>
+<li><p><strong>3.6</strong> 本规范的实现 <em>不应该</em> 任意限定thenable链的深度，并认定只要超过了该限定递归就是无限的。只有真正的循环递归才应导致一个 <strong><code>TypeError</code></strong>；如果一条无限长链上的thenable对象各不相同，那么无限递归下去则是正确的行为。</p>
+</li>
+</ul>
+<p>By <a href="https://github.com/llwanghong/blog" target="_blank" rel="noopener">Hong</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/30/Promise：从懵逼开始摸爬滚打/" rel="next" title="Promise：从懵逼开始摸爬滚打">
+                <i class="fa fa-chevron-left"></i> Promise：从懵逼开始摸爬滚打
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/06/组件的一些思考/" rel="prev" title="组件的一些思考">
+                组件的一些思考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-术语（Terminology）"><span class="nav-number">1.</span> <span class="nav-text">1. 术语（Terminology）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-要求（Requirements）"><span class="nav-number">2.</span> <span class="nav-text">2. 要求（Requirements）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Promise-的状态"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Promise 的状态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-处于等待态（pending）时，promise-对象："><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1 处于等待态（pending）时，promise 对象：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-处于执行态（fulfilled）时，promise-对象："><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.2 处于执行态（fulfilled）时，promise 对象：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-3-处于拒绝态（rejected），promise-对象："><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.3 处于拒绝态（rejected），promise 对象：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-then-方法"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 then 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-onFulfilled-和-onRejected-都是可选参数。"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 onFulfilled 和 onRejected 都是可选参数。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-如果-onFulfilled-是一个函数："><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 如果 onFulfilled 是一个函数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-如果-onRejected-是一个函数："><span class="nav-number">2.2.3.</span> <span class="nav-text">2.2.3 如果 onRejected 是一个函数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-4-onFulfilled-和-onRejected-只有在执行上下文（execution-context）堆栈仅包含平台代码（platform-code）时才可被调用。-3-1"><span class="nav-number">2.2.4.</span> <span class="nav-text">2.2.4 onFulfilled 和 onRejected 只有在执行上下文（execution context）堆栈仅包含平台代码（platform code）时才可被调用。[3.1]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-5-onFulfilled-和-onRejected-必须被作为函数调用（例如没有-this-值）。-3-2"><span class="nav-number">2.2.5.</span> <span class="nav-text">2.2.5 onFulfilled 和 onRejected  必须被作为函数调用（例如没有 this 值）。[3.2]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-6-then-方法可以被同一个promise对象调用多次。"><span class="nav-number">2.2.6.</span> <span class="nav-text">2.2.6 then 方法可以被同一个promise对象调用多次。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-7-then-方法必须返回一个promise对象-3-3"><span class="nav-number">2.2.7.</span> <span class="nav-text">2.2.7 then 方法必须返回一个promise对象 [3.3]</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Promise-Resolution-Procedure（PRP）"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Promise Resolution Procedure（PRP）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-注释"><span class="nav-number">3.</span> <span class="nav-text">3. 注释</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

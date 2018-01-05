@@ -1,0 +1,737 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="何以模块化 最早的前端，没有模块加载规范，只能在HTML中通过\来引入js文件，同时无法区分函数来源于哪个js文件，而且要用过多全局变量。而随着前端工程复杂度的提升，使用这种方式已经无法满足日益增长的开发需求，js的模块化应运而生。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS模块化 - 浅谈 CommonJS require 函数实现">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/26/JS模块化 - 浅谈 CommonJS require 函数实现/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="何以模块化 最早的前端，没有模块加载规范，只能在HTML中通过\来引入js文件，同时无法区分函数来源于哪个js文件，而且要用过多全局变量。而随着前端工程复杂度的提升，使用这种方式已经无法满足日益增长的开发需求，js的模块化应运而生。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image1.jpg">
+<meta property="og:image" content="https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image2.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.369Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS模块化 - 浅谈 CommonJS require 函数实现">
+<meta name="twitter:description" content="何以模块化 最早的前端，没有模块加载规范，只能在HTML中通过\来引入js文件，同时无法区分函数来源于哪个js文件，而且要用过多全局变量。而随着前端工程复杂度的提升，使用这种方式已经无法满足日益增长的开发需求，js的模块化应运而生。">
+<meta name="twitter:image" content="https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/26/JS模块化 - 浅谈 CommonJS require 函数实现/"/>
+
+
+
+
+
+  <title>JS模块化 - 浅谈 CommonJS require 函数实现 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/26/JS模块化 - 浅谈 CommonJS require 函数实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JS模块化 - 浅谈 CommonJS require 函数实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-26T00:00:00+08:00">
+                2017-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="何以模块化"><a href="#何以模块化" class="headerlink" title="何以模块化"></a>何以模块化</h2><blockquote>
+<p>最早的前端，没有模块加载规范，<br>只能在HTML中通过\<script\>来引入js文件，同时无法区分函数来源于哪个js文件，而且要用过多全局变量。<br>而随着前端工程复杂度的提升，使用这种方式已经无法满足日益增长的开发需求，js的模块化应运而生。</script\></p>
+</blockquote>
+<a id="more"></a>
+<p>CommonJS 是属于 Node.js 的模块化方案，最早是叫 ServerJS，随着 Node.js 的火爆发展而成名的。Module1.0 规范在 Node.js 上实践的很好。</p>
+<p>而 JavaScript 在当时（ES6 Modules 规范还未诞生）是没有模块化方案的，所以又更名从 CommonJS，想要统一服务端与客户端的模块加载方案。</p>
+<p>但是，require 函数是同步的，在浏览器端由于网络的瓶颈而不适用。于是，AMD 和 CMD 的规范相继涌现，和 CommonJS 一起服务于 JavaScript 模块化。<br>而正是规则的不统一，这也是目前兼容方案 UMD 会出现的原因。</p>
+<p>不过AMD 和 CMD 的浏览器端模块化，有很明显的问题：</p>
+<ol>
+<li>导致浏览器端请求数过多；</li>
+<li>受限于网络，所有模块都成功加载完只是一个承诺。</li>
+</ol>
+<p>现如今，当打包这一环节被引入了前端工程化，CommonJS 以与服务端可以类库共用和 NPM(Node Package Manager) 这个后台的优势，成为了 es5 JavaScript 模块化的首选</p>
+<p>本文内容，是从 <code>require</code> 函数这个切面，带读者了解到 CommonJS 模块化的原理，所有代码整理在 <a href="https://github.com/ImHype/MockRequire" target="_blank" rel="noopener">git 仓库</a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>CommonJS 是一个旨在构建涵盖web服务器端、桌面应用、命令行app和浏览器JS的JS生态系统。</p>
+<h2 id="标准"><a href="#标准" class="headerlink" title="标准"></a>标准</h2><p>CommonJS 的标准符合 <a href="http://wiki.commonjs.org/wiki/Modules/1.1" target="_blank" rel="noopener">module1.1</a> 规范，暴露给使用者的有三个全局变量：</p>
+<ol>
+<li>require 是一个全局方法，用来加载模块  </li>
+<li>exports 一个全局对象，用来导入模块的属性或方法  </li>
+<li>module 一个全局对象。涵盖当前模块的必要信息，有一个只读的id属性，有一个uri属性，还有其它的一些命名规范，可以查看 <a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank" rel="noopener">CommonJS 规范的文档</a>。</li>
+</ol>
+<h2 id="面向-require-这个切面"><a href="#面向-require-这个切面" class="headerlink" title="面向 require 这个切面"></a>面向 <code>require</code> 这个切面</h2><h3 id="写一个-main-函数"><a href="#写一个-main-函数" class="headerlink" title="写一个 main 函数"></a>写一个 <code>main</code> 函数</h3><p>本文讲的是如何模拟一个 $require 函数，先来捋一捋 require 函数的主逻辑</p>
+<p><img src="https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image1.jpg" alt=""></p>
+<p>根据这个逻辑，我们先写一个 <code>main</code> 函数，以及定义一些需要的接口</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 缓存模块 require 的结果</span></div><div class="line"><span class="keyword">var</span> cached = &#123;&#125;</div><div class="line"><span class="comment">// 初始化的时候就会装载进来</span></div><div class="line"><span class="keyword">var</span> coreModule = &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取入口 js</span></div><div class="line"><span class="comment">// 用于后续的相对路径转绝对路径</span></div><div class="line"><span class="keyword">var</span> ENTRYJS = path.resolve(process.cwd(), process.argv[<span class="number">1</span>])</div><div class="line"><span class="keyword">var</span> stack = <span class="keyword">new</span> Stack(getParent(ENTRYJS))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">$require</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="comment">// 是否已存在缓存</span></div><div class="line">    <span class="keyword">if</span> (cached[pathname]) &#123;</div><div class="line">        <span class="keyword">return</span> cached[pathname]</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 是否核心模块</span></div><div class="line">    <span class="keyword">if</span> (coreModule[pathname]) &#123; </div><div class="line">        cached[pathname] = coreModule[pathname]</div><div class="line">        <span class="keyword">return</span> cached[pathname]</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 获取到模块的真实位置</span></div><div class="line">    <span class="comment">// 1, 如果是绝对路径，则转换相对路径</span></div><div class="line">    <span class="comment">// 2. 如果是包，则查找是否存在 package.json，并读取 main 属性</span></div><div class="line">    <span class="keyword">var</span> targetModule = getModuleLocation(stack, pathname)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="number">-1</span> === targetModule) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'模块'</span> + pathname + <span class="string">'未找到'</span>) <span class="comment">// 包未找到</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 1. 如果是目录，则添加 /index</span></div><div class="line">    <span class="comment">// 2. 如果是文件，先检测文件是否存在</span></div><div class="line">    <span class="comment">// 3. 若不存在，则检测添加后缀名后的文件是否存在， ['', '.js', '.json', '.node']</span></div><div class="line">    <span class="keyword">var</span> targetFile = getRealPath(targetModule)</div><div class="line">    <span class="keyword">if</span> (<span class="number">-2</span> === targetFile) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'模块'</span> + pathname + <span class="string">'未找到'</span>) <span class="comment">// 文件未找到</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    stack.push(getParent(targetFile))</div><div class="line"></div><div class="line">    <span class="comment">// 找到具体的文件，并执行，执行完成赋值到缓存中</span></div><div class="line">    cached[pathname] = _require(targetFile)</div><div class="line">    stack.pop()</div><div class="line">        </div><div class="line">    <span class="keyword">return</span> cached[pathname]</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// 需要实现的接口</span></div><div class="line"><span class="comment">// 数据结构 - 栈</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Stack</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="comment">// 获取文件的所在目录的绝对路径</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getParent</span>(<span class="params">pathname</span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// 查找模块的所在位置</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getModuleLocation</span>(<span class="params">pathname</span>) </span>&#123;&#125;</div><div class="line"><span class="comment">// 从模块的所在位置，获取到真实的 js 路径</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRealPath</span>(<span class="params">pathname</span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// 纯粹的模块执行处理函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">_require</span>(<span class="params">pathname</span>) </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<p>至此已经有一个不可执行的 require 函数了，逻辑中会依次判断是否有缓存，是否核心模块，加载相应文件以及加载执行模块并缓存。</p>
+<p>可以看到没有具体实现，只有接口被定义出来，这种编码方式，同样可以借鉴到在其他的开发需求中：</p>
+<ol>
+<li>在开始编码前，进行尽可能合理的功能模块划分，可以让代码逻辑清晰，减少重复步骤 <strong>(DRY)</strong>，并增强后期的代码可维护性</li>
+<li>定义你需要哪些接口。如果是比较复杂的功能，且不是独立开发的话，这一环节做的好坏，合理地划分与合理地分配，决定团队合作开发是否可以配合恰当</li>
+</ol>
+<h3 id="逐一实现接口"><a href="#逐一实现接口" class="headerlink" title="逐一实现接口"></a>逐一实现接口</h3><p>这一步骤，主要是对上述过程需要的接口进行实现。<br>思想上是一个分而治之的思想，实现一个很复杂的东西比较困难，但是实现具体的功能要求，且在一定输入输出的限制下，每个人都能轻易的写出符合需求的算法，并进行调优。</p>
+<h4 id="1-数据结构与工具函数类"><a href="#1-数据结构与工具函数类" class="headerlink" title="1. 数据结构与工具函数类"></a>1. 数据结构与工具函数类</h4><h5 id="a-栈-–-存储当前模块的所在目录"><a href="#a-栈-–-存储当前模块的所在目录" class="headerlink" title="a. 栈 – 存储当前模块的所在目录"></a>a. 栈 – 存储当前模块的所在目录</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Stack</span>(<span class="params">...args</span>) </span>&#123;</div><div class="line">    <span class="keyword">this</span>._stack = <span class="keyword">new</span> <span class="built_in">Array</span>(...args);</div><div class="line">&#125;</div><div class="line">Stack.prototype = &#123;</div><div class="line">    <span class="attr">top</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>._stack .slice(<span class="number">-1</span>)[<span class="number">0</span>]</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">push</span>: <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>._stack.push(...args)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">pop</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>._stack.pop()</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">constructor</span>: Stack</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个栈的作用是存放当前模块的所在目录，用于模块内 <code>require</code> 函数传入相对路径时，解析成绝对路径</p>
+<h4 id="b-获取文件所在目录"><a href="#b-获取文件所在目录" class="headerlink" title="b. 获取文件所在目录"></a>b. 获取文件所在目录</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getParent</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> path.parse(pathname).dir</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-具体的模块文件查找逻辑"><a href="#2-具体的模块文件查找逻辑" class="headerlink" title="2. 具体的模块文件查找逻辑"></a>2. 具体的模块文件查找逻辑</h3><p><img src="https://www.infoq.com/resource/articles/nodejs-module-mechanism/zh/resources/image2.jpg" alt=""></p>
+<h4 id="a-检测模块类型与定位包的位置"><a href="#a-检测模块类型与定位包的位置" class="headerlink" title="a. 检测模块类型与定位包的位置"></a>a. 检测模块类型与定位包的位置</h4><p>这个函数要做下面的事情</p>
+<ol>
+<li>检测模块类型：绝对路径，相对路径 或是 在 <code>node_modules</code> 内</li>
+<li>如果是模块，则需要就近寻找 node_modules 有无这个模块，并且读取 <code>pacakge.json</code> 的 <code>main</code>属性</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getModuleLocation</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> moduleType = getModuleType(pathname)</div><div class="line">    <span class="keyword">var</span> map = &#123;</div><div class="line">        [MODULE_TYPE.ABSOLUTE_PATH]: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> pathname</div><div class="line">        &#125;,</div><div class="line">        [MODULE_TYPE.RELEALITIVE_PATH]:: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> path.resolve(stack.top(), pathname)</div><div class="line">        &#125;,</div><div class="line">        [MODULE_TYPE.IN_NODE_MODULES]: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">var</span> parent = stack.top()</div><div class="line">            <span class="keyword">while</span> (!fs.lstatSync(path.resolve(parent, <span class="string">'node_modules'</span>, pathname))) &#123;</div><div class="line">                parent = getParent(pathname)</div><div class="line">                <span class="keyword">if</span> (!parent) &#123;</div><div class="line">                    <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 从包名 到 绝对路径</span></div><div class="line">            pathname = path.resolve(stack.top(), <span class="string">'node_modules'</span>, pathname)</div><div class="line">            </div><div class="line">            <span class="comment">// 输出包的 main 文件</span></div><div class="line">            pathname = getPackageMain(pathname)</div><div class="line">            </div><div class="line">            <span class="keyword">return</span> pathname</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> map[moduleType]()</div><div class="line">&#125;</div><div class="line"><span class="comment">/**************** 分割线 *******************/</span></div><div class="line"><span class="comment">// 以下部分，是 getModuleLocation 自身需要实现的接口，往往是开发过程中自行提炼的，其他模块不通用</span></div><div class="line"><span class="keyword">var</span> MODULE_TYPE = &#123;</div><div class="line">    <span class="string">"ABSOLUTE_PATH"</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">"RELEALITIVE_PATH"</span>: <span class="number">2</span>,</div><div class="line">    <span class="string">"IN_NODE_MODULES"</span>: <span class="number">0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getModuleType</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (path.isAbsolute(pathname)) &#123;</div><div class="line">        <span class="keyword">return</span> MODULE_TYPE.ABSOLUTE_PATH</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (pathname.MODULE_TYPE(<span class="string">'.'</span>)) &#123;</div><div class="line">        <span class="keyword">return</span> MODULETYPE.RELEALITIVE_PATH</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> MODULE_TYPE.IN_NODE_MODULES</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPackageMain</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">var</span> packageJson = fs.readFileSync(path.resolve(pathname, <span class="string">'package.json'</span>)).toString(<span class="string">'utf-8'</span>)</div><div class="line">        <span class="keyword">var</span> json = <span class="built_in">JSON</span>.parse(packageJson)    </div><div class="line">        <span class="keyword">if</span> (json.main) &#123;</div><div class="line">            <span class="keyword">return</span> path.resolve(pathname, json.main)</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</div><div class="line">        <span class="keyword">return</span> pathname</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="b-定位引用的真实路径"><a href="#b-定位引用的真实路径" class="headerlink" title="b. 定位引用的真实路径"></a>b. 定位引用的真实路径</h4><ol>
+<li>如果是目录，则添加’/index’后缀</li>
+<li>对 ‘.js’，’.node’, ‘.json’ 可能有的后缀省略进行补齐</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRealPath</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> list = [<span class="string">''</span>, <span class="string">'.js'</span>, <span class="string">'.json'</span>, <span class="string">'.node'</span>]</div><div class="line">    <span class="keyword">var</span> stats</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        stats = fs.lstatSync(pathname)    </div><div class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">-2</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (stats) &#123;</div><div class="line">        <span class="keyword">if</span> (stats.isFile()) &#123;</div><div class="line">            <span class="keyword">return</span> pathname    </div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (stats.isDirectory()) &#123;</div><div class="line">            pathname = path.join(pathname, <span class="string">'index'</span>)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; list.length; i++) &#123;</div><div class="line">        <span class="keyword">var</span> fullname = pathname + item</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            fs.lstatSync(fullname)</div><div class="line">            <span class="keyword">return</span> fullname</div><div class="line">        &#125; <span class="keyword">catch</span> (e) &#123;&#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">-2</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-require-函数"><a href="#3-require-函数" class="headerlink" title="3. _require 函数"></a>3. _require 函数</h3><p>这个函数是 CommonJS 模块化的核心体现，理解这个函数，对 <code>module</code> 和 <code>exports</code> 的实际使用也会有帮助</p>
+<ol>
+<li>Node.js 的模块化实质是为每个模块的 js 包裹一层 ‘function module_exports(){}’ 用以隔离作用域； </li>
+<li>module / exports / require 被作为传参而传入，而 exports 实质是 module.exports 的引用</li>
+<li><strong>dirname / </strong>filename ，其实是这个模块内被先于执行函数定义的变量 </li>
+<li>JS <code>new Function</code> 的特性常用来动态定义和执行某个方法，这边也同样用来执行模块</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">_require</span>(<span class="params">pathname</span>) </span>&#123;</div><div class="line">    <span class="comment">// 定义一个Module对象</span></div><div class="line">    <span class="keyword">var</span> Module = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.exports = &#123;&#125;</div><div class="line"></div><div class="line">        <span class="comment">// 添加其他必须属性，如 id</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 引入nodejs 文件模块 下面是nodejs中原生的require方法</span></div><div class="line">    <span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</div><div class="line"></div><div class="line">    <span class="comment">// 同步读取该文件</span></div><div class="line">    <span class="keyword">var</span> sourceCode = fs.readFileSync(pathname, <span class="string">'utf8'</span>)</div><div class="line"></div><div class="line">    <span class="comment">// 字符串转换成函数</span></div><div class="line">    <span class="keyword">var</span> moduleExportsFunc = <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">'module'</span>, <span class="string">'exports'</span>, <span class="string">`<span class="subst">$&#123;sourceCode&#125;</span>; return module.exports;`</span>)</div><div class="line"></div><div class="line">    <span class="comment">// 实例化一个Module 里面有一个exports属性</span></div><div class="line">    <span class="keyword">var</span> <span class="built_in">module</span> = <span class="keyword">new</span> Module()</div><div class="line"></div><div class="line">    <span class="comment">// 把module 和 它内部的module.exports都作为参数传进去 </span></div><div class="line">    <span class="comment">// 并得到挂在到module.exports 或 exports上的功能</span></div><div class="line">    <span class="keyword">var</span> res = moduleExportsFunc(<span class="built_in">module</span>, <span class="built_in">module</span>.exports)</div><div class="line"></div><div class="line">    <span class="comment">// 最终我们拿到了path代表的文件模块提供的API</span></div><div class="line">    <span class="keyword">return</span> res </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>留下一些问题留给同学们思考：</p>
+<ol>
+<li>如果出现异步 <code>require</code> 的情况，由于当前模块已经执行完，会清空存储模块目录的 stack ，会出现相对路径查找失败的问题，如何解决？</li>
+<li>当发生循环依赖的时候，<code>CommonJS</code> 内部的加载流程是是否会陷入死循环，如果不会那会带来什么其他影响？（且听下回分解）</li>
+</ol>
+<h2 id="End"><a href="#End" class="headerlink" title="End"></a>End</h2><p>本文是我参考一些 Node.js require 特性后，利用 JavaScript 简单的实现后的总结，主要提供一个思路。<br>本文中实现的 $require 函数存放在了 git 仓库 <a href="https://github.com/ImHype/MockRequire" target="_blank" rel="noopener">MockRequire</a> 中</p>
+<p>至此，我们粗暴地模拟了 Node.js 中的 require，多谢阅读，如有疑问，欢迎指出</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/24/用Nodejs开发命令行工具/" rel="next" title="用Nodejs开发命令行工具">
+                <i class="fa fa-chevron-left"></i> 用Nodejs开发命令行工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/27/基于PhantomFlow的自动化UI测试/" rel="prev" title="基于PhantomFlow的自动化UI测试">
+                基于PhantomFlow的自动化UI测试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#何以模块化"><span class="nav-number">1.</span> <span class="nav-text">何以模块化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准"><span class="nav-number">3.</span> <span class="nav-text">标准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面向-require-这个切面"><span class="nav-number">4.</span> <span class="nav-text">面向 require 这个切面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#写一个-main-函数"><span class="nav-number">4.1.</span> <span class="nav-text">写一个 main 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逐一实现接口"><span class="nav-number">4.2.</span> <span class="nav-text">逐一实现接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-数据结构与工具函数类"><span class="nav-number">4.2.1.</span> <span class="nav-text">1. 数据结构与工具函数类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#a-栈-–-存储当前模块的所在目录"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">a. 栈 – 存储当前模块的所在目录</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#b-获取文件所在目录"><span class="nav-number">4.2.2.</span> <span class="nav-text">b. 获取文件所在目录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-具体的模块文件查找逻辑"><span class="nav-number">4.3.</span> <span class="nav-text">2. 具体的模块文件查找逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#a-检测模块类型与定位包的位置"><span class="nav-number">4.3.1.</span> <span class="nav-text">a. 检测模块类型与定位包的位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#b-定位引用的真实路径"><span class="nav-number">4.3.2.</span> <span class="nav-text">b. 定位引用的真实路径</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-require-函数"><span class="nav-number">4.4.</span> <span class="nav-text">3. _require 函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#End"><span class="nav-number">5.</span> <span class="nav-text">End</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

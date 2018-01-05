@@ -1,0 +1,728 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="说明这个动画实现的是线条动画,主要用到的是 SVG 的 path 标签。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVG动画实践篇-无中生有的线条动画">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/07/SVG动画实践篇-无中生有的线条动画/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="说明这个动画实现的是线条动画,主要用到的是 SVG 的 path 标签。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.373Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVG动画实践篇-无中生有的线条动画">
+<meta name="twitter:description" content="说明这个动画实现的是线条动画,主要用到的是 SVG 的 path 标签。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/07/SVG动画实践篇-无中生有的线条动画/"/>
+
+
+
+
+
+  <title>SVG动画实践篇-无中生有的线条动画 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/07/SVG动画实践篇-无中生有的线条动画/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SVG动画实践篇-无中生有的线条动画
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-07T00:00:00+08:00">
+                2017-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这个动画实现的是线条动画,主要用到的是 SVG 的 path 标签。</p>
+<a id="more"></a>
+<h3 id="lt-path-gt-标签命令"><a href="#lt-path-gt-标签命令" class="headerlink" title="&lt;path&gt; 标签命令"></a>&lt;path&gt; 标签命令</h3><p>使用 &lt;path&gt; 标签的 d 属性标识路径集合,勾画线条的形状。</p>
+<ul>
+<li>M = moveto</li>
+<li>L = lineto</li>
+<li>H = horizontal lineto</li>
+<li>V = vertical lineto</li>
+<li>C = curveto</li>
+<li>S = smooth curveto</li>
+<li>Q = quadratic Belzier curve</li>
+<li>T = smooth quadratic Belzier curveto</li>
+<li>A = elliptical Arc</li>
+<li>Z = closepath</li>
+</ul>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;svg width=&quot;300&quot; height=&quot;300&quot; version=&quot;1.2&quot; xml:space=&quot;default&quot;&gt;</div><div class="line">    &lt;path d=&quot;M0 0 L150 100 V200 H100&quot; stroke=&quot;#f00&quot; stroke-width=&quot;1&quot;/&gt;   </div><div class="line">&lt;/svg&gt;</div></pre></td></tr></table></figure>
+<h2 id="动画实现"><a href="#动画实现" class="headerlink" title="动画实现"></a>动画实现</h2><h3 id="步骤一-定义SVG线条"><a href="#步骤一-定义SVG线条" class="headerlink" title="步骤一: 定义SVG线条"></a>步骤一: 定义SVG线条</h3><p>定义SVG线条,除了使用 d 属性定义路径外,还需要用到两个重要的属性, stroke-dasharray 和 stroke-dashoffset, 这两个属性值可以在 path 标签上定义,也可以在样式表中定义。</p>
+<ul>
+<li>stroke-dasharray 定义短划线和缺口的长度,实现画虚线的效果。例如4px 2px/4px,2px,数与数之间可用空白或逗号隔开。</li>
+<li>stroke-dashoffset 标识的是整个路径的偏移值。</li>
+</ul>
+<p>svg代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;svg width=&quot;500&quot; height=&quot;200&quot; version=&quot;1.2&quot; xml:space=&quot;default&quot;&gt;</div><div class="line">    &lt;path id=&quot;path&quot; d=&quot;M0,150c0,0,0-61,72-44c0,0-47,117,81,57s5-110,10-67s-51,77.979-50,33.989&quot; stroke=&quot;#f00&quot; stroke-width=&quot;1&quot; stroke-dasharray=&quot;4px,2px&quot; stroke-dashoffset=&quot;10px&quot; fill=&quot;none&quot;/&gt;</div><div class="line">&lt;/svg&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="步骤二-给path标签使用CSS3动画"><a href="#步骤二-给path标签使用CSS3动画" class="headerlink" title="步骤二: 给path标签使用CSS3动画"></a>步骤二: 给path标签使用CSS3动画</h3><p>定义 css3 的 animation,通过改变 path 标签的 stroke-dasharray 或 stroke-dashoffset 值来使路径动起来。<br>path 路径的长度可使用 js 的 document.getElementById(‘path’).getTotalLength() 来获得。</p>
+<h4 id="方法一-改变-stroke-dasharray-来实现动画"><a href="#方法一-改变-stroke-dasharray-来实现动画" class="headerlink" title="方法一: 改变 stroke-dasharray 来实现动画"></a>方法一: 改变 stroke-dasharray 来实现动画</h4><p>css 代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#path&#123;</div><div class="line">    -webkit-animation:slide 2s linear infinite;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">@keyframes slide &#123;</div><div class="line">    0%&#123;</div><div class="line">        stroke-dasharray:0 511px;   /* 511px 为整个路径的长度 */</div><div class="line">    &#125;</div><div class="line">    100%&#123;</div><div class="line">        stroke-dasharray:511px 511px;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>stroke-dasharray:0 511px; 实线宽度为0,空隙宽度为整个path路径的宽度,所以刚开始路径没有实线,是不可见的。</li>
+<li>stroke-dasharray:511px 511px; 实线宽度为整个 path 路径长度,所以整条路径可见。</li>
+<li>css3 animation 动画定义路径从不可见到可见的变化。</li>
+</ul>
+<h4 id="方法二-改变-stroke-dashoffset-来实现动画"><a href="#方法二-改变-stroke-dashoffset-来实现动画" class="headerlink" title="方法二: 改变 stroke-dashoffset 来实现动画"></a>方法二: 改变 stroke-dashoffset 来实现动画</h4><p>css 代码如下:</p>
+<pre><code>#path{
+    stroke-dasharray:511px 511px;
+    -webkit-animation:slide2 2s linear infinite;
+}
+
+@keyframes slide2 {
+    0%{
+        stroke-dashoffset:511px;
+    }
+    100%{
+        stroke-dashoffset:0px;
+    }
+}
+</code></pre><ul>
+<li>stroke-dasharray:511px 511px; 给 path 标签定义实线宽度和空隙宽度都为整个path 的长度。这个时候如果不用动画,则线条会全部展示。</li>
+<li>0%{stroke-dashoffset:511px;}  path 路径左偏移 511px, 则会显示 511px 的空隙宽度。此时路径没有实线,是不可见的。</li>
+<li>100%{stroke-dashoffset:0px;} path 路径偏移量为0,则恢复到最初始状态,显示全部的实线。</li>
+<li>css3 animation 动画定义路径从不可见到可见的变化。</li>
+</ul>
+<h4 id="多条-path-的动画或文字动画"><a href="#多条-path-的动画或文字动画" class="headerlink" title="多条 path 的动画或文字动画"></a>多条 path 的动画或文字动画</h4><ul>
+<li>使用 symbol 定义和 use 实例化来画出SVG路径。</li>
+<li>使用 CSS3 的 animation 属性来修改实例化路径的 stroke-dasharray 或 stroke-dashoffset 的值,从而实现动画效果。</li>
+<li>可新建多个同样的 SVG 路径,并且每个路径的颜色和动画效果都不一样,最终形成错落的完整的动画。</li>
+</ul>
+<p>git: <a href="https://github.com/rainnaZR/svg-animations/tree/master/src/pages/step2/path" target="_blank" rel="noopener">https://github.com/rainnaZR/svg-animations/tree/master/src/pages/step2/path</a><br>参考资料: <a href="http://www.alloyteam.com/2017/02/the-beauty-of-the-lines-break-lines-svg-animation/" target="_blank" rel="noopener">http://www.alloyteam.com/2017/02/the-beauty-of-the-lines-break-lines-svg-animation/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/04/SVG动画实践篇-音量变化效果/" rel="next" title="SVG动画实践篇-音量变化效果">
+                <i class="fa fa-chevron-left"></i> SVG动画实践篇-音量变化效果
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/19/结合CleanCode的一次代码重构实践/" rel="prev" title="结合CleanCode的一次代码重构实践">
+                结合CleanCode的一次代码重构实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-path-gt-标签命令"><span class="nav-number">1.1.</span> <span class="nav-text">&lt;path&gt; 标签命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画实现"><span class="nav-number">2.</span> <span class="nav-text">动画实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤一-定义SVG线条"><span class="nav-number">2.1.</span> <span class="nav-text">步骤一: 定义SVG线条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤二-给path标签使用CSS3动画"><span class="nav-number">2.2.</span> <span class="nav-text">步骤二: 给path标签使用CSS3动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法一-改变-stroke-dasharray-来实现动画"><span class="nav-number">2.2.1.</span> <span class="nav-text">方法一: 改变 stroke-dasharray 来实现动画</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法二-改变-stroke-dashoffset-来实现动画"><span class="nav-number">2.2.2.</span> <span class="nav-text">方法二: 改变 stroke-dashoffset 来实现动画</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多条-path-的动画或文字动画"><span class="nav-number">2.2.3.</span> <span class="nav-text">多条 path 的动画或文字动画</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

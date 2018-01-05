@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="[x] generator基本概念 [x] generator流程控制   生成器这个概念在其他编程语言比如C++,PHP,Javaj,Python等语言中都有广泛应用，于是es6也将这一特性引入。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="generator基本概念">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/27/generator基本概念/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="[x] generator基本概念 [x] generator流程控制   生成器这个概念在其他编程语言比如C++,PHP,Javaj,Python等语言中都有广泛应用，于是es6也将这一特性引入。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.377Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="generator基本概念">
+<meta name="twitter:description" content="[x] generator基本概念 [x] generator流程控制   生成器这个概念在其他编程语言比如C++,PHP,Javaj,Python等语言中都有广泛应用，于是es6也将这一特性引入。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/27/generator基本概念/"/>
+
+
+
+
+
+  <title>generator基本概念 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/27/generator基本概念/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                generator基本概念
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-27T00:00:00+08:00">
+                2017-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>[x] generator基本概念</li>
+<li>[x] generator流程控制</li>
+</ul>
+<hr>
+<p>生成器这个概念在其他编程语言比如C++,PHP,Javaj,Python等语言中都有广泛应用，于是es6也将这一特性引入。</p>
+<a id="more"></a>
+<blockquote>
+<p>生成器是一种被用来控制循环中迭代行为的特殊程序。实际上，所有的生成器都是迭代器。生成器和一个返回了数组的函数很类似，在这里生成器有参数能够被调用，并且生成一系列值。然而和数组不同的是，生成器不是一次存储所有的值并且一次性返回完，而是每调用一次返回一次并且停止等待下一次调用。这样只需要很少的内存，且允许调用者立即处理开始的几个数据。简而言之，生成器看起来像函数，表现得像迭代器<br>–wikipedia</p>
+</blockquote>
+<p>要从整体上了解这一概念，需要了解一些与之相关的知识与概念。</p>
+<h2 id="可迭代协议-iterable-protocols"><a href="#可迭代协议-iterable-protocols" class="headerlink" title="可迭代协议(iterable protocols)"></a>可迭代协议(iterable protocols)</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><code>iterable</code>协议可以允许对象定义或者定制迭代行为，要能够可迭代，对象需要继承或者有<code>@@iterator</code>方法，<code>@@iterator</code>属性可以通过<code>Symbol.iterator</code>（是一个常量）获得，<code>@@iterator</code>方法是一个零参数并返回一个遵守<code>iterator</code>协议对象的函数。如果一个对象有<code>@@iterator</code>方法，但返回的对象不是迭代器，就会成为一个不正确的可迭代对象。</p>
+<p>当一个对象是可迭代的并且<strong>需要迭代的时候</strong>，就会无参调用<code>@@iterator</code>，返回的迭代器用来获得迭代出来的值</p>
+<h3 id="需要迭代的时候"><a href="#需要迭代的时候" class="headerlink" title="需要迭代的时候"></a>需要迭代的时候</h3><ul>
+<li><code>for...of</code></li>
+<li><code>spread operator</code></li>
+<li><code>destructuring assignment</code></li>
+<li><code>yield*</code></li>
+</ul>
+<h3 id="内置可迭代对象"><a href="#内置可迭代对象" class="headerlink" title="内置可迭代对象"></a>内置可迭代对象</h3><ul>
+<li><code>String</code></li>
+<li><code>Array</code></li>
+<li><code>TypedArray</code></li>
+<li><code>Map</code></li>
+<li><code>Set</code></li>
+</ul>
+<h3 id="定制迭代行为"><a href="#定制迭代行为" class="headerlink" title="定制迭代行为"></a>定制迭代行为</h3><p>即重写或者添加<code>@@iterator</code>方法，所写方法遵守迭代器协议(<code>iterator protocols</code>)即可，否则为不正确的可迭代对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">// 为对象添加@@iterator</div><div class="line">var o = &#123;&#125;;</div><div class="line">o[Symbol.iterator] = function() &#123;</div><div class="line">    return &#123;</div><div class="line">        tick: 0,</div><div class="line">        next: function() &#123;</div><div class="line">            return &#123;</div><div class="line">                value: this.tick &gt; 3 ? undefined:this.tick++,</div><div class="line">                done: this.tick &gt; 4 ? true:false</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var a = o[Symbol.iterator](); // 获得迭代器</div><div class="line"></div><div class="line">a.next(); // &#123;value: 1, done: false&#125;</div><div class="line">a.next(); // &#123;value: 2, done: false&#125;</div><div class="line">a.next(); // &#123;valeu: 3, done: false&#125;</div><div class="line">a.next(); // &#123;value: undefined, done: true&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="迭代器协议-iterator-protocols"><a href="#迭代器协议-iterator-protocols" class="headerlink" title="迭代器协议(iterator protocols)"></a>迭代器协议(<code>iterator protocols</code>)</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p><code>iterator</code>协议定义了一个标准方法(<code>next</code>)来产生序列值。</p>
+<p>要成为迭代器，需要继承或实现<code>next</code>方法，<code>next</code>方法返回了两个属性，<code>done</code>和<code>value</code></p>
+<h3 id="与可迭代对象的关系"><a href="#与可迭代对象的关系" class="headerlink" title="与可迭代对象的关系"></a>与可迭代对象的关系</h3><ul>
+<li><p>某些迭代器也是可迭代的对象，比如generator对象</p>
+</li>
+<li><p>可迭代对象调用@@iterator返回迭代器(即协议的内容)</p>
+</li>
+</ul>
+<hr>
+<h2 id="生成器-generator"><a href="#生成器-generator" class="headerlink" title="生成器(generator)"></a>生成器(<code>generator</code>)</h2><h3 id="生成器函数-generator-function"><a href="#生成器函数-generator-function" class="headerlink" title="生成器函数(generator function)"></a>生成器函数(<code>generator function</code>)</h3><h4 id="定义生成器函数"><a href="#定义生成器函数" class="headerlink" title="定义生成器函数"></a>定义生成器函数</h4><ul>
+<li><code>function*</code>声明</li>
+<li><code>function*</code>表达式</li>
+<li><code>GeneratorFunction</code>构造器</li>
+</ul>
+<p>以<code>function*</code>声明为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">function* myGenerator() &#123;</div><div class="line">    yield 1;</div><div class="line">    yield 2;</div><div class="line">    yield 3;</div><div class="line">&#125;</div><div class="line">var g = myGenerator();  // 得到generator object</div><div class="line">g.next(); // &#123;value: 1, done: false&#125;</div><div class="line">g.next(); // &#123;value: 2, done: false&#125;</div><div class="line">g.next(); // &#123;valeu: 3, done: false&#125;</div><div class="line">g.next(); // &#123;value: undefined, done: true&#125;</div><div class="line">/**</div><div class="line"> *可以在调用next的时候向next方法中传入参数，</div><div class="line"> *此时的参数会被传入generator function中，与内部的变量进行通信。</div><div class="line"> *需要注意的是传值的方向是外部返回回内部的时候，而第一次调用next的时候，是遍</div><div class="line"> *历的开始，就算传了值内部也无变量接收。</div><div class="line"> *</div><div class="line">*/</div><div class="line">function* myGenerator2() &#123;</div><div class="line">    var a = yield 1;</div><div class="line">    console.log(a);</div><div class="line">    var b = yield 2;</div><div class="line">    console.log(b);</div><div class="line">&#125;</div><div class="line">var g2 = myGenerator2(); // 得到generator object</div><div class="line">g2.next();  // &#123;value: 1, done: false&#125;</div><div class="line">g2.next(&apos;a:1&apos;); // &apos;a:1&apos;  &#123;value: 2, done: false&#125; </div><div class="line">g2.next(&apos;b:2&apos;); // &apos;b:2&apos;  &#123;value: undefined, done: true&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="生成器对象-generator-object"><a href="#生成器对象-generator-object" class="headerlink" title="生成器对象(generator object)"></a>生成器对象(<code>generator object</code>)</h3><p><code>generator</code>对象是需要’generator function`执行才能得到。</p>
+<p><code>generator</code>对象遵循<code>iterable</code>协议和<code>iterator</code>协议，所以<code>generator</code>对象既是可迭代对象又是迭代器</p>
+<h3 id="原型链方法"><a href="#原型链方法" class="headerlink" title="原型链方法"></a>原型链方法</h3><ul>
+<li>next()</li>
+</ul>
+<p>返回两个参数，<code>yield</code>表达式后面的值<code>value</code>和表示遍历是否结束的<code>done</code>;</p>
+<ul>
+<li>return()</li>
+</ul>
+<p>遇到<code>return</code>，和一般函数一样，结束函数。下面如果还有<code>yield</code>，则无视。</p>
+<ul>
+<li>throw(exception)</li>
+</ul>
+<p>为了调试方便，<code>exception</code>一般是<code>Error</code>的实例，返回的结构和和调用<code>next</code>一样</p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h3 id="流和无穷序列"><a href="#流和无穷序列" class="headerlink" title="流和无穷序列"></a>流和无穷序列</h3><p>由于<code>generator</code>这种需要的时候才会去取的特性，所以对于描述流很有用，比如不可能一次计算完或者过量消费<code>cpu</code>的序列。包括无穷序列和实时数据流。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 经典的无穷序列</div><div class="line">function* fibonacci() &#123;</div><div class="line">    let [pre, cur] = [0, 1];</div><div class="line">    while(true) &#123;</div><div class="line">        yield cur;</div><div class="line">        [pre, cur] = [cur, pre + cur];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>参考文献：</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#The_iterator_protocol" target="_blank" rel="noopener">MDN Iteration protocols</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/iterator" target="_blank" rel="noopener">MDN Symbol.iterator</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*" target="_blank" rel="noopener">MDN function*</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator" target="_blank" rel="noopener">MDN Generator</a></li>
+<li><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Iterators_and_Generators" target="_blank" rel="noopener">MDN Iterators and generators</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Generator_(computer_programming" target="_blank" rel="noopener">WIKI Generator</a>)</li>
+<li><a href="https://en.wikipedia.org/wiki/Iterator" target="_blank" rel="noopener">WIKI Iterator</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/25/JS计算精度及舍去几位小数点后的值/" rel="next" title="JS计算精度及舍去几位小数点后的值">
+                <i class="fa fa-chevron-left"></i> JS计算精度及舍去几位小数点后的值
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/27/generator函数与co函数库/" rel="prev" title="generator函数与co函数库">
+                generator函数与co函数库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#可迭代协议-iterable-protocols"><span class="nav-number">1.</span> <span class="nav-text">可迭代协议(iterable protocols)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需要迭代的时候"><span class="nav-number">1.2.</span> <span class="nav-text">需要迭代的时候</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置可迭代对象"><span class="nav-number">1.3.</span> <span class="nav-text">内置可迭代对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定制迭代行为"><span class="nav-number">1.4.</span> <span class="nav-text">定制迭代行为</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代器协议-iterator-protocols"><span class="nav-number">2.</span> <span class="nav-text">迭代器协议(iterator protocols)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义-1"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与可迭代对象的关系"><span class="nav-number">2.2.</span> <span class="nav-text">与可迭代对象的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成器-generator"><span class="nav-number">3.</span> <span class="nav-text">生成器(generator)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成器函数-generator-function"><span class="nav-number">3.1.</span> <span class="nav-text">生成器函数(generator function)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义生成器函数"><span class="nav-number">3.1.1.</span> <span class="nav-text">定义生成器函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成器对象-generator-object"><span class="nav-number">3.2.</span> <span class="nav-text">生成器对象(generator object)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型链方法"><span class="nav-number">3.3.</span> <span class="nav-text">原型链方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">4.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流和无穷序列"><span class="nav-number">4.1.</span> <span class="nav-text">流和无穷序列</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

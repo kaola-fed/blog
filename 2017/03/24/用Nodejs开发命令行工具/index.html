@@ -1,0 +1,788 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Table of Contents  generated with DocToc  前言 准备工作 Hello World 内容详解 index.js package.json npm link命令   发布项目到npm官网供大家使用 如何处理命令行参数 单元测试 让你的项目显得正规(github badges) 持续集成（CI）和代码覆盖率   常用的库 参考资料">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Nodejs开发命令行工具">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/24/用Nodejs开发命令行工具/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="Table of Contents  generated with DocToc  前言 准备工作 Hello World 内容详解 index.js package.json npm link命令   发布项目到npm官网供大家使用 如何处理命令行参数 单元测试 让你的项目显得正规(github badges) 持续集成（CI）和代码覆盖率   常用的库 参考资料">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.evernote.com/l/AawRLN3neFtPnqh6JWMYorvfA2aK4rhTslEB/image.png">
+<meta property="og:image" content="https://www.evernote.com/l/Aay3jpmq3M9ElLB4wZQn6T5dDJ3EmxOSebEB/image.png">
+<meta property="og:image" content="https://travis-ci.org/jerryni/chost.svg?branch=master">
+<meta property="og:image" content="https://coveralls.io/repos/github/jerryni/chost/badge.svg?branch=master">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用Nodejs开发命令行工具">
+<meta name="twitter:description" content="Table of Contents  generated with DocToc  前言 准备工作 Hello World 内容详解 index.js package.json npm link命令   发布项目到npm官网供大家使用 如何处理命令行参数 单元测试 让你的项目显得正规(github badges) 持续集成（CI）和代码覆盖率   常用的库 参考资料">
+<meta name="twitter:image" content="https://www.evernote.com/l/AawRLN3neFtPnqh6JWMYorvfA2aK4rhTslEB/image.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/24/用Nodejs开发命令行工具/"/>
+
+
+
+
+
+  <title>用Nodejs开发命令行工具 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/24/用Nodejs开发命令行工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                用Nodejs开发命令行工具
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-24T00:00:00+08:00">
+                2017-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc" target="_blank" rel="noopener">DocToc</a></em></p>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作</a></li>
+<li><a href="#hello-world">Hello World</a></li>
+<li><a href="#%E5%86%85%E5%AE%B9%E8%AF%A6%E8%A7%A3">内容详解</a><ul>
+<li><a href="#indexjs">index.js</a></li>
+<li><a href="#packagejson">package.json</a></li>
+<li><a href="#npm-link%E5%91%BD%E4%BB%A4">npm link命令</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%91%E5%B8%83%E9%A1%B9%E7%9B%AE%E5%88%B0npm%E5%AE%98%E7%BD%91%E4%BE%9B%E5%A4%A7%E5%AE%B6%E4%BD%BF%E7%94%A8">发布项目到npm官网供大家使用</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0">如何处理命令行参数</a></li>
+<li><a href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95">单元测试</a></li>
+<li><a href="#%E8%AE%A9%E4%BD%A0%E7%9A%84%E9%A1%B9%E7%9B%AE%E6%98%BE%E5%BE%97%E6%AD%A3%E8%A7%84github-badges">让你的项目显得正规(github badges)</a><ul>
+<li><a href="#%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%EF%BC%88ci%EF%BC%89%E5%92%8C%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87">持续集成（CI）和代码覆盖率</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%BA%93">常用的库</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>找到合适的工具包，开发nodejs命令行工具是很容易的</p>
+</blockquote>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>nodejs v6.10.1</li>
+<li>npm v3.10.10</li>
+</ul>
+<p>版本号是我当前使用的版本，可自行选择</p>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p>分4步：</p>
+<ul>
+<li>index.js</li>
+<li>package.json</li>
+<li>根目录下执行<code>npm link</code></li>
+<li>执行命令<code>nhw</code> =&gt; <code>hello world</code></li>
+</ul>
+<p><code>touch index.js</code>创建一个<strong>index.js</strong>文件，内容如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#! /usr/bin/env node</span></div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'hello world'</span>)</div></pre></td></tr></table></figure>
+<p>用<code>npm init</code>创建一个<strong>package.json</strong>文件，之后修改成如下:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"name"</span>: <span class="string">"npmhelloworld"</span>, </div><div class="line">    <span class="string">"bin"</span>: &#123;</div><div class="line">        <span class="string">"nhw"</span>: <span class="string">"index.js"</span> </div><div class="line">    &#125;,</div><div class="line">    <span class="string">"preferGlobal"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">    <span class="string">"description"</span>: <span class="string">""</span>,</div><div class="line">    <span class="string">"scripts"</span>: &#123;</div><div class="line">        <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"author"</span>: <span class="string">"jerryni &lt;jerryni2014@gmail.com&gt;"</span>,</div><div class="line">    <span class="string">"license"</span>: <span class="string">"ISC"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="内容详解"><a href="#内容详解" class="headerlink" title="内容详解"></a>内容详解</h2><h3 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h3><blockquote>
+<p>#! /usr/bin/env node</p>
+</blockquote>
+<p><a href="http://stackoverflow.com/questions/33509816/what-exactly-does-usr-bin-env-node-do-at-the-beginning-of-node-files" target="_blank" rel="noopener">http://stackoverflow.com/questions/33509816/what-exactly-does-usr-bin-env-node-do-at-the-beginning-of-node-files</a></p>
+<p>这句话是一个<a href="https://en.wikipedia.org/wiki/Shebang_%28Unix%29" target="_blank" rel="noopener">shebang line</a>实例, 作用是告诉系统运行这个文件的解释器是node；<br>比如，本来需要这样运行<code>node ./file.js</code>，但是加上了这句后就可以直接<code>./file.js</code>运行了</p>
+<h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="comment">// 模块系统的名字，如require('npmhelloworld')</span></div><div class="line">    <span class="string">"name"</span>: <span class="string">"npmhelloworld"</span>, </div><div class="line">    <span class="string">"bin"</span>: &#123;</div><div class="line">        <span class="string">"nhw"</span>: <span class="string">"index.js"</span> <span class="comment">// nhw就是命令名 ，index.js就是入口</span></div><div class="line">    &#125;,</div><div class="line">    </div><div class="line">    <span class="comment">// 加入 安装的时候, 就会有-g的提示了</span></div><div class="line">    <span class="string">"preferGlobal"</span>: <span class="literal">true</span>,</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">// 去掉main: 'xxx.js'  是模块系统的程序入口</span></div><div class="line">    <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">    <span class="string">"description"</span>: <span class="string">""</span>,</div><div class="line">    <span class="string">"scripts"</span>: &#123;</div><div class="line">        <span class="string">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"author"</span>: <span class="string">"jerryni &lt;jerryni2014@gmail.com&gt;"</span>,</div><div class="line">    <span class="string">"license"</span>: <span class="string">"ISC"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="npm-link命令"><a href="#npm-link命令" class="headerlink" title="npm link命令"></a>npm link命令</h3><p>执行后，控制台里面会有以下输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/local/bin/nhw -&gt; /usr/local/lib/node_modules/npmhelloworld/index.js</div><div class="line">/usr/local/lib/node_modules/npmhelloworld -&gt; /Users/nirizhe/GitHub/npmhelloworld</div></pre></td></tr></table></figure>
+<p>解释：创建了2个软链接分别放到系统环境变量$PATH目录里，nhw命令和npmhellworld模块。<code>npm link</code>在用户使用的场景下是不需要执行的，用户使用<code>npm i -g npmhellworld</code>命令安装即可。</p>
+<h2 id="发布项目到npm官网供大家使用"><a href="#发布项目到npm官网供大家使用" class="headerlink" title="发布项目到npm官网供大家使用"></a>发布项目到npm官网供大家使用</h2><p>设置npm用户名，没有的话先到<a href="https://www.npmjs.com/" target="_blank" rel="noopener">npm官方网站</a>注册一个：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">npm set init.author.name <span class="string">"Your Name"</span></div><div class="line">npm set init.author.email <span class="string">"you@example.com"</span></div><div class="line">npm set init.author.url <span class="string">"http://yourblog.com"</span></div><div class="line"></div><div class="line">npm adduser</div></pre></td></tr></table></figure>
+<p>项目根目录运行：</p>
+<blockquote>
+<p>npm publish</p>
+</blockquote>
+<p>注意：</p>
+<blockquote>
+<p>每次发布需要修改package.json中的版本号，否则无法发布</p>
+</blockquote>
+<h2 id="如何处理命令行参数"><a href="#如何处理命令行参数" class="headerlink" title="如何处理命令行参数"></a>如何处理命令行参数</h2><p><a href="https://npmcompare.com/compare/commander,minimist,nomnom,optimist,yargs" target="_blank" rel="noopener">当下比较流程的几个工具对比</a></p>
+<p>这边使用<a href="http://yargs.js.org/" target="_blank" rel="noopener">yargs</a></p>
+<blockquote>
+<p>npm install –save yargs</p>
+</blockquote>
+<p>请看之前我实战<a href="https://github.com/jerryni/chost/blob/master/index.js#L9-L32" target="_blank" rel="noopener">一段代码</a></p>
+<p>大概是这个样子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> argv = yargs</div><div class="line">    .option(<span class="string">'name'</span>, &#123;</div><div class="line">        <span class="attr">type</span>: <span class="string">'string'</span>,</div><div class="line">        <span class="attr">describe</span>: <span class="string">'[hostName] Switch host by name'</span>,</div><div class="line">        <span class="attr">alias</span>: <span class="string">'n'</span></div><div class="line">    &#125;)</div><div class="line">    .option(<span class="string">'list'</span>, &#123;</div><div class="line">        <span class="attr">boolean</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">default</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">describe</span>: <span class="string">'Show hostName list'</span>,</div><div class="line">        <span class="attr">alias</span>: <span class="string">'l'</span></div><div class="line">    &#125;)</div><div class="line">    .option(<span class="string">'close'</span>, &#123;</div><div class="line">        <span class="attr">type</span>: <span class="string">'string'</span>,</div><div class="line">        <span class="attr">describe</span>: <span class="string">'close certain host'</span>,</div><div class="line">        <span class="attr">alias</span>: <span class="string">'c'</span></div><div class="line">    &#125;)</div><div class="line">    .example(<span class="string">'chost -n localhost'</span>, <span class="string">'Switch localhost successfully!'</span>)</div><div class="line">    .example(<span class="string">'chost -c localhost'</span>, <span class="string">'Close localhost successfully!'</span>)</div><div class="line">    .example(<span class="string">'chost -l'</span>, <span class="string">'All host name list: xxx'</span>)</div><div class="line">    .help(<span class="string">'h'</span>)</div><div class="line">    .alias(<span class="string">'h'</span>, <span class="string">'help'</span>)</div><div class="line">    .epilog(<span class="string">'copyright 2017'</span>)</div><div class="line">    .argv</div></pre></td></tr></table></figure></p>
+<p>效果：<br><img src="https://www.evernote.com/l/AawRLN3neFtPnqh6JWMYorvfA2aK4rhTslEB/image.png" alt="yargs"></p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><p>推荐使用<a href="https://mochajs.org/" target="_blank" rel="noopener">mocha</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> assert = <span class="built_in">require</span>(<span class="string">'assert'</span>);</div><div class="line">describe(<span class="string">'Array'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  describe(<span class="string">'#indexOf()'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    it(<span class="string">'should return -1 when the value is not present'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      assert.equal(<span class="number">-1</span>, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>].indexOf(<span class="number">4</span>));</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>执行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./node_modules/mocha/bin/mocha</span></div><div class="line"></div><div class="line">  Array</div><div class="line">    #indexOf()</div><div class="line">      ✓ should return -1 when the value is not present</div><div class="line"></div><div class="line"></div><div class="line">  1 passing (9ms)</div></pre></td></tr></table></figure></p>
+<h2 id="让你的项目显得正规-github-badges"><a href="#让你的项目显得正规-github-badges" class="headerlink" title="让你的项目显得正规(github badges)"></a>让你的项目显得正规(github badges)</h2><p>实际效果就是这些小图标：</p>
+<p><img src="https://www.evernote.com/l/Aay3jpmq3M9ElLB4wZQn6T5dDJ3EmxOSebEB/image.png" alt="badges"></p>
+<p>这里可以找到各式各样的badges:<br><a href="https://github.com/badges/shields" target="_blank" rel="noopener">https://github.com/badges/shields</a></p>
+<h3 id="持续集成（CI）和代码覆盖率"><a href="#持续集成（CI）和代码覆盖率" class="headerlink" title="持续集成（CI）和代码覆盖率"></a>持续集成（CI）和代码覆盖率</h3><p><img src="https://travis-ci.org/jerryni/chost.svg?branch=master" alt="travis"><br><a href="https://coveralls.io/github/jerryni/chost?branch=master" target="_blank" rel="noopener"><img src="https://coveralls.io/repos/github/jerryni/chost/badge.svg?branch=master" alt="Coverage Status"></a></p>
+<p><a href="https://travis-ci.org/" target="_blank" rel="noopener">travis-ci</a>:</p>
+<ul>
+<li>用github帐号登录，这时网站上列出你github上的项目</li>
+<li><p>在项目根目录放<code>.travis.yml</code>这个文件， 并写好简单的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">language: node_js</div><div class="line">node_js:</div><div class="line">  - &quot;6&quot;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在项目的package.json中添加测试脚本， 因为travis默认会执行npm test</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="string">"scripts"</span>: &#123;</div><div class="line">  <span class="string">"test"</span>: <span class="string">"mocha"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在travis设置成功后，继续<a href="https://coveralls.io" target="_blank" rel="noopener">覆盖率</a>的处理：</p>
+<ul>
+<li>安装2个依赖</li>
+</ul>
+<blockquote>
+<p>npm install istanbul coveralls –save-dev</p>
+</blockquote>
+<ul>
+<li><p>travis的配置文件中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">language: node_js</div><div class="line">node_js:</div><div class="line">  - &quot;6&quot;</div><div class="line">after_script:</div><div class="line">  - npm run coverage</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>package.json</code>中的测试脚本</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">"scripts"</span>: &#123;</div><div class="line">  <span class="string">"test"</span>: <span class="string">"node ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha"</span>,</div><div class="line">  <span class="string">"coverage"</span>: <span class="string">"cat ./coverage/lcov.info | coveralls"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="常用的库"><a href="#常用的库" class="headerlink" title="常用的库"></a>常用的库</h2><p><a href="https://www.npmjs.com/package/shelljs" target="_blank" rel="noopener">shelljs</a>：</p>
+<blockquote>
+<p>Portable Unix shell commands for Node.js<br>在nodejs里用unix命令行</p>
+</blockquote>
+<p><a href="https://github.com/chalk/chalk" target="_blank" rel="noopener">chalk</a></p>
+<blockquote>
+<p>Terminal string styling done right<br>给命令行输出上色</p>
+</blockquote>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://javascriptplayground.com/blog/2015/03/node-command-line-tool/" target="_blank" rel="noopener">http://javascriptplayground.com/blog/2015/03/node-command-line-tool/</a><br><a href="https://medium.freecodecamp.com/writing-command-line-applications-in-nodejs-2cf8327eee2#.3yg7f98dv" target="_blank" rel="noopener">https://medium.freecodecamp.com/writing-command-line-applications-in-nodejs-2cf8327eee2#.3yg7f98dv</a><br><a href="http://www.ruanyifeng.com/blog/2015/05/command-line-with-node.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/05/command-line-with-node.html</a><br><a href="https://gist.github.com/coolaj86/1318304" target="_blank" rel="noopener">https://gist.github.com/coolaj86/1318304</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/23/Clean Code 阅读总结/" rel="next" title="Clean Code 阅读总结">
+                <i class="fa fa-chevron-left"></i> Clean Code 阅读总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/26/JS模块化 - 浅谈 CommonJS require 函数实现/" rel="prev" title="JS模块化 - 浅谈 CommonJS require 函数实现">
+                JS模块化 - 浅谈 CommonJS require 函数实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-World"><span class="nav-number">3.</span> <span class="nav-text">Hello World</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内容详解"><span class="nav-number">4.</span> <span class="nav-text">内容详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#index-js"><span class="nav-number">4.1.</span> <span class="nav-text">index.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#package-json"><span class="nav-number">4.2.</span> <span class="nav-text">package.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-link命令"><span class="nav-number">4.3.</span> <span class="nav-text">npm link命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布项目到npm官网供大家使用"><span class="nav-number">5.</span> <span class="nav-text">发布项目到npm官网供大家使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何处理命令行参数"><span class="nav-number">6.</span> <span class="nav-text">如何处理命令行参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试"><span class="nav-number">7.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#让你的项目显得正规-github-badges"><span class="nav-number">8.</span> <span class="nav-text">让你的项目显得正规(github badges)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成（CI）和代码覆盖率"><span class="nav-number">8.1.</span> <span class="nav-text">持续集成（CI）和代码覆盖率</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的库"><span class="nav-number">9.</span> <span class="nav-text">常用的库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">10.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

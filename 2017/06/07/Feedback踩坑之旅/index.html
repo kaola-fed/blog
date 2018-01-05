@@ -1,0 +1,711 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="目录 1. 重复的跨域头2. 打包后代码报错3. 获取客户端IP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feedback踩坑之旅">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/07/Feedback踩坑之旅/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="目录 1. 重复的跨域头2. 打包后代码报错3. 获取客户端IP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_3.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Feedback踩坑之旅">
+<meta name="twitter:description" content="目录 1. 重复的跨域头2. 打包后代码报错3. 获取客户端IP">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/07/Feedback踩坑之旅/"/>
+
+
+
+
+
+  <title>Feedback踩坑之旅 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/07/Feedback踩坑之旅/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Feedback踩坑之旅
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-07T00:00:00+08:00">
+                2017-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>目录</p>
+<h4 id="1-重复的跨域头"><a href="#1-重复的跨域头" class="headerlink" title="1. 重复的跨域头"></a><a href="#section1">1. 重复的跨域头</a></h4><h4 id="2-打包后代码报错"><a href="#2-打包后代码报错" class="headerlink" title="2. 打包后代码报错"></a><a href="#section2">2. 打包后代码报错</a></h4><h4 id="3-获取客户端IP"><a href="#3-获取客户端IP" class="headerlink" title="3. 获取客户端IP"></a><a href="#section3">3. 获取客户端IP</a></h4><a id="more"></a>
+<hr>
+<h3 id="1-重复的跨域头-1"><a href="#1-重复的跨域头-1" class="headerlink" title="1. 重复的跨域头"></a><p id="section1">1. 重复的跨域头</p></h3><p>之前的feedback方案是, 在宿主系统中嵌入一个iframe, 用户通过iframe向feedback提交信息. 这样导致feedback无法获取到宿主系统中当前页面的信息.</p>
+<p>该来的总要来, 第二次迭代中, 问题暴露了. 在第二次迭代中, 要求打开反馈窗口后, 要在窗口中将当前页面的可见区域绘制出来, 并允许用户在绘制出的图像上进行标注.</p>
+<p>这个需求的实现中使用了一个第三方的库, 将dom传到库提供的api里, 库把dom绘制到一个canvas里.跨域的话, iframe是无法拿到parent frame的dom内容的.所以提交信息的方式改为在宿主中打开普通的模态弹窗, 然后将保存的文本信息以及图像信息跨域提交到feedback系统中.</p>
+<p>跨域提交数据, 需要在接收请求的server中对跨域做设置, 具体到node, 加上这几句:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">res.header(&apos;Access-Control-Allow-Origin&apos;, &apos;*&apos;);</div><div class="line">res.header(&apos;Access-Control-Allow-Methods&apos;, &apos;GET,PUT,POST,DELETE,PATCH,OPTIONS&apos;);</div><div class="line">res.header(&apos;Access-Control-Allow-Headers&apos;, &apos;Content-Type, Authorization, Content-Length, X-Requested-With&apos;);</div></pre></td></tr></table></figure>
+<p>上面几句的意思显而易见, 分别是设置允许跨域请求来源的域名, 请求的方法, 请求的其他头信息.</p>
+<p>理论上来说, 这样设置之后, feedback就会接收到所有域名来的跨域请求了, 但是在本地跑起来之后发现, 跨域请求还是会报错, 如下图:</p>
+<p><img src="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_1.png" alt="图1"></p>
+<p>检查请求报文, 发现上面三句中涉及到的请求头都发了两份, 而且除了第一句中的<code>Access-Control-Allow-Origin</code>以外, 另外两个重复的头所对应的值并不相同, 如下图:</p>
+<p><img src="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_2.png" alt="图2"></p>
+<p>由于请求头中存在两个<code>Access-Control-Allow-Origin:*</code>, 浏览器认为<code>Access-Control-Allow-Origin</code>的值是<code>*, *</code>, 所以跨域失败.</p>
+<p>反复检查node代码后, 并没有找到其他地方设置了这个头, google了半天, 也没有找到有效的答案. 甚至尝试在node处理请求之前检查是否有重复, 都不能奏效. 所以当时的权宜之计是把第一句注释掉. 至于后两句的重复, 则不影响跨域请求.</p>
+<p>但是发布到测试环境后, <code>Access-Control-Allow-Origin</code>头又不见了, 导致只能在开发过程中把第一句注释, 发布到线上的时候把第一句打开.</p>
+<p>这样过了一段时间, 有一次开发feedback新功能的过程中, 偶然把跨域请求的域名改成了直接请求ip, 发现请求头重复的问题居然不见了, 换回域名请求后, 问题又重现出来. ip请求和域名请求, 中间有什么区别? —- nginx.</p>
+<p>是不是nginx对请求做了手脚? 打开nginx的配置文件, 果然发现如下三行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">add_header Access-Control-Allow-Origin *;</div><div class="line">add_header Access-Control-Allow-Headers X-Requested-With;</div><div class="line">add_header Access-Control-Allow-Methods GET,POST,OPTIONS;</div></pre></td></tr></table></figure>
+<p>这正好和浏览器中的报文吻合.</p>
+<p>把这三行配置去掉, 重启nginx, 问题解决了.</p>
+<h3 id="2-打包后代码报错-1"><a href="#2-打包后代码报错-1" class="headerlink" title="2. 打包后代码报错"></a><p id="section2">2. 打包后代码报错</p></h3><p>feedback中的代码体积越来越大, 刚开始开发的时候, 只是把每个页面的文件打到一个js中, 后续开发中, 觉得这样处理显得很不美观. 于是把第三方库作为vonder单独拎出来, 这样打出来的包看起来结构清晰一点.</p>
+<p>但是这又导致一个问题, 由于干掉了iframe, 所以要在其他系统中生成弹窗, 这样弹窗中的业务逻辑也要加到原先对外导出的js中. 而弹窗代码中, 也依赖了第三方库, 如<code>vue</code>, <code>vue-resource</code>等. 现在把第三方库拎出来, 难道要宿主系统再引入两个js吗? 这样显然不行.</p>
+<p>目前想到的做法是, 把feedback系统内部使用的js用一个webpack打包, 对外暴露的js用另外一个webpack打包. 内部打包时把第三方库拎出来, 外部打包时把全部逻辑打到一起.</p>
+<p>实践证明这样做是可行的, 但是在开发过程中, 大包后经常出现这样一个报错:<br><img src="https://raw.githubusercontent.com/yubaoquan/yubaoquan.github.io/master/images/feedback_3.png" alt="图3"></p>
+<p>重新执行一次打包, 报错就没了, 所以以为是webpack的bug或者是浏览器的缓存什么的, 并没多想.</p>
+<p>但是放到测试环境之后, 发现这个bug100%发生, 重新构建部署也没用. 同样的代码, 同样的打包脚本, 为什么本地就能跑起来, 测试环境就跪了呢? 想了半天, 想不出名堂, 找到君羽帮忙, 把测试环境中打包后的文件和本地文件一个一个对比, 发现测试环境的第三方库文件比本地打包出来的文件多出来一大块代码, 而业务逻辑代码则没有区别.</p>
+<p>又想了想, 想起来了, 原来, 两个打包脚本是先后执行的, 在两个打包脚本中, 第三方库对应的输出文件名设置成了一样的. 这导致后执行的打包脚本打出来的包, 覆盖了先执行的脚本打出来的包, 也就是不使用code split模式打出来的包把使用code split模式打出的同名文件覆盖掉了.</p>
+<p>想着是这样, 那么真实的情况如何呢?</p>
+<p>为了验证, 我把两个脚本中同名的输出文件名改成不同名, 再次到测试环境构建发布, 刷新页面, 报错没了, 页面正常了. 果然是这样.</p>
+<h3 id="3-获取客户端IP-1"><a href="#3-获取客户端IP-1" class="headerlink" title="3. 获取客户端IP"></a><p id="section3">3. 获取客户端IP</p></h3><p>业务中, 需要获取发起请求的客户端ip. 项目部署到测试环境后, 发现获取到的总是nginx的ip, 不是真实的客户端ip.</p>
+<p>google了一下, 找到一个解决方案: 在nginx配置中, 加入如下一条配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">proxy_set_header X-Real-IP $remote_addr;</div></pre></td></tr></table></figure>
+<p>这样, 当用户发起请求时, nginx会在请求头中添加一个<code>X-Real-IP</code>, 值就是客户端的真实ip.</p>
+<p>by <a href="http://yubaoquan.github.io" target="_blank" rel="noopener">Jerry Yu</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/06/websocket homework之聊天室优化/" rel="next" title="websocket homework之聊天室优化">
+                <i class="fa fa-chevron-left"></i> websocket homework之聊天室优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/08/生命中最简单又最困难的事/" rel="prev" title="生命中最简单又最困难的事">
+                生命中最简单又最困难的事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-重复的跨域头"><span class="nav-number">1.</span> <span class="nav-text">1. 重复的跨域头</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-打包后代码报错"><span class="nav-number">2.</span> <span class="nav-text">2. 打包后代码报错</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-获取客户端IP"><span class="nav-number">3.</span> <span class="nav-text">3. 获取客户端IP</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-重复的跨域头-1"><span class="nav-number"></span> <span class="nav-text">1. 重复的跨域头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-打包后代码报错-1"><span class="nav-number"></span> <span class="nav-text">2. 打包后代码报错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-获取客户端IP-1"><span class="nav-number"></span> <span class="nav-text">3. 获取客户端IP</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

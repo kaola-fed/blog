@@ -1,0 +1,733 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Regular实现动画的痛点一个需求PC首页增加一个模块如下图：左侧区域3个强推品牌轮播，右侧10个个性化推荐品牌展示，右上角换一批，点击发请求获取10个新品牌展示。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Regular实现动画的痛点">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/03/Regular实现动画的痛点/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="Regular实现动画的痛点一个需求PC首页增加一个模块如下图：左侧区域3个强推品牌轮播，右侧10个个性化推荐品牌展示，右上角换一批，点击发请求获取10个新品牌展示。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/269e605c-de3b-4e7a-ae7a-eb5e254f6be4.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/39974273-d4f4-4579-a51a-c67b019c5681.gif">
+<meta property="og:image" content="https://haitao.nos.netease.com/326ffc51-d7ac-44bb-8bc2-a33c67b2b98f.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/fefa5f57-c6bb-48b9-aba6-cebb3d6ca2d7.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/6fd2446a-1feb-437c-b644-1d3b638923ee.gif">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.372Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Regular实现动画的痛点">
+<meta name="twitter:description" content="Regular实现动画的痛点一个需求PC首页增加一个模块如下图：左侧区域3个强推品牌轮播，右侧10个个性化推荐品牌展示，右上角换一批，点击发请求获取10个新品牌展示。">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/269e605c-de3b-4e7a-ae7a-eb5e254f6be4.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/03/Regular实现动画的痛点/"/>
+
+
+
+
+
+  <title>Regular实现动画的痛点 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/03/Regular实现动画的痛点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Regular实现动画的痛点
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-03T00:00:00+08:00">
+                2017-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Regular实现动画的痛点"><a href="#Regular实现动画的痛点" class="headerlink" title="Regular实现动画的痛点"></a>Regular实现动画的痛点</h2><h3 id="一个需求"><a href="#一个需求" class="headerlink" title="一个需求"></a>一个需求</h3><p>PC首页增加一个模块如下图：左侧区域3个强推品牌轮播，右侧10个个性化推荐品牌展示，右上角换一批，点击发请求获取10个新品牌展示。</p>
+<a id="more"></a>
+<p>左侧我们有轮播组件可以直接拿来用，右侧的换一批获取到新数据后直接替换老数据，触发脏检查regular自动刷新右侧列表，实现起来还是比较简单。<br><img src="https://haitao.nos.netease.com/269e605c-de3b-4e7a-ae7a-eb5e254f6be4.png" alt="需求图"></p>
+<h3 id="优化需求"><a href="#优化需求" class="headerlink" title="优化需求"></a>优化需求</h3><p>交互说搞点动画吧，我们网站太缺了。我很同意，所以乐意花点时间做。他说效果参照某猫，如下：<br><img src="https://haitao.nos.netease.com/39974273-d4f4-4579-a51a-c67b019c5681.gif" alt="某猫翻牌效果"><br>确实比较酷炫，值得借鉴。</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>实现这个效果主要有3个需要思考的点：</p>
+<ul>
+<li>单个品牌翻转动画的实现</li>
+<li>全部品牌翻转的时序控制</li>
+<li>如何在翻转的过程中替换数据<h4 id="单个翻转"><a href="#单个翻转" class="headerlink" title="单个翻转"></a>单个翻转</h4>看到这类dom动画是不是第一反应animation、transition、transform等？翻转后品牌变了，是否要两个节点互相backface-visibility:hidden;？又考虑到PC首页要保证较好的低版本浏览器兼容，然后考虑降级方案。。。</li>
+</ul>
+<p>其实此处有更好的方案。这个是比较简单的翻转效果，其实用width也能实现。通过将品牌节点的width从100%-&gt;0-&gt;100%，该节点会先压缩到0宽不可见，然后再展开到原宽度，视觉上看和rotateY并无差异。即保证了效果，也兼容了低版本浏览器，一举两得。</p>
+<p><em>简单的动画可以多考虑用兼容性更好的css属性实现，尤其是在PC端。</em></p>
+<p>width的变化可以用nej的缓动函数封装<code>util/animation/bezier</code>轻松实现。为了与regular结合，扩展了regular的<a href="http://regularjs.github.io/guide/zh/basic/animation.html" target="_blank" rel="noopener">animation指令</a>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> Regular.animation(<span class="string">"brand-rotate"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">step</span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> param = step.param, <span class="comment">// 传入brand-rotate的参数</span></div><div class="line">      element = step.element, <span class="comment">//触发节点</span></div><div class="line">      ...;</div><div class="line">  <span class="comment">// 它只接受一个done函数作为参数，标志着本步骤的结束</span></div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">done</span>)</span>&#123; </div><div class="line">    doAnimation(element,done);</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--品牌节点--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'brand'</span> <span class="attr">r-animation</span>=</span></div><div class="line">       <span class="string">"on:brand-rotate;</span></div><div class="line">        brand-rotate:;</div><div class="line">         "&gt;</div><div class="line">    ...</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在需要翻转的时候$emit(“brand-rotate”)即可。</p>
+<h4 id="时序控制"><a href="#时序控制" class="headerlink" title="时序控制"></a>时序控制</h4><p>当数据更新时，所有品牌并不是同时翻转，而是根据品牌所在位置按照一定的延时间隔，从左上角到右下角依次翻转。各个品牌翻转的次序可以根据其位置计算得出，这个不难。接下来的任务就是控制品牌在该翻转的时候翻转。<br><img src="https://haitao.nos.netease.com/326ffc51-d7ac-44bb-8bc2-a33c67b2b98f.png" alt="翻转次序"></p>
+<p>regular文档的<a href="http://regularjs.github.io/guide/zh/basic/animation.html" target="_blank" rel="noopener">animation指令</a>一章确有delay相关参数，<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--7. wait: duration--&gt;</span></div><div class="line"><span class="comment">&lt;!--等待数秒再进入下一个步骤--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'box animated'</span> <span class="attr">r-animation</span>=</span></div><div class="line">     <span class="string">"on:click; </span></div><div class="line">        class: swing ;</div><div class="line">        wait: 2000 ;</div><div class="line">        class: shake"&gt;</div><div class="line">  wait: click me</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这正是我想要的，我想我应该这么写就能按序翻转了：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;#list brandList as brand&#125;</div><div class="line">    <span class="comment">&lt;!--品牌节点--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">'brand'</span> <span class="attr">r-animation</span>=</span></div><div class="line">           <span class="string">"on:brand-rotate;</span></div><div class="line">            wait:&#123;brand_index|getDelayMs&#125;;</div><div class="line">            brand-rotate:;</div><div class="line">             "&gt;</div><div class="line">        ...</div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">&#123;/list&#125;</div></pre></td></tr></table></figure></p>
+<p>然鹅，报错了。。。如下图：<br><img src="https://haitao.nos.netease.com/fefa5f57-c6bb-48b9-aba6-cebb3d6ca2d7.png" alt="报错"><br>value中包含表达式，变当做表达式解析成一个对象，然后这里直接在对象上调用trim()，就报错了，看来此处value只支持String类型，也就是说wait值只能写死，不能用表达式。。。因此delay方法只能自己通过setTimeout、requestAnimationFrame等实现了。</p>
+<p>看了一下regular在github上的<a href="https://github.com/regularjs/regular/blob/master/src/directive/animation.js#L147" target="_blank" rel="noopener">最新代码</a>，此处已被机智的波神修复了，也早有人提过<a href="https://github.com/regularjs/regular/issues/61" target="_blank" rel="noopener">issue</a>。<em>看来工程里的regular需要升级了！</em></p>
+<h4 id="数据更新"><a href="#数据更新" class="headerlink" title="数据更新"></a>数据更新</h4><p>这听起来是最容易的，MVVM做的就是从数据到视图自动更新，我们只需关心数据，而无需操心如何更新。然鹅和动画结合后就变得不那么容易了。</p>
+<p>数据的更新是在动画进行到一半时触发的，width渐变成0–&gt;更新品牌数据–&gt;width渐变成100%。<br>当更新数据时，数据对应的节点将会被刷新成新节点并恢复成模板中初始的样子，也就是说节点动画被终止、样式被重置，width直接从0变成100%而没有过渡。</p>
+<p><em>当我们的用js操作regular模板节点时，会与regular自身的视图更新相冲突，这是问题所在。</em></p>
+<p>想过把有动画的部分纯用自己的脚本操作节点实现翻转、数据更新，那就是一夜回到解放前（jQuery时代），奈何节点上还有事件绑定、节点数据修改等操作，想想都麻烦。</p>
+<p>最终有两个可行方案：</p>
+<ol>
+<li>把动画逻辑和更新数据完全分开</li>
+</ol>
+<ul>
+<li>动画：width 100% -&gt; 0</li>
+<li>width==0时，直接js修改图片url和说明文案</li>
+<li>动画：width 0 -&gt; 100%（以上全是为了视觉上的翻转效果）</li>
+<li>等全部动画执行完，整体更新brandList数据</li>
+<li>自动刷新视图、绑上各种事件（虽说最后dom节点是都刷新了，但是刷新前后显示的图片、文案都是一样的，所以视觉上并看不出）</li>
+</ul>
+<ol>
+<li>取巧的方案。</li>
+</ol>
+<ul>
+<li>设置品牌节点的css样式为width=0</li>
+<li>模块首次出现时，需要执行动画width 0 -&gt; 100%，使之出现</li>
+<li>当换一批时，执行动画：width 100% -&gt; 0</li>
+<li>当有节点width==0时，就刷新这个单个品牌的数据</li>
+<li>这个品牌数据被更新，样式被重置成初始的样子width=0（正好现在width也是0，所以视觉上并无变化）</li>
+<li>然后执行动画width 0 -&gt; 100%</li>
+</ul>
+<p><em>既然运用了regular，如果非必须，还是不要直接操作dom节点的好。</em> 所以最终选择了第二种。效果如下图：</p>
+<p><img src="https://haitao.nos.netease.com/6fd2446a-1feb-437c-b644-1d3b638923ee.gif" alt="最终效果"></p>
+<h3 id="痛点"><a href="#痛点" class="headerlink" title="痛点"></a>痛点</h3><p>这个需求的实现可以看到regular实现动画的一些局限性：</p>
+<ul>
+<li>r-animation比较适合控制增删class、修改css，从而触发简单的css3动画，如果要实现比较复杂的动画，还是需要直接操作dom节点，并依赖专业的js动画库。</li>
+<li>动画操作和regular刷新视图会互相影响，应尽量把两块操作分开，一次只做一件事，按序进行。密集的串插进行可能会导致意想不到的问题。</li>
+<li>波神也提到“动画使用不当是可能与组件本身的数据-UI状态产生冲突，应该尽量使用on/emit的组合，而少使用when/call的组合来实现动画序列”，为的就是避免状态更新而对动画状态产生影响。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/03/重构与模式系列（一）简化函数/" rel="next" title="重构与模式系列（一）简化函数">
+                <i class="fa fa-chevron-left"></i> 重构与模式系列（一）简化函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/16/深入了解层叠上下文和层叠顺序/" rel="prev" title="深入了解层叠上下文和层叠顺序">
+                深入了解层叠上下文和层叠顺序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Regular实现动画的痛点"><span class="nav-number">1.</span> <span class="nav-text">Regular实现动画的痛点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个需求"><span class="nav-number">1.1.</span> <span class="nav-text">一个需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化需求"><span class="nav-number">1.2.</span> <span class="nav-text">优化需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">1.3.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单个翻转"><span class="nav-number">1.3.1.</span> <span class="nav-text">单个翻转</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#时序控制"><span class="nav-number">1.3.2.</span> <span class="nav-text">时序控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据更新"><span class="nav-number">1.3.3.</span> <span class="nav-text">数据更新</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#痛点"><span class="nav-number">1.4.</span> <span class="nav-text">痛点</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

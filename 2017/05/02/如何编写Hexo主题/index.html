@@ -1,0 +1,829 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="最开始折腾Hexo的时候感觉这东西很神奇，通过他和github搭配就能生成免费的静态博客，而且还有丰富的主题可以选择，当我刚入Hexo的时候默认主题是landscape，后来又使用过NexT，是一款很漂亮的主题，但是除此之外，还有很多好看的主题，我很好奇这些主题都是怎么写出来的，于是乎就仿照landscape主题开始研究，写自己的主题，也就是我自己的博客正在用的主题，项目地址在这里。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何编写Hexo主题">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/02/如何编写Hexo主题/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="最开始折腾Hexo的时候感觉这东西很神奇，通过他和github搭配就能生成免费的静态博客，而且还有丰富的主题可以选择，当我刚入Hexo的时候默认主题是landscape，后来又使用过NexT，是一款很漂亮的主题，但是除此之外，还有很多好看的主题，我很好奇这些主题都是怎么写出来的，于是乎就仿照landscape主题开始研究，写自己的主题，也就是我自己的博客正在用的主题，项目地址在这里。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何编写Hexo主题">
+<meta name="twitter:description" content="最开始折腾Hexo的时候感觉这东西很神奇，通过他和github搭配就能生成免费的静态博客，而且还有丰富的主题可以选择，当我刚入Hexo的时候默认主题是landscape，后来又使用过NexT，是一款很漂亮的主题，但是除此之外，还有很多好看的主题，我很好奇这些主题都是怎么写出来的，于是乎就仿照landscape主题开始研究，写自己的主题，也就是我自己的博客正在用的主题，项目地址在这里。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/02/如何编写Hexo主题/"/>
+
+
+
+
+
+  <title>如何编写Hexo主题 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/02/如何编写Hexo主题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何编写Hexo主题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T00:00:00+08:00">
+                2017-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最开始折腾Hexo的时候感觉这东西很神奇，通过他和github搭配就能生成免费的静态博客，而且还有丰富的主题可以选择，当我刚入Hexo的时候默认主题是<code>landscape</code>，后来又使用过<code>NexT</code>，是一款很漂亮的主题，但是除此之外，还有很多好看的主题，我很好奇这些主题都是怎么写出来的，于是乎就仿照<code>landscape</code>主题开始研究，写自己的主题，也就是<a href="http://www.showonne.com/" target="_blank" rel="noopener">我自己的博客</a>正在用的主题，项目地址在<a href="https://github.com/showonne/hexo_showonne" target="_blank" rel="noopener">这里</a>。</p>
+<a id="more"></a>
+<p>完成一个Hexo的主题其实很简单，和写静态页面差不多，只是内容部分通过Hexo的变量去获取，而且Hexo还内置了一些辅助函数帮你快速方便地完成繁琐的处理。</p>
+<!-- more -->
+<h2 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h2><p>在写代码之前要先把项目结构搭建好，一个Hexo主题的项目名就是主题名字本身，项目内的目录结构如下: (生成树形图是用的<code>tree</code>， mac上直接<code>brew install tree</code>就可以了，以前不写都不知道囧)</p>
+<pre><code>.
+├── _config.yml   //记录主题配置信息
+├── layout        //存放布局模板文件
+│   └── _partial  //布局文件中可共用的模板
+└── source        //静态资源文件夹
+    ├── css
+    ├── fonts
+    ├── js
+    └── sass
+</code></pre><p>项目结构搞好就可以开始写代码了!因为当初我是仿<code>landscape</code>写的，而且<code>ejs</code>也是我之前看nodejs时就接触过的，因此就直接用ejs写模板文件了，样式使用了<code>sass (scss</code>。</p>
+<h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><h4 id="编写布局文件-layout-ejs"><a href="#编写布局文件-layout-ejs" class="headerlink" title="编写布局文件(layout.ejs)"></a>编写布局文件(layout.ejs)</h4><p>模板文件在<code>layout</code>文件夹下，文件名对应Hexo中的模板名，有<code>index</code>,<code>post</code>,<code>page</code>,<code>archive</code>,<code>category</code>,<code>tag</code>几种，对于普通的<code>header + content + footer</code>的页面结构，<code>header</code>和<code>footer</code>往往是可以复用的，因此我们可以使用<code>layout.ejs</code>进行布局，动态的内容使用<code>body</code>变量去动态渲染，所以我的<code>layout.ejs</code>大概长这样:</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, user-scalable=no&quot;/&gt;
+    &lt;title&gt;&lt;%= config.title %&gt;&lt;/title&gt;
+    &lt;%- css(&apos;css/style&apos;) %&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;%- partial(&apos;_partial/header&apos;) %&gt;
+    &lt;div class=&quot;main&quot;&gt;
+        &lt;%- body %&gt;
+    &lt;/div&gt;
+    &lt;%- partial(&apos;_partial/footer&apos;) %&gt;
+    &lt;%- js(&apos;js/index.js&apos;) %&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p><code>partial</code>,<code>js</code>和<code>css</code>是Hexo提供的辅助函数，后面再说。</p>
+<h4 id="其他模板文件"><a href="#其他模板文件" class="headerlink" title="其他模板文件"></a>其他模板文件</h4><p>每一个模板文件对应的是一种布局，当你使用<code>hexo new &lt;title&gt;</code>的时候，其实忽略了一个参数，完整的命令是<code>hexo new [layout] &lt;title&gt;</code>，这个<code>layout</code>就决定了文章使用何种方式布局，比如创建一个自己简介的About页面，<code>hexo new page &quot;about&quot;</code>其实就是使用了page布局。每种布局对应到我们的模板文件上就是<code>index.ejs(首页)</code>,<code>post.ejs(文章)</code>,<code>archive.ejs(归档)</code>,<code>tag.ejs(标签归档)</code>,<code>page.ejs(分页)</code>。</p>
+<p>如果更直观一点，url和模板的对应关系是这样的:</p>
+<table>
+<thead>
+<tr>
+<th>Url</th>
+<th>Description</th>
+<th>Layout      </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> /</td>
+<td>首页</td>
+<td>index.ejs   </td>
+</tr>
+<tr>
+<td> /yyyy/mm/dd/:title/</td>
+<td>文章</td>
+<td>post.ejs    </td>
+</tr>
+<tr>
+<td> /archives/</td>
+<td>归档</td>
+<td>archive.ejs </td>
+</tr>
+<tr>
+<td> /tags/:tagname/</td>
+<td>某个标签的归档</td>
+<td>tag.ejs     </td>
+</tr>
+<tr>
+<td> /:else/</td>
+<td>其他</td>
+<td>page.ejs    </td>
+</tr>
+</tbody>
+</table>
+<h4 id="index-ejs"><a href="#index-ejs" class="headerlink" title="index.ejs"></a>index.ejs</h4><p>首页一般是一些博文的摘要和一个分页器，通过Hexo的<code>page</code>变量拿到页面的数据渲染即可，这里我们不直接在<code>index.ejs</code>中写HTML结构，新建一个<code>_partial/article.ejs</code>，将文章数据传给子模板渲染，然后再额外传入一个参数<code>{index: true}</code>，对后面的<code>post.ejs</code>和<code>page.ejs</code>加以区分，让子模板能正确渲染。最后，index.ejs大致是这样的:</p>
+<pre><code>//index.ejs
+&lt;% page.posts.each(function(post, index){ %&gt;
+    &lt;%- partial(&apos;_partial/article&apos;, {index: true, post: post}) %&gt;
+&lt;% }) %&gt;
+&lt;div class=&quot;pagination&quot;&gt;
+    &lt;%- paginator({ total: Math.ceil(site.posts.length / config.per_page)}) %&gt;
+&lt;/div&gt;
+</code></pre><h4 id="post-ejs"><a href="#post-ejs" class="headerlink" title="post.ejs"></a>post.ejs</h4><p>文章模板和首页差不多，只是对应的是一篇具体的文章，所以就把文章传入，再额外传入<code>{index: false}</code>告诉子模板不要按首页的方式去渲染就好了。就一行代码(因为都在子模板里 XD</p>
+<pre><code>//post.ejs
+&lt;%- partial(&apos;_partial/article&apos;, {index: false, post: page}) %&gt;
+</code></pre><h4 id="page-ejs"><a href="#page-ejs" class="headerlink" title="page.ejs"></a>page.ejs</h4><p>我个人对Page模板其实是有点懵逼的，在我自己的实践中是添加<code>about</code>(<code>hexo new page &quot;about&quot;</code>)页面后，访问<code>/about</code>会走分页布局，实际上这个页面对应的内容是<code>/source/about</code>里的<code>index.md</code>，也相当于对文章的渲染，因此我把Page模板也写成了和文章模板一样:</p>
+<pre><code>//page.ejs
+&lt;%- partial(&apos;_partial/article&apos;, {index: false, post: page}) %&gt;
+</code></pre><h4 id="partial-article-ejs"><a href="#partial-article-ejs" class="headerlink" title="_partial/article.ejs"></a>_partial/article.ejs</h4><p>前面一共有三处共用了article模板，另外page和post的一样的，所以实际上只有两种情况:主页(<code>index: true</code>)和非主页(<code>index: false</code>)。对应的<code>_partial/article.ejs</code>里只要判断这个值就可以正确渲染了，基本结构如下：</p>
+<pre><code>//_partial/article.ejs
+&lt;% if(index){ %&gt;
+    //index logic...
+&lt;% }else{ %&gt;
+    //post or page logic...
+&lt;% } %&gt;
+</code></pre><h4 id="tag-ejs"><a href="#tag-ejs" class="headerlink" title="tag.ejs"></a>tag.ejs</h4><p>标签归档页内容很少，直接用Hexo的辅助函数<code>list_tags</code>生成一个标签的列表就ok了:</p>
+<pre><code>//tag.ejs
+&lt;%- list_tags() %&gt;
+</code></pre><p>归档页模板和首页差不多，归档页只需要展示文章标题和最后的分页器就好:</p>
+<pre><code>//archive.ejs
+&lt;div class=&quot;archive&quot;&gt;
+  &lt;% var lastyear; %&gt;
+  &lt;% page.posts.each(function(post){ %&gt;
+    &lt;% var year = post.date.year() %&gt;
+    &lt;% if(lastyear !== year){ %&gt;
+      &lt;h4 class=&quot;year&quot;&gt;&lt;%= year %&gt;&lt;/h4&gt;
+      &lt;% lastyear = year %&gt;
+    &lt;% } %&gt;
+    &lt;div class=&quot;archive_item&quot;&gt;
+      &lt;a class=&quot;title&quot; href=&quot;&lt;%- url_for(post.path) %&gt;&quot;&gt;&lt;%= post.title %&gt;&lt;/a&gt;
+      &lt;span class=&quot;date&quot;&gt;&lt;%= post.date.format(&apos;YYYY-MM-DD&apos;) %&gt;&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;% }) %&gt;
+  &lt;div class=&quot;pagination&quot;&gt;
+    &lt;%- paginator({ total: Math.ceil(site.posts.length / config.per_page)}) %&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>至此，模板文件就写好了，对于<code>category</code>模板就放弃了，感觉比较鸡肋。。。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>其实在模板文件中我们已经看到了<code>page.post</code>,<code>site.posts.length</code>,<code>config.per_page</code>等等，页面的内容就是根据这些变量获取的，由Hexo提供，拿来直接用，Hexo提供了很多变量，但不是都很常用，一般就用到以下变量:</p>
+<ul>
+<li><code>site</code>: 对应整个网站的变量，一般会用到<code>site.posts.length</code>制作分页器</li>
+<li><code>page</code>: 对应当前页面的信息，例如我在<code>index.ejs</code>中使用<code>page.posts</code>获取了当前页面的所有文章而不是使用<code>site.posts</code>。</li>
+<li><code>config</code>: 博客的配置信息，博客根目录下的<code>_config.yml</code>。</li>
+<li><code>theme</code>: 主题的配置信息，对于主题根目录下的<code>_config.yml</code>。</li>
+</ul>
+<h2 id="辅助函数-Helper"><a href="#辅助函数-Helper" class="headerlink" title="辅助函数(Helper)"></a>辅助函数(Helper)</h2><p>制作一个分页器，我们需要知道文章的总数和每页展示的文章数，然后通过循环生成每个link标签，还要根据当前页面判断link标签的active状态，但是在Hexo中这些都不用我们自己来做了!Hexo提供了<code>paginator</code>这一辅助函数帮助我们生成分页器，只需要将文章总数<code>site.posts.length</code>和每页文章数<code>config.per_page</code>传入就可以生成了。</p>
+<h4 id="其他的Helper"><a href="#其他的Helper" class="headerlink" title="其他的Helper:"></a>其他的Helper:</h4><ul>
+<li><code>list_tags([options])</code>: 快速生成标签列表</li>
+<li><code>js(path/to/js)</code>, <code>css(path/to/css)</code> 用来载入静态资源，path可以是字符串或数组(载入多个资源)，默认会去<code>source</code>文件夹下去找。</li>
+<li><code>partial(path/to/partial)</code> 引用字模板，默认会去<code>layout</code>文件夹下找。</li>
+</ul>
+<h2 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h2><p>知道了Hexo的渲染方式，我们就可以使用HTML标签+CSS样式个性化我们的主题了，推荐大家使用CSS预处理语言的一种来写样式，这样就可以通过预处理语言自身的特点让样式更灵活。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h4 id="添加对多说和Disqus的支持"><a href="#添加对多说和Disqus的支持" class="headerlink" title="添加对多说和Disqus的支持"></a>添加对多说和Disqus的支持</h4><p>评论是很常用的功能，不如就直接在我们的主题里支持了，然后通过配置变量决定是否开启，评论区跟在文章内容下面，对于这种三方的代码块，最好也以<code>partial</code>的方式提取出来，方便移除或是替换。</p>
+<pre><code>//_partial/article.ejs
+&lt;section class=&apos;post-content&apos;&gt;
+    &lt;%- post.content %&gt;
+&lt;/section&gt;
+//评论部分，post.comments判断是否开启评论，config.duoshuo_shortname
+和config.disqus_shortname来判断启用那种评论插件，这里优先判断了多说
+&lt;% if(post.comments){ %&gt;
+    &lt;section id=&quot;comments&quot;&gt;
+    &lt;% if (config.duoshuo_shortname){ %&gt;
+            &lt;%- partial(&apos;_partial/duoshuo&apos;) %&gt;
+        &lt;% }else if(config.disqus_shortname){ %&gt;
+            &lt;%- partial(&apos;_partial/disqus&apos;) %&gt;
+        &lt;% } %&gt;
+    &lt;/section&gt;
+&lt;% } %&gt;
+</code></pre><p>再将多说和Disqus提供的js脚本代码放在<code>_partial/duoshuo.ejs</code>和<code>_partial/disqus.ejs</code>下就ok了~</p>
+<h4 id="使用highlight-js提供代码高亮"><a href="#使用highlight-js提供代码高亮" class="headerlink" title="使用highlight.js提供代码高亮"></a>使用highlight.js提供代码高亮</h4><p>highlight.js提供了多种语言的支持和多种皮肤，用法也很简单，载入文件后调用初始化方法，一切都帮你搞定，对于使用那种皮肤，喜好因人而异，我们干脆在主题的配置文件中做成配置项让用户自己选择:</p>
+<pre><code>//showonne/_config.yml
+...other configs
+
+# highlight.js
+highlight_theme: zenburn
+</code></pre><p>对应的<code>layout.ejs</code>中:<br>    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/<%= theme.highlight_theme %>.min.css"></p>
+<p>样式文件通过CDN引入，因为不同皮肤对应不同的文件名，所以十分灵活。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>当初是对应着<code>landscape</code>照葫芦画瓢写的，最近回头来发现一些不合理的地方，所以就又改了改，也对应着写了这么一篇总结，接下来准备再把样式划分一下，对于颜色这类样式通过变量的方式提取出来，也变得可配置，能让主题更灵活一些。</p>
+<h4 id="参考资源"><a href="#参考资源" class="headerlink" title="参考资源"></a>参考资源</h4><p><a href="https://hexo.io/zh-cn/api/helper.html" target="_blank" rel="noopener">了解辅助函数</a><br><a href="https://hexo.io/zh-cn/docs/templates.html" target="_blank" rel="noopener">模板</a><br><a href="https://hexo.io/zh-cn/docs/variables.html" target="_blank" rel="noopener">Hexo中的变量</a><br><a href="https://hexo.io/themes/" target="_blank" rel="noopener">Hexo主题列表</a><br><a href="http://dev.duoshuo.com/threads/541d3b2b40b5abcd2e4df0e9" target="_blank" rel="noopener">Hexo使用多说教程</a><br><a href="https://highlightjs.org/usage/" target="_blank" rel="noopener">How to use highlight.js</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/意外发现regular v0.4.3的一个bug，它竟然这么干的/" rel="next" title="意外发现regular v0.4.3的一个bug，它竟然这么干的">
+                <i class="fa fa-chevron-left"></i> 意外发现regular v0.4.3的一个bug，它竟然这么干的
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/11/实践中的前后端分离/" rel="prev" title="实践中的前后端分离">
+                实践中的前后端分离 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#起步"><span class="nav-number">1.</span> <span class="nav-text">起步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局"><span class="nav-number">2.</span> <span class="nav-text">布局</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编写布局文件-layout-ejs"><span class="nav-number">2.0.1.</span> <span class="nav-text">编写布局文件(layout.ejs)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他模板文件"><span class="nav-number">2.0.2.</span> <span class="nav-text">其他模板文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#index-ejs"><span class="nav-number">2.0.3.</span> <span class="nav-text">index.ejs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#post-ejs"><span class="nav-number">2.0.4.</span> <span class="nav-text">post.ejs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#page-ejs"><span class="nav-number">2.0.5.</span> <span class="nav-text">page.ejs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#partial-article-ejs"><span class="nav-number">2.0.6.</span> <span class="nav-text">_partial/article.ejs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tag-ejs"><span class="nav-number">2.0.7.</span> <span class="nav-text">tag.ejs</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">3.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#辅助函数-Helper"><span class="nav-number">4.</span> <span class="nav-text">辅助函数(Helper)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#其他的Helper"><span class="nav-number">4.0.1.</span> <span class="nav-text">其他的Helper:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#样式"><span class="nav-number">5.</span> <span class="nav-text">样式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加对多说和Disqus的支持"><span class="nav-number">6.0.1.</span> <span class="nav-text">添加对多说和Disqus的支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用highlight-js提供代码高亮"><span class="nav-number">6.0.2.</span> <span class="nav-text">使用highlight.js提供代码高亮</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资源"><span class="nav-number">7.0.1.</span> <span class="nav-text">参考资源</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

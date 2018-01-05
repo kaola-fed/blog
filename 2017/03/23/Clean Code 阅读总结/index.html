@@ -1,0 +1,822 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="1 开始本文是在阅读 clean code 时的一些总结，原书是基于 Java 的，这里将其中的一些个人认为实用性较强且容易与日常业务开发结合的一些原则重新进行整理，并参考了 clean-code-javascript 一文给出了一些代码实例，希望本文能够给日常开发编码和重构作出一些参考。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clean Code 阅读总结">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/23/Clean Code 阅读总结/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="1 开始本文是在阅读 clean code 时的一些总结，原书是基于 Java 的，这里将其中的一些个人认为实用性较强且容易与日常业务开发结合的一些原则重新进行整理，并参考了 clean-code-javascript 一文给出了一些代码实例，希望本文能够给日常开发编码和重构作出一些参考。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Clean Code 阅读总结">
+<meta name="twitter:description" content="1 开始本文是在阅读 clean code 时的一些总结，原书是基于 Java 的，这里将其中的一些个人认为实用性较强且容易与日常业务开发结合的一些原则重新进行整理，并参考了 clean-code-javascript 一文给出了一些代码实例，希望本文能够给日常开发编码和重构作出一些参考。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/23/Clean Code 阅读总结/"/>
+
+
+
+
+
+  <title>Clean Code 阅读总结 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/23/Clean Code 阅读总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Clean Code 阅读总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-23T00:00:00+08:00">
+                2017-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-开始"><a href="#1-开始" class="headerlink" title="1 开始"></a>1 开始</h2><p>本文是在阅读 <code>clean code</code> 时的一些总结，原书是基于 Java 的，这里将其中的一些个人认为实用性较强且容易与日常业务开发结合的一些原则重新进行整理，并参考了 <a href="https://github.com/ryanmcdermott/clean-code-javascript" target="_blank" rel="noopener">clean-code-javascript</a> 一文给出了一些代码实例，希望本文能够给日常开发编码和重构作出一些参考。</p>
+<a id="more"></a>
+<h2 id="2-有意义的命名"><a href="#2-有意义的命名" class="headerlink" title="2 有意义的命名"></a>2 有意义的命名</h2><h3 id="2-1-名副其实"><a href="#2-1-名副其实" class="headerlink" title="2.1 名副其实"></a>2.1 名副其实</h3><p>变量取名要花心思想想，不要贪图方便，过于简略的名称，时间长了以后就难以读懂。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> d = <span class="number">10</span>;</div><div class="line"><span class="keyword">var</span> oVal = <span class="number">20</span>;</div><div class="line"><span class="keyword">var</span> nVal = <span class="number">100</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> days = <span class="number">10</span>;</div><div class="line"><span class="keyword">var</span> oldValue = <span class="number">20</span>;</div><div class="line"><span class="keyword">var</span> newValue = <span class="number">100</span>;</div></pre></td></tr></table></figure>
+<h3 id="2-2-避免误导"><a href="#2-2-避免误导" class="headerlink" title="2.2 避免误导"></a>2.2 避免误导</h3><p>命名不要让人对变量的信息 (类型，作用) 产生误解。</p>
+<p>accounts 和 accountList，除非 accountList 真的是一个 List 类型，否则 accounts 会比 accountList 更好。因此像 List，Map 这样的后缀，不要随意使用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> platformList = &#123;</div><div class="line">    <span class="attr">web</span>: &#123;&#125;,</div><div class="line">    <span class="attr">wap</span>: &#123;&#125;,</div><div class="line">    <span class="attr">app</span>: &#123;&#125;,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> platforms = &#123;</div><div class="line">    <span class="attr">web</span>: &#123;&#125;,</div><div class="line">    <span class="attr">wap</span>: &#123;&#125;,</div><div class="line">    <span class="attr">app</span>: &#123;&#125;,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="2-3-做有意义的区分"><a href="#2-3-做有意义的区分" class="headerlink" title="2.3 做有意义的区分"></a>2.3 做有意义的区分</h3><p>用明确的意义去表述变量直接的区别。</p>
+<p>很多情况下，会有存在 product，productData，productInfo 之类的命名，Data 和 Info 很多情况下并没有明显的区别，不如直接就使用 product。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> goodsInfo = &#123;</div><div class="line">    <span class="attr">skuDataList</span>: [],</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getGoods</span>(<span class="params"></span>)</span>&#123;&#125;;          <span class="comment">// 获取商品列表</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getGoodsDetail</span>(<span class="params">id</span>)</span>&#123;&#125;;  <span class="comment">// 通过商品ID获取单个商品</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> goods = &#123;</div><div class="line">    <span class="attr">skus</span>: [],</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getGoodsList</span>(<span class="params"></span>)</span>&#123;&#125;;      <span class="comment">// 获取商品列表</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getGoodsById</span>(<span class="params">id</span>)</span>&#123;&#125;;    <span class="comment">// 通过商品ID获取单个商品</span></div></pre></td></tr></table></figure>
+<h3 id="2-4-使用读得出来的名称"><a href="#2-4-使用读得出来的名称" class="headerlink" title="2.4 使用读得出来的名称"></a>2.4 使用读得出来的名称</h3><p>缩写要有个度，比如像 DAT 这样的写法，到底是 DATA 还是 DATE…</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> yyyyMMddStr = eu.format(<span class="keyword">new</span> <span class="built_in">Date</span>(), <span class="string">'yyyy-MM-dd'</span>);</div><div class="line"><span class="keyword">var</span> dat = <span class="literal">null</span>;</div><div class="line"><span class="keyword">var</span> dev = <span class="string">'Android'</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> todaysDate = eu.format(<span class="keyword">new</span> <span class="built_in">Date</span>(), <span class="string">'yyyy-MM-dd'</span>);</div><div class="line"><span class="keyword">var</span> data = <span class="literal">null</span>;</div><div class="line"><span class="keyword">var</span> device = <span class="string">'Android'</span>;</div></pre></td></tr></table></figure>
+<h3 id="2-5-使用可搜索的名称"><a href="#2-5-使用可搜索的名称" class="headerlink" title="2.5 使用可搜索的名称"></a>2.5 使用可搜索的名称</h3><p>可搜索的名称能够帮助快速定位代码，尤其对于一些数字状态码，不建议直接使用数值，而是使用枚举。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> param = &#123;</div><div class="line">    <span class="attr">periodType</span>: <span class="number">0</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">const</span> HOUR = <span class="number">0</span>, DAY = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> param = &#123;</div><div class="line">    <span class="attr">periodType</span>: HOUR,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="2-6-避免使用成员前缀"><a href="#2-6-避免使用成员前缀" class="headerlink" title="2.6 避免使用成员前缀"></a>2.6 避免使用成员前缀</h3><p>把类和函数做得足够小，消除对成员前缀的需要。因为长期以后，前缀在人们眼里会变得越来越不重要。</p>
+<h3 id="2-7-添加有意义的语境"><a href="#2-7-添加有意义的语境" class="headerlink" title="2.7 添加有意义的语境"></a>2.7 添加有意义的语境</h3><p>对于某些名称，在不同语境下可能代表不同的含义，最好为它添加有意义的语境。</p>
+<p>firstName，lastName，street，houseNumber，city，state，zipcode 一连串变量放在一起可以判断是一个地址，但是如果将这些变量单独拎出来，有些变量名意义就不明确了。这时可以添加语境明确其意义，如 addrFirstName，addrLastName，addrState。</p>
+<p>当然也不要随意添加语境，这样只会让变量名变得冗长。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> firsName, lastName, city, zipcode, state;</div><div class="line"><span class="keyword">var</span> sku = &#123;</div><div class="line">    <span class="attr">skuName</span>: <span class="string">'sku0'</span>,</div><div class="line">    <span class="attr">skuStorage</span>: <span class="string">'storage0'</span>,</div><div class="line">    <span class="attr">skuCost</span>: <span class="string">'10'</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> addrFirsName, addrLastName, city, zipcode, addrState;</div><div class="line"><span class="keyword">var</span> sku = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'sku0'</span>,</div><div class="line">    <span class="attr">storage</span>: <span class="string">'storage0'</span>,</div><div class="line">    <span class="attr">cost</span>: <span class="string">'10'</span>,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="2-8-变量名从一而终"><a href="#2-8-变量名从一而终" class="headerlink" title="2.8 变量名从一而终"></a>2.8 变量名从一而终</h3><p>变量名取名多花一点时间，如果这一对象会在多个函数，模块中使用，就应该使用一致的变量名，否则每次看到这个对象，都需要重新去理清变量名，造成阅读障碍。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">searchGoods</span>(<span class="params">searchText</span>) </span>&#123;</div><div class="line">    getList(&#123;</div><div class="line">        <span class="attr">keyword</span>: searchText,</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getList</span>(<span class="params">option</span>) </span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">searchGoods</span>(<span class="params">keyword</span>) </span>&#123;</div><div class="line">    getList(&#123;</div><div class="line">        <span class="attr">keyword</span>: keyword,</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getList</span>(<span class="params">keyword</span>) </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<h2 id="3-函数"><a href="#3-函数" class="headerlink" title="3 函数"></a>3 函数</h2><h3 id="3-1-短小"><a href="#3-1-短小" class="headerlink" title="3.1 短小"></a>3.1 短小</h3><p>短小是函数的第一规则，过长的函数不仅会造成阅读困难，在维护的时候难度也会增加。短小，要求每个函数做尽可能少的事情，同时减少代码的嵌套和缩进，要知道，代码的嵌套和缩减同样会带来阅读的困难。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initPage</span>(<span class="params">initParams</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">    <span class="keyword">if</span> (<span class="string">'dimension'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.dimension = initParams.dimension;</div><div class="line">        data.tab.source.some(<span class="function"><span class="keyword">function</span>(<span class="params">item, index</span>)</span>&#123;</div><div class="line">            <span class="keyword">if</span> (item.value === data.dimension) &#123;</div><div class="line">                data.tab.defaultIndex = index;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="string">'standardMedium'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.hasStandardMedium = <span class="literal">true</span>;</div><div class="line">        data.filterParams[data.dimension].standardMedium = initParams.standardMedium;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="string">'plan'</span> <span class="keyword">in</span> initParams || <span class="string">'name'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.filterParams[data.dimension].planQueryString = initParams.plan || initParams.name;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">'traceId'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.filterParams[data.dimension].planQueryString = <span class="string">'id:'</span> + initParams.traceId;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initPage</span>(<span class="params">initParams</span>) </span>&#123;</div><div class="line">    initDimension(initParams);</div><div class="line">    initStandardMedium(initParams);</div><div class="line">    initPlanQueryString(initParams);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initDimension</span>(<span class="params">initParams</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">    <span class="keyword">if</span> (<span class="string">'dimension'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.dimension = initParams.dimension;</div><div class="line">        data.tab.source.some(<span class="function"><span class="keyword">function</span>(<span class="params">item, index</span>)</span>&#123;</div><div class="line">            <span class="keyword">if</span> (item.value === data.dimension) &#123;</div><div class="line">                data.tab.defaultIndex = index;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initStandardMedium</span>(<span class="params">initParams</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">    <span class="keyword">if</span> (<span class="string">'standardMedium'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.hasStandardMedium = <span class="literal">true</span>;</div><div class="line">        data.filterParams[data.dimension].standardMedium = initParams.standardMedium;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initPlanQueryString</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">    <span class="keyword">if</span> (<span class="string">'plan'</span> <span class="keyword">in</span> initParams || <span class="string">'name'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.filterParams[data.dimension].planQueryString = initParams.plan || initParams.name;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">'traceId'</span> <span class="keyword">in</span> initParams) &#123;</div><div class="line">        data.filterParams[data.dimension].planQueryString = <span class="string">'id:'</span> + initParams.traceId;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-2-只做一件事情"><a href="#3-2-只做一件事情" class="headerlink" title="3.2 只做一件事情"></a>3.2 只做一件事情</h3><p>函数应该做一件事情，做好这件事，只做这一件事。</p>
+<p>如果函数只是做了该函数名下同一个抽象层上的步骤，则函数还是只做了一件事。当函数中出现另一抽象层级所做的事情时，则可以将这部分拆成另一层级的函数，因此缩小函数。</p>
+<p>当一个函数可以被划分成多个区段时(代码块)时，这就说明了这个函数做了太多事情。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onTimepickerChange</span>(<span class="params">type, e</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span>(type === <span class="string">'base'</span>) &#123;</div><div class="line">        <span class="comment">// do base type logic...</span></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type === <span class="string">'compare'</span>) &#123;</div><div class="line">        <span class="comment">// do compare type logic...</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// do other stuff...</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onBaseTimepickerChange</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="comment">// do base type logic</span></div><div class="line">    <span class="keyword">this</span>.doOtherStuff();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onCompareTimepickerChange</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="comment">// do compare type logic</span></div><div class="line">    <span class="keyword">this</span>.doOtherStuff();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">doOtherStuff</span>(<span class="params"></span>)</span>&#123;&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-3-每个函数一个抽象层级"><a href="#3-3-每个函数一个抽象层级" class="headerlink" title="3.3 每个函数一个抽象层级"></a>3.3 每个函数一个抽象层级</h3><p>一个函数中不应该混杂了多个抽象层级，即同一级别的步骤才放到一个函数中，因为通过这些步骤就能完整地完成一件事情。</p>
+<p>回到之前提到变量命名的问题，一个变量或函数，其作用域余越广，就越需要一个有意义的名字来对其进行描述，提高可读性，减少在阅读代码时还需要去查询定义代码的频率，有些时候有意义的名字就可能需要更多的字符，但这是值得的。但对于小范围使用的变量和函数，可以适当缩短名称。因为过长的名称，某些时候反而会增加阅读的困难。</p>
+<p>可以通过向下原则划分抽象层级</p>
+<pre><code>程序就像是一系列 TO 起头的段落，每一段都描述当前层级，并引用位于下一抽象层级的后续 TO 起头段落
+- 如果要完成 A，需要完成 B，完成 C;
+- 要完成 B，需要完成 D;
+- 要完成 C，需要完成 E;
+</code></pre><p>函数名明确了其作用，获取一个图表和列表，函数中各个模块的逻辑进行了划分，明确各个函数的分工, 拆分的函数名直接表明了每个步骤的作用, 不需要额外的注释和划分。在维护的时候, 可以快速的定位各个步骤, 而不需要在一个长篇幅的函数中需找对应的代码逻辑.</p>
+<p>实际业务例子, 数据门户-流量看板-流量总览的一个获取趋势图和右边列表的例子。选择一个通过 tab 选择不同的指标，不同的指标影响的趋势图和右边列表的内容，两个模块的数据合并到一个请求中得到。流水账的写法可以将函数写成下面的样子，这种写法有几个明显的缺点:</p>
+<ul>
+<li>长。通常情况下趋势图配置可能就需要20多行，整个函数加起来，轻易就超过50行了;</li>
+<li>函数名不准确。函数名仅表明是获取一个图表的，但实际上还获取了右边列表数据并进行了配置;</li>
+<li>函数层级混乱，还可以进行更细的划分;</li>
+</ul>
+<p>根据向下原则</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line">getChart: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">    <span class="keyword">var</span> option = &#123;</div><div class="line">        <span class="attr">url</span>: <span class="string">'/chartUrl'</span>,</div><div class="line">        <span class="attr">param</span>: &#123;</div><div class="line">            <span class="attr">dimension</span>: data.dimension,</div><div class="line">            <span class="attr">period</span>: data.period,</div><div class="line">            <span class="attr">comparePeriod</span>: data.comparePeriod,</div><div class="line">            <span class="attr">periodType</span>: data.periodType,</div><div class="line">        &#125;,</div><div class="line">        <span class="attr">fn</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</div><div class="line">            <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">            <span class="comment">// 设置图表</span></div><div class="line">            data.chart = json.data.chart;</div><div class="line">            data.chart.config = &#123;</div><div class="line">                <span class="comment">//... 大量的图表配置，可能有20多行</span></div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 设置右边列表</span></div><div class="line">            data.sideList = json.data.list;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">// 获取请求参数</span></div><div class="line">    <span class="keyword">this</span>.fetchData(option);</div><div class="line">&#125;,</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line">getChartAndSideList: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> option = &#123;</div><div class="line">        <span class="attr">url</span>: <span class="string">'/chartUrl'</span>,</div><div class="line">        <span class="attr">param</span>: <span class="keyword">this</span>.getChartAndSideListParam();</div><div class="line">        fn: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</div><div class="line">            <span class="keyword">this</span>.setChart(json);</div><div class="line">            <span class="keyword">this</span>.setSideList(json);</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">this</span>.fetchData(option);</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h3 id="3-4-switch语句"><a href="#3-4-switch语句" class="headerlink" title="3.4 switch语句"></a>3.4 switch语句</h3><p>switch语句会让代码变得很长，因为switch语句天生就是要做多件事情，当状态不断增加的时候，switch语句也会不断增加。因此可能把取代switch语句，或者将其放在较低的层级.</p>
+<p>放在底层的意思，可以理解为将其埋藏到抽象工厂地下，利用抽象工厂返回内涵不同的方法或对象来进行处理.</p>
+<h3 id="3-5-减少函数的参数"><a href="#3-5-减少函数的参数" class="headerlink" title="3.5 减少函数的参数"></a>3.5 减少函数的参数</h3><p>函数的参数越多，不仅注释写得长，使用的时候容易使得函数参数发生错位。当函数参数过多时，可以考虑以参数列表或者对象的形式传入.</p>
+<p>数据门户里面的一个例子:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSum</span>(<span class="params">a [, b, c, d, e ...]</span>)</span>&#123;&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSum</span>(<span class="params">arr</span>)</span>&#123;&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">exportExcel</span>(<span class="params">url, param, onsuccess, onerror</span>)</span>&#123;&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * @param option</div><div class="line"> *    @property url</div><div class="line"> *    @property param</div><div class="line"> *    @property onsucces</div><div class="line"> *    @property onerror</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">exportExcel</span>(<span class="params">option</span>)</span>&#123;&#125;</div></pre></td></tr></table></figure>
+<p>参数尽量少，最好不要超过 3 个</p>
+<h3 id="3-6-取个好名字"><a href="#3-6-取个好名字" class="headerlink" title="3.6 取个好名字"></a>3.6 取个好名字</h3><p>函数应该取个好一点的名字，适当使用动词和关键字可以提高函数的可读性。例如:</p>
+<p>一个判断是否在某个区间范围的函数，取名为 <code>within</code>，从名称上可以容易判断出函数的作用，但是这仍然不是最好的，因为这个函数带有三个参数，无法一眼看出这个函数三个参数之间的关系，是 <code>b &lt;= a &amp;&amp; a&lt;= c</code>，还是 <code>a &lt;= b &amp;&amp; b &lt;= c</code> ?</p>
+<p>或许可以通过更改参数名来表达三个参数的关系，这个必须看到函数的定义后才可能得知函数的用法.</p>
+<p>如果再把名字改一下，从名字就可以容易得知三个参数依次的关系，当然这个名字可能会很长，但如果这个函数需要大范围地使用，较长的名字换来更好的可读性，这一代价是值得的.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">within</span>(<span class="params">a, b, c</span>)</span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">assertWithin</span>(<span class="params">val, min, max</span>)</span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">assertValWithinMinAndMax</span>(<span class="params">val, min, max</span>)</span>&#123;&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-7-无副作用"><a href="#3-7-无副作用" class="headerlink" title="3.7 无副作用"></a>3.7 无副作用</h3><p>一个有副作用的函数，通常都是是非纯函数，这意味着函数做的事情其实不止一件，函数所产生的副作用被隐藏了，函数调用者无法直接通过函数名来明确函数所做的事请.</p>
+<h2 id="4-注释"><a href="#4-注释" class="headerlink" title="4 注释"></a>4 注释</h2><h3 id="4-1-好注释"><a href="#4-1-好注释" class="headerlink" title="4.1 好注释"></a>4.1 好注释</h3><p>法律信息，提供信息的注释，对意图的解释，阐释，警示，TODO，放大(放大某种看似不合理代码的重要性)，公共 API 注释</p>
+<p>尽量让函数，变量变得刻度，不要依赖注释来描述，对于复杂难懂的部分才适当用注释说明.</p>
+<h3 id="4-2-坏注释"><a href="#4-2-坏注释" class="headerlink" title="4.2 坏注释"></a>4.2 坏注释</h3><p>喃喃自语，多余的注释(例如本来函数名就能够说明意图，还要加注释)，误导性注释，循规式注释(为了规范去加注释，其实函数名和参数名已经可以明确信息了)，日志式注释(记录无用修改日志的注释)，废话注释</p>
+<h3 id="4-3-原则"><a href="#4-3-原则" class="headerlink" title="4.3 原则"></a>4.3 原则</h3><ol>
+<li>能用函数或变量说明时，就别用注释，这就意味着要花点时间取个好名字</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> d = <span class="number">10</span>;     <span class="comment">// 天数</span></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> days = <span class="number">10</span>;</div></pre></td></tr></table></figure>
+<ol>
+<li>注释掉的代码不要留，重要的代码是不会被注释掉的</li>
+</ol>
+<p>数据门户-实时概况里面的一段代码，<code>/src/javascript/realTimeOverview/components/index.js</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">dimensionChanged</span>(<span class="params">dimension</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data.keyDealComposition;</div><div class="line">    data.selectedDimension = dimension;</div><div class="line">    <span class="comment">// 2016.10.31 modify：产品改动，选择品牌分布的时候不显示二级类目</span></div><div class="line">    <span class="comment">// if (dimension.dimensionId == '6') &#123;</span></div><div class="line">    <span class="comment">//     data.columns[0][0].name = dimension.dimensionName;</span></div><div class="line">    <span class="comment">//     data.columns[0].splice(1, 0, &#123;name:'二级类目', value:'secCategoryName', noSort: true&#125;);</span></div><div class="line">    <span class="comment">// &#125; else &#123;</span></div><div class="line">        <span class="keyword">this</span>.handle(<span class="string">'util.setTableHeader'</span>);</div><div class="line">    <span class="comment">// &#125;</span></div><div class="line">    <span class="keyword">this</span>.handle(<span class="string">'refreshComposition'</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">dimensionChanged</span>(<span class="params">dimension</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> data = <span class="keyword">this</span>.data.keyDealComposition;</div><div class="line">    data.selectedDimension = dimension;</div><div class="line">    <span class="keyword">this</span>.handle(<span class="string">'util.setTableHeader'</span>);</div><div class="line">    <span class="keyword">this</span>.handle(<span class="string">'refreshComposition'</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>不要在注释里面加入太多信息，没人会看</p>
+</li>
+<li><p>非公用函数，没有必要加过多的注释说明，冗余的注释会使代码变得不够紧凑，增加阅读障碍</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 设置表格表头</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setTableHeader</span>(<span class="params"></span>)</span>&#123;&#125;,</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setTableHeader</span>(<span class="params"></span>)</span>&#123;&#125;,</div></pre></td></tr></table></figure>
+<ol>
+<li>括号后的注释</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">doSomthing</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">while</span>(!buffer.isEmpty()) &#123;  <span class="comment">// while 1</span></div><div class="line">        <span class="comment">// ...</span></div><div class="line">        <span class="keyword">while</span>(arr.length &gt; <span class="number">0</span>) &#123;  <span class="comment">// while 2</span></div><div class="line">            <span class="comment">// ...</span></div><div class="line">            <span class="keyword">if</span>() &#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125; <span class="comment">// while 2</span></div><div class="line">    &#125; <span class="comment">// while 1</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>不需要日志式，归属式注释，相信版本控制系统</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 2016.12.03 bugfix, by xxxx</div><div class="line"> * 2016.11.01 new feature, by xxxx</div><div class="line"> * 2016.09.12 new feature, by xxxx</div><div class="line"> * ...</div><div class="line"> */</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * created by xxxx</div><div class="line"> * modified by xxxx</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">addSum</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * created by xxxx</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getAverage</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// modified by xxx</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>尽量别用用位置标记</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"></div><div class="line"><span class="comment">/*************** Filters ****************/</span></div><div class="line"></div><div class="line"><span class="comment">///////////// Initiation /////////////////</span></div></pre></td></tr></table></figure>
+<h2 id="5-格式"><a href="#5-格式" class="headerlink" title="5 格式"></a>5 格式</h2><h3 id="5-1-垂直方向"><a href="#5-1-垂直方向" class="headerlink" title="5.1 垂直方向"></a>5.1 垂直方向</h3><ol>
+<li>相关代码紧凑显示，不同部分的用空格隔开</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.data.chartView = <span class="keyword">this</span>.$refs.chartView;</div><div class="line">    <span class="keyword">this</span>.$parent.$on(<span class="string">'inject'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.dataConvert(<span class="keyword">this</span>.data.source);</div><div class="line">        <span class="keyword">this</span>.draw();</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">this</span>.$watch(<span class="string">'source'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">newValue, oldValue</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (newValue &amp;&amp; newValue != <span class="keyword">this</span>.data.initValue) &#123;</div><div class="line">            <span class="keyword">this</span>.dataConvert(newValue);</div><div class="line">            <span class="keyword">this</span>.draw();</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newValue) &#123;</div><div class="line">            <span class="keyword">if</span> (self.data.chartView) &#123;</div><div class="line">                <span class="keyword">this</span>.data.chartView.innerHTML = <span class="string">''</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;, <span class="literal">true</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.data.chartView = <span class="keyword">this</span>.$refs.chartView;</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.$parent.$on(<span class="string">'inject'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.dataConvert(<span class="keyword">this</span>.data.source);</div><div class="line">        <span class="keyword">this</span>.draw();</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.$watch(<span class="string">'source'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">newValue, oldValue</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (newValue &amp;&amp; newValue != <span class="keyword">this</span>.data.initValue) &#123;</div><div class="line">            <span class="keyword">this</span>.dataConvert(newValue);</div><div class="line">            <span class="keyword">this</span>.draw();</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newValue) &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.data.chartView) &#123;</div><div class="line">                <span class="keyword">this</span>.data.chartView.innerHTML = <span class="string">''</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;, <span class="literal">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>不要在代码中加入太多过长的注释，阻碍代码阅读</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line">BaseComponent.extend(&#123;</div><div class="line">    <span class="attr">checkAll</span>: <span class="function"><span class="keyword">function</span>(<span class="params">status</span>)</span>&#123;</div><div class="line">        status = !!status;</div><div class="line">        <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">        <span class="keyword">this</span>.checkAllList(status);</div><div class="line">        <span class="keyword">this</span>.checkSigList(status);</div><div class="line">        data.checked.list = [];</div><div class="line">        <span class="keyword">if</span>(status)&#123;</div><div class="line">            <span class="comment">// 当全选的时候先清空列表, 然后在利用Array.push添加选中项</span></div><div class="line">            <span class="comment">// 如果在全选的时候不能直接checked.list = dataList</span></div><div class="line">            <span class="comment">// 因为这样的话后面对checked.list的操作就相当于对dataList直接进行操作</span></div><div class="line">            <span class="comment">// 利用push可以解决这一个问题</span></div><div class="line">            data.sigList.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item,i</span>)</span>&#123;</div><div class="line">                data.checked.list.push(item.data.item);</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.$emit(<span class="string">'check'</span>, &#123;</div><div class="line">            <span class="attr">sender</span>: <span class="keyword">this</span>,</div><div class="line">            <span class="attr">index</span>: CHECK_ALL,</div><div class="line">            <span class="attr">checked</span>: status,</div><div class="line">        &#125;);</div><div class="line">    &#125;,</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line">BaseComponent.extend(&#123;</div><div class="line">    <span class="attr">checkAll</span>: <span class="function"><span class="keyword">function</span>(<span class="params">status</span>)</span>&#123;</div><div class="line">        status = !!status;</div><div class="line">        <span class="keyword">this</span>.checkAllList(status);</div><div class="line">        <span class="keyword">this</span>.checkSigList(status);</div><div class="line">        <span class="keyword">this</span>.clearCheckedList();</div><div class="line">        <span class="keyword">if</span>(status)&#123;</div><div class="line">            <span class="keyword">this</span>.updateCheckedList();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.emitCheckEvent(CHECK_ALL, status);</div><div class="line">    &#125;,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<ol>
+<li>函数按照依赖顺序布局，被调用函数应该紧跟调用函数</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateModule</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateFilter</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">reset</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">refresh</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    updateFilter();</div><div class="line">    updateModule();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">refresh</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    updateFilter();</div><div class="line">    updateModule();</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateFilter</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateModule</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">reset</span>(<span class="params"></span>) </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>相关的，相似的函数放在一起</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onSubmit</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">refresh</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onFilterChange</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">reset</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onSubmit</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">onFilterChange</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">refresh</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">reset</span>(<span class="params"></span>) </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>变量声明靠近其使用位置</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="function"><span class="keyword">function</span> (<span class="params">x</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> a = <span class="number">10</span>, b = <span class="number">100</span>;</div><div class="line">    <span class="keyword">var</span> c, d;</div><div class="line"></div><div class="line">    a = (a-b) * x;</div><div class="line">    b = (a-b) / x;</div><div class="line">    c = a + b;</div><div class="line">    d = c - x;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="function"><span class="keyword">function</span> (<span class="params">x</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> a = <span class="number">10</span>, b = <span class="number">100</span>;</div><div class="line"></div><div class="line">    a = (a-b) * x;</div><div class="line">    b = (a-b) / x;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> c = a + b;</div><div class="line">    <span class="keyword">var</span> d = c - x;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="5-2-水平方向"><a href="#5-2-水平方向" class="headerlink" title="5.2 水平方向"></a>5.2 水平方向</h4><ol>
+<li>运算符号之间空格，但是要注意运算优先级</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> v = a + (b + c) / d + e * f;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> v = a + (b+c)/d + e*f;</div></pre></td></tr></table></figure>
+<ol>
+<li>变量水平对齐意义不大，应该让其靠近</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">var</span> a       = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> sku     = goodsInfo.sku;</div><div class="line"><span class="keyword">var</span> goodsId = goodsInfo.goodsId;</div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> sku = goodsInfo.sku;</div><div class="line"><span class="keyword">var</span> goodsId = goodsInfo.goodsId;</div></pre></td></tr></table></figure>
+<h3 id="5-4-对于短小的if，while语句，也要尽量保持缩进"><a href="#5-4-对于短小的if，while语句，也要尽量保持缩进" class="headerlink" title="5.4 对于短小的if，while语句，也要尽量保持缩进"></a>5.4 对于短小的if，while语句，也要尽量保持缩进</h3><p>突然间改变缩进的规律，很容易就会被阅读习惯欺骗</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">if</span>(empty)&#123;<span class="keyword">return</span>;&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">if</span>(empty)&#123;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// bad</span></div><div class="line"><span class="keyword">while</span>(cli.readCommand() != <span class="number">-1</span>);</div><div class="line">app.run();</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// good</span></div><div class="line"><span class="keyword">while</span>(cli.readCommand() != <span class="number">-1</span>)</div><div class="line">;</div><div class="line"></div><div class="line">app.run();</div></pre></td></tr></table></figure>
+<h2 id="6-实际业务代码中的应用"><a href="#6-实际业务代码中的应用" class="headerlink" title="6 实际业务代码中的应用"></a>6 实际业务代码中的应用</h2><h3 id="庞大的config函数"><a href="#庞大的config函数" class="headerlink" title="庞大的config函数"></a>庞大的config函数</h3><p>对于一些较为复杂的组件或页面组件，需要定义很多属性，同时又要对这部分属性进行初始化和监听，像下面这段代码。在好几个大型的页面里面都看到了类似的代码，config 方法少的有 100行，多的有 400行。</p>
+<p> config 方法基本就是一个组件的入口，在进行维护的时候一般都会先读 config 方法，但是对于这么长的函数，很容易第一眼就懵了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Component.extend(&#123;</div><div class="line">    <span class="attr">template</span>: tpl,</div><div class="line">    <span class="attr">config</span>: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        eu.extend(data, &#123;</div><div class="line">            <span class="attr">tabChartTab</span>: <span class="number">0</span>,</div><div class="line">            <span class="attr">periodType</span>: <span class="number">0</span>,</div><div class="line">            <span class="attr">dimensionType</span>: <span class="number">1</span>,</div><div class="line">            <span class="attr">dealConstituteCompare</span>:<span class="literal">false</span>,</div><div class="line">            <span class="attr">dealConstituteSort</span>: &#123;</div><div class="line">                <span class="attr">dimensionValue</span>: <span class="string">'sales'</span>,</div><div class="line">                <span class="attr">sortType</span>: <span class="number">0</span>,</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">dealConstituteDecorate</span>: &#123;</div><div class="line">                <span class="attr">noCompare</span>:[],</div><div class="line">                <span class="attr">progress</span>: [<span class="string">'salesPercent'</span>],</div><div class="line">                <span class="attr">sort</span>:[</div><div class="line">                ]</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">defaultMetrics</span>: [</div><div class="line">            ],</div><div class="line">            <span class="comment">// ...下面还有几百行关于其他模块的属性, flow, hotSellRank等</span></div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.$watch(<span class="string">'periodType'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">            <span class="comment">// ...</span></div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.$watch(<span class="string">'topCategoryId'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">            <span class="comment">// ...</span></div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="comment">// 这里还有一部分异步请求代码...</span></div><div class="line">        <span class="keyword">this</span>.refresh();</div><div class="line">    &#125;,</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>针对上述这段代码代码，明显的缺点是:</p>
+<ul>
+<li>太长</li>
+<li>变量命名有冗余信息，且搜索性差</li>
+<li>变量(属性)太多</li>
+<li>做的事情太多，初始化组件属性，添加监听方法，还有一些业务逻辑代码</li>
+</ul>
+<p>这对这些可以作出一些改进:</p>
+<ul>
+<li>使用枚举代替数值</li>
+<li>config内只保留一切作为范围加大属性的直接初始化代码，其余针对于模块的属性将通过调用 <code>initData</code> 方法来初始化</li>
+<li><code>initData</code> 进一步根据模块划分初始化方法</li>
+<li>对于属于摸个模块的属性，则将其划分到同一个对象上，减少组件上挂载的属性数量，同时也简化了属性的命名</li>
+<li>监听方法同样是通过 <code>addWatchers</code> 初始化</li>
+<li>初始化过程中需要执行的部分逻辑，尽可能放在 <code>init</code> 等组件实例化后执行</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> TAB_A = <span class="number">0</span>, TAB_B = <span class="number">1</span>;</div><div class="line"><span class="keyword">const</span> HOUR = <span class="number">0</span>, DAY = <span class="number">1</span>;</div><div class="line"><span class="keyword">const</span> DIMENSION_A = <span class="number">0</span>, DIMENSION_B = <span class="number">1</span>;</div><div class="line"><span class="keyword">const</span> DISABLE = <span class="literal">false</span>, ENABLE = <span class="literal">true</span>;</div><div class="line"></div><div class="line">Component.extend(&#123;</div><div class="line">    <span class="attr">template</span>: tpl,</div><div class="line">    <span class="attr">config</span>: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</div><div class="line">        eu.extend(data, &#123;</div><div class="line">            <span class="attr">tabChartTab</span>: TAB_A,</div><div class="line">            <span class="attr">periodType</span>: HOUR,</div><div class="line">            <span class="attr">dimensionType</span>: DIMENSION_B,</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.initData();</div><div class="line">        <span class="keyword">this</span>.addWatchers();</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    <span class="attr">initData</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.initDealConsitiuteData();</div><div class="line">        <span class="keyword">this</span>.initFlowData();</div><div class="line">        <span class="keyword">this</span>.initHotSellRank();</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    <span class="attr">initDealConsitiuteData</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.data.dealConstitute = &#123;</div><div class="line">            <span class="attr">compare</span>: DISABLE,</div><div class="line">            <span class="attr">sort</span>: &#123;</div><div class="line">                <span class="attr">dimensionValue</span>: <span class="string">'sales'</span>,</div><div class="line">                <span class="attr">sortType</span>: <span class="number">0</span>,</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">decorate</span>: &#123;</div><div class="line">                <span class="attr">noCompare</span>:[],</div><div class="line">                <span class="attr">progress</span>: [<span class="string">'salesPercent'</span>],</div><div class="line">                <span class="attr">sort</span>:[</div><div class="line">                ]</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">defaultMetrics</span>: [</div><div class="line">            ],</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    <span class="attr">addWatchers</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.$watch(<span class="string">'periodType'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">            <span class="comment">// ...</span></div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.$watch(<span class="string">'topCategoryId'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">            <span class="comment">// ...</span></div><div class="line">        &#125;);</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    <span class="attr">init</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="comment">// 部分初始化要执行的逻辑</span></div><div class="line">        <span class="keyword">this</span>.refresh();</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>其实按照上面进行优化以后，代码的可读性是有所提高，但由于这是一个页面组件，代码行数极多，修改后方法变得更多了，仍然不便于阅读。所以，针对于这种大型的页面，更适当的做法是，将页面拆分为几个模块，将业务逻辑拆分，减少每个模块的代码量，提高可读性。而对于不可再拆分的组件或模块，如果仍然包含大量需要初始化的属性，上述例子就可以作为参考了。</p>
+<h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7 总结"></a>7 总结</h2><p>本文整理的几个要点:</p>
+<ul>
+<li>写代码就像写故事，里面各个角色 (变量，函数) 的名字要取得好，才读得流畅;</li>
+<li>函数要短小，不要混杂太多不相关，不同层级的逻辑;</li>
+<li>注释要精简准确，能不写就不要写;</li>
+<li>代码布局要向报纸学习，排版注意垂直与水平方向的间隔，联系紧密的布局要紧凑;</li>
+</ul>
+<p>就算是经验老道的大神，也很难一遍就能写出简洁的代码，所以要勤于对代码进行重构，边写代码边修改。代码只有在经过一遍一遍修改和锤炼以后，才会逐渐地变得简洁和精致。</p>
+<h2 id="8-参考"><a href="#8-参考" class="headerlink" title="8 参考"></a>8 参考</h2><ol>
+<li><a href="https://book.douban.com/subject/3032825/" target="_blank" rel="noopener">Clean Code</a></li>
+<li><a href="https://github.com/ryanmcdermott/clean-code-javascript" target="_blank" rel="noopener">clean-code-javascript</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/23/浅谈HTML5 Web Worker/" rel="next" title="浅谈HTML5 Web Worker">
+                <i class="fa fa-chevron-left"></i> 浅谈HTML5 Web Worker
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/24/用Nodejs开发命令行工具/" rel="prev" title="用Nodejs开发命令行工具">
+                用Nodejs开发命令行工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-开始"><span class="nav-number">1.</span> <span class="nav-text">1 开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-有意义的命名"><span class="nav-number">2.</span> <span class="nav-text">2 有意义的命名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-名副其实"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 名副其实</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-避免误导"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 避免误导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-做有意义的区分"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 做有意义的区分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-使用读得出来的名称"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 使用读得出来的名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-使用可搜索的名称"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 使用可搜索的名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-避免使用成员前缀"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 避免使用成员前缀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-添加有意义的语境"><span class="nav-number">2.7.</span> <span class="nav-text">2.7 添加有意义的语境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-变量名从一而终"><span class="nav-number">2.8.</span> <span class="nav-text">2.8 变量名从一而终</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-函数"><span class="nav-number">3.</span> <span class="nav-text">3 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-短小"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 短小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-只做一件事情"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 只做一件事情</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-每个函数一个抽象层级"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 每个函数一个抽象层级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-switch语句"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 switch语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-减少函数的参数"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 减少函数的参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-取个好名字"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 取个好名字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-无副作用"><span class="nav-number">3.7.</span> <span class="nav-text">3.7 无副作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-注释"><span class="nav-number">4.</span> <span class="nav-text">4 注释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-好注释"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 好注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-坏注释"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 坏注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-原则"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-格式"><span class="nav-number">5.</span> <span class="nav-text">5 格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-垂直方向"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 垂直方向</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-水平方向"><span class="nav-number">5.1.1.</span> <span class="nav-text">5.2 水平方向</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-对于短小的if，while语句，也要尽量保持缩进"><span class="nav-number">5.2.</span> <span class="nav-text">5.4 对于短小的if，while语句，也要尽量保持缩进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-实际业务代码中的应用"><span class="nav-number">6.</span> <span class="nav-text">6 实际业务代码中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#庞大的config函数"><span class="nav-number">6.1.</span> <span class="nav-text">庞大的config函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-总结"><span class="nav-number">7.</span> <span class="nav-text">7 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-参考"><span class="nav-number">8.</span> <span class="nav-text">8 参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,755 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="翻译自：A cartoon intro to ArrayBuffers and SharedArrayBuffers 这是图解 SharedArrayBuffers 系列的第二篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「译」图解 ArrayBuffers 和 SharedArrayBuffers">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/21/「译」图解 ArrayBuffers 和 SharedArrayBuffers/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="翻译自：A cartoon intro to ArrayBuffers and SharedArrayBuffers 这是图解 SharedArrayBuffers 系列的第二篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.int64ago.org/egh86ar2.png">
+<meta property="og:image" content="https://cdn.int64ago.org/howd3ymn.png">
+<meta property="og:image" content="https://cdn.int64ago.org/aki3zrxf.png">
+<meta property="og:image" content="https://cdn.int64ago.org/u34s6ku.png">
+<meta property="og:image" content="https://cdn.int64ago.org/eeju5fw6.png">
+<meta property="og:image" content="https://cdn.int64ago.org/h56rhd5j.png">
+<meta property="og:image" content="https://cdn.int64ago.org/llwasvia.png">
+<meta property="og:image" content="https://cdn.int64ago.org/qkodaaqi.png">
+<meta property="og:image" content="https://cdn.int64ago.org/e68b0vad.png">
+<meta property="og:image" content="https://cdn.int64ago.org/blehepo.png">
+<meta property="og:image" content="https://cdn.int64ago.org/ngu33a1b.png">
+<meta property="og:image" content="https://cdn.int64ago.org/avi9ufo9.png">
+<meta property="og:image" content="https://cdn.int64ago.org/bp8oj22n.png">
+<meta property="og:image" content="https://cdn.int64ago.org/qx8jhl1d.png">
+<meta property="og:image" content="https://cdn.int64ago.org/l5qu7huq.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="「译」图解 ArrayBuffers 和 SharedArrayBuffers">
+<meta name="twitter:description" content="翻译自：A cartoon intro to ArrayBuffers and SharedArrayBuffers 这是图解 SharedArrayBuffers 系列的第二篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta name="twitter:image" content="https://cdn.int64ago.org/egh86ar2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/21/「译」图解 ArrayBuffers 和 SharedArrayBuffers/"/>
+
+
+
+
+
+  <title>「译」图解 ArrayBuffers 和 SharedArrayBuffers | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/21/「译」图解 ArrayBuffers 和 SharedArrayBuffers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                「译」图解 ArrayBuffers 和 SharedArrayBuffers
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T00:00:00+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>翻译自：<a href="https://hacks.mozilla.org/2017/06/a-cartoon-intro-to-arraybuffers-and-sharedarraybuffers/" target="_blank" rel="noopener">A cartoon intro to ArrayBuffers and SharedArrayBuffers</a></p>
+<p>这是图解 SharedArrayBuffers 系列的第二篇：</p>
+<ol>
+<li><a href="https://github.com/kaola-fed/blog/issues/70" target="_blank" rel="noopener">内存管理碰撞课程</a></li>
+<li>图解 ArrayBuffers 和 SharedArrayBuffers</li>
+<li><a href="https://github.com/kaola-fed/blog/issues/72" target="_blank" rel="noopener">用 Atomics 避免 SharedArrayBuffers 竞争条件</a></li>
+</ol>
+<a id="more"></a>
+<p><a href="https://github.com/kaola-fed/blog/issues/70" target="_blank" rel="noopener">上一篇文章</a>中，我解释了 JavaScript 这类自动管理内存的语言是如何处理内存的，同样也解释了类似 C 语言这种手动管理内存的语言</p>
+<p>为什么这对于我们讨论的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer" target="_blank" rel="noopener">ArrayBuffers</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer" target="_blank" rel="noopener">SharedArrayBuffers</a> 如此重要？</p>
+<p>因为即使你使用的是 JavaScript 这种自动管理内存的语言，ArrayBuffers 也提供了一种手动处理数据的途径</p>
+<p>为什么你会有这样的需求呢？</p>
+<p>正如<a href="https://github.com/kaola-fed/blog/issues/70" target="_blank" rel="noopener">上篇文章</a>所说，这里有个权衡，自动管理内存对开发者是友好的，但是这会增加机器负担，甚至会有性能问题</p>
+<p><img src="https://cdn.int64ago.org/egh86ar2.png" alt=""></p>
+<p>例如，JS 里创建一个变量，引擎会去猜测变量的类型以及内存里如何表示。因为有了类型猜测，JS 引擎通常会比真实需要预留更多的空间。根据变量不同，内存分配可能会是真实需求的 2-8 倍，这导致了内存浪费</p>
+<p>而且，某些创建和使用 JS 对象的场景会让垃圾回收变得很困难。如果你是手动维护的内存，可以根据实际使用需求来决定分配和释放内存的策略</p>
+<p>很多时候，这不是什么大不了的事。大多数场景并不会对性能要求那么苛刻，反而更多地担心管理内存的麻烦。而且一般情况下，手动管理内存可能更慢</p>
+<p>但是对于底层需要极致优化的场景，ArrayBuffers 和 SharedArrayBuffers 为你提供了可能</p>
+<p><img src="https://cdn.int64ago.org/howd3ymn.png" alt=""></p>
+<h2 id="ArrayBuffer-是如何工作的"><a href="#ArrayBuffer-是如何工作的" class="headerlink" title="ArrayBuffer 是如何工作的"></a>ArrayBuffer 是如何工作的</h2><p>ArrayBuffer 跟其它 JavaScript 数组差不多，但是不是所有 JavaScript 类型都可以放进去，比如对象、字符串。你唯一可以放进去的只有字节（可以用数字表示）</p>
+<p><img src="https://cdn.int64ago.org/aki3zrxf.png" alt=""></p>
+<p>需要澄清的一点是，你事实上不是直接把这个字节到 ArrayBuffer 里就行了，ArrayBuffer 并不知道字节有多长，该用多少位去存</p>
+<p>ArrayBuffer 仅仅是一个个 0/1 组成的串，它不知道第一个元素和第二个元素的分割点</p>
+<p><img src="https://cdn.int64ago.org/u34s6ku.png" alt=""></p>
+<p>为了提供必要的上下文信息，把 ArrayBuffer 分块，我们需要把它包裹到视图里，这些数据的视图可以通过带类型的数组添加，已经支持很多种类型的数组了</p>
+<p>例如，你可以用一个 Int8 类型的数组把 0/1 串分割成 8 位一组的序列</p>
+<p><img src="https://cdn.int64ago.org/eeju5fw6.png" alt=""></p>
+<p>或者你可以用一个无符的 Int16 类型数组，把它分割成 16 位一组的序列，可以把它当作无符整型处理</p>
+<p><img src="https://cdn.int64ago.org/h56rhd5j.png" alt=""></p>
+<p>甚至你可以在同一个基础 buffer 上同时处理多种视图，不同视图在相同操作下会返回不同的结果</p>
+<p>例如，如果我们从某个 ArrayBuffer 的 Int8 视图得到第 0 和第 1 个元素的值，在 Uint16 视图下，第 0 个元素与其有相同二进制位值，但是得到的值也会不一样</p>
+<p><img src="https://cdn.int64ago.org/llwasvia.png" alt=""></p>
+<p>这种方式下，ArrayBuffer 几乎是扮演原始内存角色了，它模拟内存的各种跟 C 语言里类似的操作</p>
+<p>你可能纳闷了，为什么不让开发者直接操纵内存而是采用这个抽象层。因为直接操作内存会有安全风险，这个以后的文章会讲</p>
+<h2 id="什么是-SharedArrayBuffer"><a href="#什么是-SharedArrayBuffer" class="headerlink" title="什么是 SharedArrayBuffer"></a>什么是 SharedArrayBuffer</h2><p>为了说明白 SharedArrayBuffers，我需要稍微解释下并行运行代码和 JavaScript 的关系</p>
+<p>为了更快运行代码或者更更快响应用户事件，你可能会让代码并行运行，为了做到这点，你需要分割工作</p>
+<p>一个典型的应用中，所有的工作都由一个单独的主线程处理，这点我之前提到过……这个主线程就像一个全栈工程师，掌管着 JavaScript、DOM 和 视图</p>
+<p>任何能够从主线程负载减少工作的方法都对代码运行效率有帮助，某些情况下，ArrayBuffers 可以减少大量应该由主线程做的工作</p>
+<p><img src="https://cdn.int64ago.org/qkodaaqi.png" alt=""></p>
+<p>但是也有些时候减少主线程负载是远远不够的，有时你需要增援，你需要分割你的任务</p>
+<p>大多数语言里，这种分割工作的方法可以使用多线程实现，这就像很多人同时在一个项目里工作。如果你可以完美地把任务分割为多个独立的部分，你可以分给不同的线程，然后，这些线程就同时各种独立执行这些任务</p>
+<p>在 JavaScript 里，你可以借助 web worker 做这种事，这些 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank" rel="noopener">web workers</a> 跟其它语言的线程还是有些区别的，默认它们不能共享内存</p>
+<p><img src="https://cdn.int64ago.org/e68b0vad.png" alt=""></p>
+<p>这意味着如果你想分配你的任务给别的线程，你需要完整把任务复制过去，这可以通过 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage" target="_blank" rel="noopener">postMessage</a> 实现</p>
+<p>postMessage 把你传给它的任何对象都序列化，发送到其它 web worker，然后那边接收后反序列化并放进内存</p>
+<p><img src="https://cdn.int64ago.org/blehepo.png" alt=""></p>
+<p>这个过程是非常慢的</p>
+<p>某些类型数据（如 ArrayBuffers）你可以通过移动内存的方式实现，这意味着把某个特定区域的内存移过去后其它 web worker 就可以直接访问了</p>
+<p>但是，之前的 web worker 就无法访问了</p>
+<p><img src="https://cdn.int64ago.org/ngu33a1b.png" alt=""></p>
+<p>对于某些场景这是实用的，但是也有很多场景对性能要求高，你只能使用共享的内存</p>
+<p>而这就是 SharedArrayBuffers 为你提供的</p>
+<p><img src="https://cdn.int64ago.org/avi9ufo9.png" alt=""></p>
+<p>有了 SharedArrayBuffer 后，多个 web worker 就可以同时读写同一块内存了</p>
+<p>你再也不需要 postMessage 伴有时延的通信了，多个 web worker 对数据访问都没有时延了</p>
+<p>当然，这种同时访问也有风险，会产生竞争条件</p>
+<p><img src="https://cdn.int64ago.org/bp8oj22n.png" alt=""></p>
+<p>这个下一篇文章会细说</p>
+<h2 id="SharedArrayBuffers-支持情况"><a href="#SharedArrayBuffers-支持情况" class="headerlink" title="SharedArrayBuffers 支持情况"></a>SharedArrayBuffers 支持情况</h2><p>所有主流浏览器都将会支持 SharedArrayBuffers</p>
+<p><img src="https://cdn.int64ago.org/qx8jhl1d.png" alt=""></p>
+<p>Safari 10.1 已经支持了，Firefox 和 Chrome 也会很快支持并发布，Edge 会在他们秋季 Windows 更新的时候发布</p>
+<p>即使所有主流浏览器都支持了，我们也不希望开发者直接使用它们，事实上，我们是反对的。你应该只使用更高级的封装好的抽象层接口</p>
+<p>我们期盼的是 JavaScript 库开发者可以提供更简单安全的方法来使用 SharedArrayBuffers</p>
+<p>而且，一旦 SharedArrayBuffers 内置到平台中，WebAssembly 可以通过它实现多线程，到那时候你就可以使用类似 Rust 的多线程语言轻松玩转多线程了</p>
+<p><a href="https://github.com/kaola-fed/blog/issues/72" target="_blank" rel="noopener">下一篇文章</a>我们会介绍一个为避免竞争条件的库提供基础操作的工具（<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics" target="_blank" rel="noopener">Atomics</a>）</p>
+<p><img src="https://cdn.int64ago.org/l5qu7huq.png" alt=""></p>
+<p>By <a href="https://github.com/int64ago" target="_blank" rel="noopener">Cody</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/21/「译」内存管理碰撞课程/" rel="next" title="「译」内存管理碰撞课程">
+                <i class="fa fa-chevron-left"></i> 「译」内存管理碰撞课程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/25/JS计算精度及舍去几位小数点后的值/" rel="prev" title="JS计算精度及舍去几位小数点后的值">
+                JS计算精度及舍去几位小数点后的值 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayBuffer-是如何工作的"><span class="nav-number">1.</span> <span class="nav-text">ArrayBuffer 是如何工作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-SharedArrayBuffer"><span class="nav-number">2.</span> <span class="nav-text">什么是 SharedArrayBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SharedArrayBuffers-支持情况"><span class="nav-number">3.</span> <span class="nav-text">SharedArrayBuffers 支持情况</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

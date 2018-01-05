@@ -1,0 +1,838 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="评价页面性能好坏的核心之一就是页面的加载速度，而页面加载速度的关键就是页面资源的加载。本文将从浏览器浏览器页面资源加载过程展开分析，来引出页面关键请求路径的概念，并给出如何优化该关键请求路径的一些方法。下面相关内容，都是以chrome浏览器为例来进行介绍的。不同浏览器之间，可以会略有差异，但基本过程是一致的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器页面资源加载过程与优化">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/01/05/浏览器页面资源加载过程与优化/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="评价页面性能好坏的核心之一就是页面的加载速度，而页面加载速度的关键就是页面资源的加载。本文将从浏览器浏览器页面资源加载过程展开分析，来引出页面关键请求路径的概念，并给出如何优化该关键请求路径的一些方法。下面相关内容，都是以chrome浏览器为例来进行介绍的。不同浏览器之间，可以会略有差异，但基本过程是一致的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/23a48ea5-5ea7-49a2-9692-f27c74892912.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/55cca5d4-602f-45a5-bdb0-433b226c57d9.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/4367f8d8-dab2-4b64-92d7-609e204e91d2.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/cc00be2b-7c07-4b61-8166-1b634d6bf745.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/509d498e-abf0-4616-b00b-b9873ba88299.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/17fe396f-4274-4d15-8457-a90e00dc202f.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/bbe4e286-c110-466c-bc88-566abe301584.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/da5dc038-8a71-4f0b-90cf-441482a9395b.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/25a79682-fc9e-40dc-9084-a43038e76618.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/1fc0cd4b-3847-4cf3-9c3a-af85ef8db451.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/0a00e6ea-6b87-4a3f-bed7-4c57b3eb6556.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/09c10766-4e71-44d4-8a06-2b7f180a5464.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/7d1b12af-3fb5-493b-b887-2fdcfa4b9d55.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/d2a91941-4cc4-42d7-a01e-fa607752e426.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/71f9d3e7-9dc4-440d-ab08-79b6ad63e8a7.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/4192d397-aa25-400d-85fc-2f96c50a16c2.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:58:58.127Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器页面资源加载过程与优化">
+<meta name="twitter:description" content="评价页面性能好坏的核心之一就是页面的加载速度，而页面加载速度的关键就是页面资源的加载。本文将从浏览器浏览器页面资源加载过程展开分析，来引出页面关键请求路径的概念，并给出如何优化该关键请求路径的一些方法。下面相关内容，都是以chrome浏览器为例来进行介绍的。不同浏览器之间，可以会略有差异，但基本过程是一致的。">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/23a48ea5-5ea7-49a2-9692-f27c74892912.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/01/05/浏览器页面资源加载过程与优化/"/>
+
+
+
+
+
+  <title>浏览器页面资源加载过程与优化 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/01/05/浏览器页面资源加载过程与优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                浏览器页面资源加载过程与优化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-05T00:00:00+08:00">
+                2017-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>评价页面性能好坏的核心之一就是<strong>页面的加载速度</strong>，而<strong>页面加载速度</strong>的关键就是<strong>页面资源的加载</strong>。本文将从浏览器浏览器页面资源加载过程展开分析，来引出页面<strong>关键请求路径</strong>的概念，并给出如何优化该<strong>关键请求路径</strong>的一些方法。<br>下面相关内容，都是以chrome浏览器为例来进行介绍的。不同浏览器之间，可以会略有差异，但基本过程是一致的。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="浏览器加载资源过程"><a href="#浏览器加载资源过程" class="headerlink" title="浏览器加载资源过程"></a>浏览器加载资源过程</h3><p>首先抛出两个问题：</p>
+<ul>
+<li>浏览器如何知道应该加载哪些资源？</li>
+<li>浏览器是什么顺序来加载这些资源？<br>当浏览器截获到一个页面请求后，将会按照顺序做如下图所示的4件事。<br><img src="https://haitao.nos.netease.com/23a48ea5-5ea7-49a2-9692-f27c74892912.jpg" alt="流程" title="流程"></li>
+</ul>
+<ol>
+<li>首先会将所有需要加载的资源进行分类。</li>
+<li>然后根据浏览器相关的安全策略，来决定资源的加载权限。</li>
+<li>接着对各个资源的加载优先级进行计算和排序。</li>
+<li>最后一步，根据加载优先级顺序来加载资源。</li>
+</ol>
+<h5 id="第一步：资源分类"><a href="#第一步：资源分类" class="headerlink" title="第一步：资源分类"></a>第一步：资源分类</h5><p>chrome浏览器会将资源分为14类，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kMainResource</td>
+<td>即主资源，html页面文件资源就属于该类型</td>
+</tr>
+<tr>
+<td>kImage</td>
+<td>各种图片资源</td>
+</tr>
+<tr>
+<td>kCSSStyleSheet</td>
+<td>顾名思义，就是层叠样式表css资源</td>
+</tr>
+<tr>
+<td>kScript</td>
+<td>脚本资源，例如js资源</td>
+</tr>
+<tr>
+<td>kFont</td>
+<td>字体资源，例如网页中常用的字体集.woff资源</td>
+</tr>
+<tr>
+<td>kRaw</td>
+<td>混合类型资源，最常见的ajax请求就属于这类资源</td>
+</tr>
+<tr>
+<td>kSVGDocument</td>
+<td>SVG可缩放矢量图形文件资源</td>
+</tr>
+<tr>
+<td>kXSLStyleSheet</td>
+<td>扩展样式表语言XSLT，是一种转换语言，关于该类型可以查阅w3c XSL来了解</td>
+</tr>
+<tr>
+<td>kLinkPrefetch</td>
+<td>HTML5页面的预读取资源(Link prefetch)，例如dns-prefetch。下面会有详细介绍</td>
+</tr>
+<tr>
+<td>kTextTrack</td>
+<td>video的字幕资源，- 即<code>&lt;track&gt;</code>标签</td>
+</tr>
+<tr>
+<td>kImportResource</td>
+<td>HTML Imports，将一个HTML文件导入到其他HTML文档中，例如<code>&lt;link href=&quot;import/post.html&quot; rel=&quot;import&quot; /&gt;</code>。详细了解请查阅相关文档。</td>
+</tr>
+<tr>
+<td>kMedia</td>
+<td>多媒体资源，video or audio都属于该类资源</td>
+</tr>
+<tr>
+<td>kManifest</td>
+<td>HTML5 应用程序缓存资源</td>
+</tr>
+<tr>
+<td>kMock</td>
+<td>预留的测试类型</td>
+</tr>
+</tbody>
+</table>
+<h5 id="第二步：安全策略检查"><a href="#第二步：安全策略检查" class="headerlink" title="第二步：安全策略检查"></a>第二步：安全策略检查</h5><p>网页安全政策（Content Security Policy，缩写 CSP）是由浏览器提供的一种白名单制度。开发者通过配置，来告诉浏览器各类外部资源的加载和执行限制，来提高网页的安全性。一种最常用的应用就是通过限制非信任域名脚本的加载来预防XSS攻击。<br>可以通过两种方式来配置CSP。<br>第一种，就是通过页面HTTP请求头的Content-Security-Policy字段来限制。如下图所示，这是www.google.com页面的请求头：<br><img src="https://haitao.nos.netease.com/55cca5d4-602f-45a5-bdb0-433b226c57d9.jpg" alt="流程" title="流程"><br>第二种是，通过<code>&lt;meta&gt;</code>标签来设置。<code>&lt;meta&gt;</code>是以key-value的方式来进行配置的。下面以几个具体的应用例子来介绍。</p>
+<ol>
+<li>用于预防XSS:<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Security-Policy"</span> <span class="attr">content</span>=<span class="string">"script-src 'self'; style-src nos.netease.com kaola.com;"</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>上面的<code>script-src</code>代表脚本资源；<code>style-src</code>代表样式资源；<code>&#39;self&#39;</code>代表只信任当前域名下的外来资源，其他域下的资源全部会被拦截；<code>nos.netease.com kaola.com</code>代表信任nos.netease.com和kaola.com这两个域名下的资源。<br>所以上面的标签的意义就是：对于脚本资源只信任本域下的，对于样式资源，除了本域还会加载nos.netease.com和kaola.com这两个域名下的。</p>
+<ol>
+<li>用于站点请求协议升级过渡（http转https）：<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Secur****ity-Policy"</span> <span class="attr">content</span>=<span class="string">"upgrade-insecure-requests"</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>上面的<code>upgrade-insecure-requests</code>的意义，就如同字面意思一样：升级所有非安全请求。当加了这个meta标签以后，浏览器会将https页面中的所有htttp请自动升级到https。例如，当我们需要进行全站http转https改造时，对于原有的大量http资源会直接强制以https或wss等SSL加密形式发送请求而不会报错。当然如果资源服务器不支持https等SSL加密，那么该资源还是不会载入。</p>
+<ol>
+<li>用于阻止Mixed Content：<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Security-Policy"</span> <span class="attr">content</span>=<span class="string">"block-all-mixed-content"</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>混合内容(Mixed Content)就是第2个例子所说的，在https站点中，进行的http请求。这类在安全链接中混合了非安全请求内容就叫混合内容。出现这类请求时，我们可以在浏览器控制台中找到对应的警告信息，如下图所示。<br><img src="https://haitao.nos.netease.com/4367f8d8-dab2-4b64-92d7-609e204e91d2.jpg" alt="流程" title="流程"><br>混合内容会降低HTTPS网站的安全性和用户体验。不过让人略感放心的是，浏览器对于可能对安全性造成较大威胁的资源类型的混合模式请求都会直接拦截报错，例如脚本资源，如下图所示。但对于图片、音频、视频等资源只会警告，但不会阻止其加载。<br><img src="https://haitao.nos.netease.com/cc00be2b-7c07-4b61-8166-1b634d6bf745.png" alt="流程" title="流程"><br>对于安全性要求极高的网站，可以通过上面的标签来阻止所以类型的非安全链接请求，这样包括图片、音频、视频等资源也将会被拦截报错。<br>当然对于Content-Security-Policy的设置还有很多其他作用，大家可以通过<a href="https://developer.mozilla.org/zh-CN/docs/Web/Security/CSP/Using_Content_Security_Policy" title="MDN" target="_blank" rel="noopener">MDN</a>来做进一步了解。</p>
+<h5 id="第三步：资源优先级计算"><a href="#第三步：资源优先级计算" class="headerlink" title="第三步：资源优先级计算"></a>第三步：资源优先级计算</h5><p>资源的优先级被分为<strong>5级</strong>。不同资料上，对这<strong>5级</strong>的命名描述上可能有所不同。主要是因为资料本身可能是从<strong>网络层面</strong>，<strong>浏览器内核</strong>或者<strong>用户端控制台显示</strong>这三个方向中的某一个来说的。这三个方向虽然对这<strong>5级</strong>的命名不同，但都是一一对应的。<br><strong>网络层面</strong>，5级分别为：Highest、Medium、Low、Lowest、Idle;<br><strong>浏览器内核</strong>，5级分别为：VeryHigh、High、Medium、Low、VeryLow;<br><strong>用户端控制台显示</strong>，5级分别为：Highest、High、Medium、Low、Lowest;</p>
+<p>下面是以<strong>浏览器内核</strong>作为研究方向，来介绍浏览器的资源优先级计算过程：</p>
+<ul>
+<li>第一步，根据资源的类型来设定默认优先级。<br>对于每一类资源浏览器都有一个默认的加载优先级规则：</li>
+</ul>
+<ol>
+<li>html、css、font这三种类型的资源优先级最高；</li>
+<li>然后是preload资源（通过<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Preloading_content" title="preload" target="_blank" rel="noopener"><code>&lt;link rel=“preload&quot;&gt;</code></a>标签预加载）、script、xhr请求；</li>
+<li>接着是图片、语音、视频；</li>
+<li>最低的是<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Link_prefetching_FAQ" title="prefetch" target="_blank" rel="noopener">prefetch</a>预读取的资源。</li>
+</ol>
+<ul>
+<li>第二步，根据一定的实际规则，对优先级进行调整。<br>初始优先级设置好以后，浏览器会根据资源的实际属性和位于文档中的位置等方面，对优先级进行调整，来确定出最终的加载优先级顺序。对于几个常见资源类型的调整规则如下：</li>
+</ul>
+<ol>
+<li>对于<strong>XHR请求</strong>资源：将<strong>同步XHR请求</strong>的优先级调整为最高。<br>XHR请求可以分为同步请求和异步请求，浏览器会把同步请求的优先级提升到最高级，以便尽早获取数据、加快页面的显示。</li>
+<li>对于<strong>图片</strong>资源：会根据图片是否在可见视图之内来改变优先级。<br>图片资源的默认优先级为Low。现代浏览器为了提高用户首屏的体验，在渲染时会计算图片资源是否在首屏可见视图之内，在的话，会将这部分视口可见图片(Image in viewport)资源的优先级提升为High。</li>
+<li>对于<strong>脚本</strong>资源：浏览器会将根据脚本所处的位置和属性标签分为三类，分别设置优先级。<br>首先，对于添加了defer/async属性标签的脚本的优先级会全部降为Low。<br>然后，对于没有添加该属性的脚本，根据该脚本在文档中的位置是在浏览器展示的第一张图片之前还是之后，又可分为两类。在之前的<code>(标记early**)</code>它会被定为High优先级，在之后的<code>(标记late**)</code>会被设置为Medium优先级。<br>下图总结了资源优先级计算后各类资源的优先级情况，其中特别将上面讲的三种常见资源的情况框了出来。红框框中的为脚本类型、紫框的为图片类型、蓝框为XHR请求。图片来源<a href="https://docs.google.com/document/d/1bCDuq9H1ih9iNjgzyAL0gpwNFiEP4TZS-YLRp_RuMlc/edit#" title="点此" target="_blank" rel="noopener">点此</a>。<br><img src="https://haitao.nos.netease.com/509d498e-abf0-4616-b00b-b9873ba88299.jpg" alt="流程" title="流程"></li>
+</ol>
+<h5 id="第四步：按照上面计算的安全策略和优先级来加载或阻塞资源。"><a href="#第四步：按照上面计算的安全策略和优先级来加载或阻塞资源。" class="headerlink" title="第四步：按照上面计算的安全策略和优先级来加载或阻塞资源。"></a>第四步：按照上面计算的安全策略和优先级来加载或阻塞资源。</h5><h3 id="关键请求链和优化"><a href="#关键请求链和优化" class="headerlink" title="关键请求链和优化"></a><strong>关键请求链和优化</strong></h3><p>上面详细介绍了浏览器的资源加载过程，其中核心在于资源的加载优先顺序的计算。我们可以通过优化资源的加载优先级顺序，来有效提高页面的加载响应速度。</p>
+<p>首先来介绍下<strong>关键请求链（Critical-Request-Chains）</strong>的概念。可视区域渲染完毕（首屏），并对于用户来说可用时，必须加载的资源请求队列，就叫做<strong>关键请求链</strong>。这样，我们可以通过<strong>关键请求链</strong>，来确定优先加载的资源以及加载顺序，以实现浏览器尽可能快地加载页面。</p>
+<h5 id="如何查找页面的关键请求链"><a href="#如何查找页面的关键请求链" class="headerlink" title="如何查找页面的关键请求链"></a>如何查找页面的<strong>关键请求链</strong></h5><ol>
+<li>通过首屏快照获取关键image资源。<br>如下图所示，我们通过首屏快照，来获取首屏所要加载的图片资源。(红框内)<br><img src="https://haitao.nos.netease.com/17fe396f-4274-4d15-8457-a90e00dc202f.jpg" alt="流程" title="流程"></li>
+<li>通过<strong>LightHouse</strong>插件获取关键请求链中的关键js和css资源。<br><strong>LightHouse</strong>详细的使用方法可以通过点击<a href="https://developers.google.com/web/tools/lighthouse/" title="此处" target="_blank" rel="noopener">此处</a>来了解。通过执行该插件最终可以生成一个报告，里面包含了有关该页面性能的全方面报告和建议。其中有关关键请求链的报告如下图所示：<br><img src="https://haitao.nos.netease.com/bbe4e286-c110-466c-bc88-566abe301584.jpg" alt="流程" title="流程"></li>
+<li>通过浏览器控制台查看各个请求的优先级<br>打开Chrome控制台，切换到Network tab下，就可以查看资源的优先级（Priority）。如果没有Priority一栏，可以右键在下拉菜单中勾选Priority即可。如下图所示：<br><img src="https://haitao.nos.netease.com/da5dc038-8a71-4f0b-90cf-441482a9395b.jpg" alt="流程" title="流程"></li>
+</ol>
+<h5 id="优化关键请求链"><a href="#优化关键请求链" class="headerlink" title="优化关键请求链"></a>优化<strong>关键请求链</strong></h5><p>优化<strong>关键请求链</strong>有很多方法，这里主要介绍两种。</p>
+<ul>
+<li><p>第一种：利用<strong>Preload</strong>和<strong>Prefetch</strong>。</p>
+<p>  这两个标签在文章前面的介绍中就已经有所介绍，它们都属于预加载性能优化技术。对于开发人员，我们可能比浏览器更加了解我们的应用。从而可以使用该技术来预先告知浏览器某些资源可能在将来会被使用到，让浏览器对这部分资源进行提前加载。<br>  <strong>Preload</strong>:</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"preload"</span> <span class="attr">href</span>=<span class="string">"test.jpg"</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>  <strong>Prefetch</strong>:<br>  Prefetch包括资源预加载、DNS预解析、http预连接和页面预渲染。</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">资源预加载：<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"prefetch"</span> <span class="attr">href</span>=<span class="string">"test.css"</span>&gt;</span></div><div class="line">DNS预解析：<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"dns-prefetch"</span> <span class="attr">href</span>=<span class="string">"//haitao.nos.netease.com"</span>&gt;</span></div><div class="line">http预连接：<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"prefetch"</span> <span class="attr">href</span>=<span class="string">"//www.kaola.com"</span>&gt;</span> 将建立对该域名的TCP链接</div><div class="line">页面预渲染：<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"prerender"</span> <span class="attr">href</span>=<span class="string">"//m.kaola.com"</span>&gt;</span> 将会预先加载链接文档的所有资源</div></pre></td></tr></table></figure>
+<p>  那么<strong>Prefetch</strong>和<strong>Preload</strong>有什么区别呢？<br>  具体来讲，<strong>Preload</strong>来告诉浏览器预先请求当前页需要的资源，从而提高这些资源的请求优先级。比如，对于那些本来请求优先级较低的关键请求，我们可以通过设置<strong>Prefetch</strong>来提升这些请求的优先级。<br>  <strong>Prefetch</strong>来告诉浏览器用户将来可能在其他页面（非本页面）可能使用到的资源，那么浏览器会在空闲时，就去预先加载这些资源放在http缓存内，最常见的dns-prefetch。比如，当我们在浏览A页面，如果会通过A页面中的链接跳转到B页面，而B页面中我们有些资源希望尽早提前加载，那么我们就可以在A页面里添加这些资源<strong>Prefetch</strong>，那么当浏览器空闲时，就会去加载这些资源。<br>  所以，对于那些可能在当前页面使用到的资源可以利用<strong>Prefetch</strong>，而对一些可能在将来的某些页面中被使用的资源可以利用<strong>Preload</strong>。如果从加载优先级上看，<strong>Prefetch</strong>会提升请求优先级；而<strong>Preload</strong>会把资源的优先级放在最低，当浏览器空闲时才去预加载。</p>
+<ul>
+<li>泼盆冷水：<br>既然<strong>Prefetch</strong>和<strong>Preload</strong>作用如此强大，我们是否可以放心使用呢？但实际上，除了dns-prefetch，其他的兼容性都十分堪忧。特别是在Safari上，由于苹果公司对安全性的苛刻要求，基本上对这些预加载技术都未实现支持。<br><strong>Preload</strong>的支持性如下图所示，发现新版chrome支持较好，但Safari全军覆没。<br><img src="https://haitao.nos.netease.com/25a79682-fc9e-40dc-9084-a43038e76618.jpg" alt="流程" title="流程"><br><strong>dns-prefetch</strong>支持性还不错。<br><img src="https://haitao.nos.netease.com/1fc0cd4b-3847-4cf3-9c3a-af85ef8db451.jpg" alt="流程" title="流程"><br><strong>Prefetch</strong>同样的Safari全军覆没。<br><img src="https://haitao.nos.netease.com/0a00e6ea-6b87-4a3f-bed7-4c57b3eb6556.jpg" alt="流程" title="流程"></li>
+</ul>
+</li>
+<li><p>第二种：利用<strong>LocalStorage</strong>。<br>既然第一种的预加载技术来进行资源缓存的支持性较差，那么通常可以利用<strong>LocalStorage</strong>来对部分请求的数据和结果进行缓存，省去发送http请求所消耗的时间，从而提高网页的响应速度。<br>这类做法在移动端应用已经十分广泛。下面分别介绍鹅、猫、狗三家页面是如何利用LS来进行请求缓存的。</p>
+</li>
+<li><strong>微信</strong>：利用LS来对js文件进行缓存。<br>如下图所示，用浏览器打开一篇微信公众账号文章，打开控制台，发现Network里竟然一个js文件都不需要加载？一脸懵逼！<br><img src="https://haitao.nos.netease.com/09c10766-4e71-44d4-8a06-2b7f180a5464.jpg" alt="流程" title="流程"><br>切到LS才哗然大悟，原来所有的JS都藏在这里了！<br><img src="https://haitao.nos.netease.com/7d1b12af-3fb5-493b-b887-2fdcfa4b9d55.jpg" alt="流程" title="流程"><br>微信就是利用了这种技巧来缓存关键路径里的js资源，从而大大加快了页面访问速度。<br>当然，实际实现起来，并不像表面看得那样，第一次访问时将js放到LS里，每次进来取出来执行这么简单，最核心的其实是需要设计一套缓存更新机制。首先我们对于缓存的js文件要通过后缀来设置独一无二的版本标识；其次，每次后端需要传一份资源配置文件，前端会根据这个配置文件来和LS中缓存的文件进行版本标识匹配，从而决定是利用LS缓存，还是重新发请求更新资源。例如，微信中的这个配置文件就是通过moon_map来同步输出给前端的，如下图所示：<br><img src="https://haitao.nos.netease.com/d2a91941-4cc4-42d7-a01e-fa607752e426.jpg" alt="流程" title="流程"></li>
+<li><strong>天猫</strong>：利用LS来对关键的XHR异步请求进行缓存。<br>以<a href="https://chaoshi.m.tmall.com/" title="天猫超市首页" target="_blank" rel="noopener">天猫超市首页</a>为例：<br>如下图，查看LS，发现其对首屏中的轮播和10个分类入口的数据进行了缓存。<br><img src="https://haitao.nos.netease.com/71f9d3e7-9dc4-440d-ab08-79b6ad63e8a7.jpg" alt="流程" title="流程"><br>上面的json内容，格式化后，发现其中包含banner和flowIcons这两个属性，里面的数据分别对应的就是轮播和分类入口的数据。这样就可以大大提升首屏的渲染展示时间。</li>
+<li><strong>京东</strong>：利用LS来对非关键请求进行缓存。<br>以PC版的<a href="https://www.jd.com/" title="京东首页" target="_blank" rel="noopener">京东首页</a>为例。京东反向思维，另辟奇径地采用了另一种方式来利用LS。那就是把非关键请求剥离出来存放在LS内。<br>具体来说，对于首屏数据，还是正常加载和展示。但为了非首屏数据的加载和渲染会阻塞和抢占资源，从而影响首屏页面渲染。所以将非首屏资源的HTML/CSS等资源抽出来放在LS内，当页面滚动到可视区域时再去LS中获取数据，插入到dom中。这点很类似于现在的模块懒加载。如下图所示，每个LS里都包含了一个模块所需要的HTML/CSS的资源。<br><img src="https://haitao.nos.netease.com/4192d397-aa25-400d-85fc-2f96c50a16c2.jpg" alt="流程" title="流程"></li>
+</ul>
+<h4 id="END"><a href="#END" class="headerlink" title="END"></a>END</h4><h3 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h3><ol>
+<li>从Chrome源码看浏览器如何加载资源：<a href="https://zhuanlan.zhihu.com/p/30558018。" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30558018。</a></li>
+<li>Preload，Prefetch 和它们在 Chrome 之中的优先级：<a href="https://yq.aliyun.com/articles/226240" target="_blank" rel="noopener">https://yq.aliyun.com/articles/226240</a></li>
+<li>聊聊浏览器资源加载优化：<a href="http://qingbob.com/let-us-talk-about-resource-load/" target="_blank" rel="noopener">http://qingbob.com/let-us-talk-about-resource-load/</a></li>
+<li>关键请求：<a href="http://www.zcfy.cc/article/the-critical-request-css-tricks-3843.html" target="_blank" rel="noopener">http://www.zcfy.cc/article/the-critical-request-css-tricks-3843.html</a></li>
+<li>其他：相关内容的MDN文档及Google Web Develop文档。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/17/如何进行组件化开发/" rel="next" title="如何进行组件化开发">
+                <i class="fa fa-chevron-left"></i> 如何进行组件化开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/27/文字垂直居中/" rel="prev" title="文字垂直居中">
+                文字垂直居中 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器加载资源过程"><span class="nav-number">1.</span> <span class="nav-text">浏览器加载资源过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#第一步：资源分类"><span class="nav-number">1.0.1.</span> <span class="nav-text">第一步：资源分类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第二步：安全策略检查"><span class="nav-number">1.0.2.</span> <span class="nav-text">第二步：安全策略检查</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第三步：资源优先级计算"><span class="nav-number">1.0.3.</span> <span class="nav-text">第三步：资源优先级计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第四步：按照上面计算的安全策略和优先级来加载或阻塞资源。"><span class="nav-number">1.0.4.</span> <span class="nav-text">第四步：按照上面计算的安全策略和优先级来加载或阻塞资源。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键请求链和优化"><span class="nav-number">2.</span> <span class="nav-text">关键请求链和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#如何查找页面的关键请求链"><span class="nav-number">2.0.1.</span> <span class="nav-text">如何查找页面的关键请求链</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#优化关键请求链"><span class="nav-number">2.0.2.</span> <span class="nav-text">优化关键请求链</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#END"><span class="nav-number">2.1.</span> <span class="nav-text">END</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料："><span class="nav-number">3.</span> <span class="nav-text">参考资料：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

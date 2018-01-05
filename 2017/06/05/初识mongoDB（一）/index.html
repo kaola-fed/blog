@@ -1,0 +1,740 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="参考资料 MongoDB官方网站：ww.mongodb.org MongoDB国内官方网站：www.mongoing.com MongoDBgithub地址：https://github.com/mongodb 中文MongoDB文档地址：docs.mongoing.com mongodb的jira：https://jira.mongodb.org/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识mongoDB（一）">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/05/初识mongoDB（一）/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="参考资料 MongoDB官方网站：ww.mongodb.org MongoDB国内官方网站：www.mongoing.com MongoDBgithub地址：https://github.com/mongodb 中文MongoDB文档地址：docs.mongoing.com mongodb的jira：https://jira.mongodb.org/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/62dc5e04-9744-458c-8315-01f7fc3b01ad.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/63fd5641-295e-4136-a368-c83e1374b6f7.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/3092f303-9d21-4546-a705-1ffa9c251b21.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/7ec995f2-cfc2-4c4a-be90-0b78b8847d38.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/a5a914db-9a1f-4c06-a40f-68833199123f.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/934041e9-0525-4db9-9539-d827f0d242fc.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/ae43ae28-68e2-4b5f-9dcf-88e1780b18aa.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/7687b519-e84e-4ed9-9c80-45009d4fea27.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.388Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识mongoDB（一）">
+<meta name="twitter:description" content="参考资料 MongoDB官方网站：ww.mongodb.org MongoDB国内官方网站：www.mongoing.com MongoDBgithub地址：https://github.com/mongodb 中文MongoDB文档地址：docs.mongoing.com mongodb的jira：https://jira.mongodb.org/">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/62dc5e04-9744-458c-8315-01f7fc3b01ad.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/05/初识mongoDB（一）/"/>
+
+
+
+
+
+  <title>初识mongoDB（一） | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/05/初识mongoDB（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                初识mongoDB（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-05T00:00:00+08:00">
+                2017-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
+<li><a href="www.mongodb.org">MongoDB官方网站</a>：ww.mongodb.org</li>
+<li><a href="www.mongoing.com">MongoDB国内官方网站</a>：www.mongoing.com</li>
+<li><a href="https://github.com/mongodb" target="_blank" rel="noopener">MongoDBgithub地址</a>：<a href="https://github.com/mongodb" target="_blank" rel="noopener">https://github.com/mongodb</a></li>
+<li><a href="docs.mongoing.com">中文MongoDB文档地址</a>：docs.mongoing.com</li>
+<li><a href="https://jira.mongodb.org/" target="_blank" rel="noopener">mongodb的jira</a>：<a href="https://jira.mongodb.org/" target="_blank" rel="noopener">https://jira.mongodb.org/</a></li>
+</ol>
+<a id="more"></a>
+<h3 id="一个mongoDB实例的组成结构如下："><a href="#一个mongoDB实例的组成结构如下：" class="headerlink" title="一个mongoDB实例的组成结构如下："></a>一个mongoDB实例的组成结构如下：</h3><p><img src="https://haitao.nos.netease.com/62dc5e04-9744-458c-8315-01f7fc3b01ad.png" alt="image"></p>
+<ul>
+<li><p><strong>文档</strong>：是基本单元（类似于关系型数据库中的行）JS中文档就是一个对象。<br>如：{“greeting” : “Hello, world!”} 就是一个文档</p>
+</li>
+<li><p><strong>集合</strong>：多个文档组成一个集合<br>如：{“greeting” : “Hello, world!”} {“foo” : 5} 可以存储在一个集合中，集合中一般放入同一种类型的文档。</p>
+<p>集合可以有子集合，如：在数据库shell中，db.blog代表blog集合，而db.blog.posts代表blog.posts集合。</p>
+</li>
+<li><p>多个集合可以组成数据库</p>
+</li>
+</ul>
+<p>MongoDB：3.4.2(3大版本，4偶数表示稳定版，2小版本号)</p>
+<p><a href="https://www.mongodb.com/download-center?jmp=nav#community" target="_blank" rel="noopener">下载链接</a>：<br><a href="https://www.mongodb.com/download-center?jmp=nav#community" target="_blank" rel="noopener">https://www.mongodb.com/download-center?jmp=nav#community</a></p>
+<hr>
+<h2 id="OSX安装"><a href="#OSX安装" class="headerlink" title="OSX安装"></a>OSX安装</h2><p><strong>1、解压文件夹（文件内容如下）</strong><br><img src="https://haitao.nos.netease.com/63fd5641-295e-4136-a368-c83e1374b6f7.png" alt="image"></p>
+<p><strong>注：</strong> bin目录下的文件简单介绍<br><img src="https://haitao.nos.netease.com/3092f303-9d21-4546-a705-1ffa9c251b21.png" alt="image"></p>
+<blockquote>
+<ul>
+<li><strong>mongod</strong>: 数据库部署</li>
+<li><strong>mongo</strong>: 链接mongdb数据服务器的客户端</li>
+<li><strong>mongoimport、mongoexport</strong>: mongodb的导入、导出</li>
+<li><strong>mongodump、mongorestore</strong>: 导入导出二进制数据（用来做数据的备份恢复）</li>
+<li><strong>mongooplog</strong>: 记录操作记录的数据集合</li>
+<li><strong>mongostat</strong>: 查看mongodb服务器的各种状态</li>
+</ul>
+</blockquote>
+<p><strong>2、新建文件夹data/conf/log</strong><br><img src="https://haitao.nos.netease.com/7ec995f2-cfc2-4c4a-be90-0b78b8847d38.png" alt="image"></p>
+<p><strong>3、conf文件夹内新建文件mongod.conf</strong></p>
+<blockquote>
+<p>mongod.conf配置文件内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">port = 0412                 //端口</div><div class="line">dbpath = data               //数据存储的目录</div><div class="line">logpath = log/mongod.log    //日志文件</div><div class="line">fork = true                  //启动一个后台进程</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p><strong>4、启动</strong></p>
+<p><strong>启动命令</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从配置文件中启动 ./bin/mongod -f conf/mongod.conf</div></pre></td></tr></table></figure>
+<p><img src="https://haitao.nos.netease.com/a5a914db-9a1f-4c06-a40f-68833199123f.png" alt="image"></p>
+<p><strong>启动 shell</strong>: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongo</div></pre></td></tr></table></figure>
+<p><img src="https://haitao.nos.netease.com/934041e9-0525-4db9-9539-d827f0d242fc.png" alt="image"></p>
+<p>附：</p>
+<p>查看当前使用的数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db</div></pre></td></tr></table></figure></p>
+<p><img src="https://haitao.nos.netease.com/ae43ae28-68e2-4b5f-9dcf-88e1780b18aa.png" alt="image"></p>
+<p>可以看出默认使用的是test数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">use kaola</div></pre></td></tr></table></figure>
+<p>切换数据库，没有默认新建一个<br><img src="https://haitao.nos.netease.com/7687b519-e84e-4ed9-9c80-45009d4fea27.png" alt="image"></p>
+<p><strong>5、关闭服务器</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">use admin</div><div class="line"></div><div class="line">db.shutdownServer()</div></pre></td></tr></table></figure>
+<h3 id="可能会遇到的一些问题"><a href="#可能会遇到的一些问题" class="headerlink" title="可能会遇到的一些问题"></a>可能会遇到的一些问题</h3><p>解决WARNING: soft rlimits too low.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ulimit -f unlimited  </div><div class="line">ulimit -t unlimited  </div><div class="line">ulimit -v unlimited  </div><div class="line">ulimit -n 64000  </div><div class="line">ulimit -m unlimited  </div><div class="line">ulimit -u 64000</div></pre></td></tr></table></figure>
+<p>添加到 /etc/profile </p>
+<p>./bin/mongo 127.0.0.1:8989</p>
+<p><a href="https://www.mongodb.com/blog/post/mongodb-security-part-ii-10-mistakes-that-can" target="_blank" rel="noopener">https://www.mongodb.com/blog/post/mongodb-security-part-ii-10-mistakes-that-can</a> 一些警告的解决办法</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/31/css3 pointer-events 介绍/" rel="next" title="css3 pointer-events">
+                <i class="fa fa-chevron-left"></i> css3 pointer-events
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/05/初识mongoDB（二）/" rel="prev" title="初识mongoDB（二）">
+                初识mongoDB（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">1.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个mongoDB实例的组成结构如下："><span class="nav-number">2.</span> <span class="nav-text">一个mongoDB实例的组成结构如下：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OSX安装"><span class="nav-number"></span> <span class="nav-text">OSX安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可能会遇到的一些问题"><span class="nav-number">1.</span> <span class="nav-text">可能会遇到的一些问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,755 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="1. 什么是 EyeDropperChrome Devtools 的颜色提取器 EyeDropper，用惯了 Chrome 的前端开发者并不陌生。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EyeDropper 开发实践">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/31/EyeDropper 开发实践/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="1. 什么是 EyeDropperChrome Devtools 的颜色提取器 EyeDropper，用惯了 Chrome 的前端开发者并不陌生。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/eyedropper.jpg">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/hue.png">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/colorful.jpg">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/eytedropperDetail.png">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/saturation.png">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/value.png">
+<meta property="og:image" content="https://7xidng.com1.z0.glb.clouddn.com/regular-color.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EyeDropper 开发实践">
+<meta name="twitter:description" content="1. 什么是 EyeDropperChrome Devtools 的颜色提取器 EyeDropper，用惯了 Chrome 的前端开发者并不陌生。">
+<meta name="twitter:image" content="https://7xidng.com1.z0.glb.clouddn.com/eyedropper.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/31/EyeDropper 开发实践/"/>
+
+
+
+
+
+  <title>EyeDropper 开发实践 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/31/EyeDropper 开发实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                EyeDropper 开发实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-31T00:00:00+08:00">
+                2017-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-什么是-EyeDropper"><a href="#1-什么是-EyeDropper" class="headerlink" title="1. 什么是 EyeDropper"></a>1. 什么是 EyeDropper</h2><p>Chrome Devtools 的颜色提取器 <a href="https://developers.google.com/web/tools/chrome-devtools/inspect-styles/edit-styles" target="_blank" rel="noopener">EyeDropper</a>，用惯了 Chrome 的前端开发者并不陌生。</p>
+<a id="more"></a>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/eyedropper.jpg" alt="image"></p>
+<p>但它并不支持在页面中使用，想在页面中使用只能自己实现一个。</p>
+<p>那么接下来就介绍一下如何自己实现一个 EyeDropper。</p>
+<h2 id="2-原理解读"><a href="#2-原理解读" class="headerlink" title="2. 原理解读"></a>2. 原理解读</h2><p>要实现 EyeDropper，必须先学习一下基本的色彩知识。</p>
+<p>物品被光线照射并反射出来，被人的眼睛接收，进而传递到人脑中形成对「色彩」的认知，称之为人的「视觉效应」。</p>
+<h3 id="色彩的三属性"><a href="#色彩的三属性" class="headerlink" title="色彩的三属性"></a>色彩的三属性</h3><h4 id="1-色相（hue）"><a href="#1-色相（hue）" class="headerlink" title="1. 色相（hue）"></a>1. 色相（hue）</h4><p>最最基本的颜色术语、通常用来表示物体的颜色。</p>
+<p>当我们说红、绿、黄时，我们说的就是色相。将色相按照波谱顺序排列，首位相连形成环状则为「色相环」。虽然人们习惯将其分为七种颜色：红、橙、黄、绿、青、蓝、紫，但实际上的光谱应该是连续的。</p>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/hue.png" alt="image"></p>
+<h4 id="2-饱和度（saturation）"><a href="#2-饱和度（saturation）" class="headerlink" title="2. 饱和度（saturation）"></a>2. 饱和度（saturation）</h4><p>指在特定的光照条件下颜色是如何呈现的，也就是色彩的鲜艳程度。</p>
+<p>饱和度取决于颜色中含色成分和消色成分（灰色）的比例，即纯度最低的是灰色（无彩色）。高纯度表现为生机朝气，低纯度表现为厚重沉稳。</p>
+<h4 id="3-明度（value）"><a href="#3-明度（value）" class="headerlink" title="3. 明度（value）"></a>3. 明度（value）</h4><p>也被称作亮度，它是指颜色的明亮程度。</p>
+<p>在任何颜色中添加白色，明度上升，添加黑色，明度下降。明度相差越远的两种颜色搭配，色彩之间的交界感就越明显，视觉上也就越清晰。</p>
+<p>三者可以简单用下图综合表示：</p>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/colorful.jpg" alt="image"></p>
+<h2 id="3-方案设计"><a href="#3-方案设计" class="headerlink" title="3. 方案设计"></a>3. 方案设计</h2><h4 id="1-模块梳理"><a href="#1-模块梳理" class="headerlink" title="1. 模块梳理"></a>1. 模块梳理</h4><p>理解了基础的颜色原理后就好办事了，拿 Chrome Devtools EyeDropper 分析：</p>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/eytedropperDetail.png" alt="image"></p>
+<ol>
+<li>饱和度和亮度选择器。</li>
+<li>色相选择器。</li>
+<li>透明度选择器。</li>
+<li>色彩转换器。点击可以在 RGBA、HSL 和 HEX 之间切换。</li>
+<li>调色板。点击直接选择不同的特定颜色。</li>
+<li>取色器。在屏幕上直接选择需要的颜色。</li>
+</ol>
+<p>结合上述色彩知识，加上这块分析就可以开始进入代码层面的设计。</p>
+<h4 id="2-实际划分"><a href="#2-实际划分" class="headerlink" title="2. 实际划分"></a>2. 实际划分</h4><p>在组件化大行其道的时代，以网易惯用的 Regular 进行组件化开发。</p>
+<p>根据模块划分，划分基础的：</p>
+<ul>
+<li>饱和度和亮度选择组件；</li>
+<li>色相选择组件；</li>
+<li>透明度选择组件；</li>
+<li>色彩输入及转换器组件。</li>
+</ul>
+<p>考虑简洁性，「取色器」及「调色板」不做实现。</p>
+<h2 id="4-组件实现"><a href="#4-组件实现" class="headerlink" title="4. 组件实现"></a>4. 组件实现</h2><h4 id="1-色彩获取功能实现"><a href="#1-色彩获取功能实现" class="headerlink" title="1. 色彩获取功能实现"></a>1. 色彩获取功能实现</h4><ul>
+<li>饱和度和亮度选择组件（就是 EyeDropper 最上面那块）</li>
+</ul>
+<p>① 该组件以色相组件选择的色相(hue)为背景，若是想直接使用 hue 作为 CSS 背景，需要使用 hsl(hue, saturation, value) 格式，设置为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hsl(hue, <span class="number">100</span>%, <span class="number">50</span>%)</div></pre></td></tr></table></figure>
+<p>此时饱和度应设为 100%，因为饱和度为 0% 时为灰色，100% 时为原色。</p>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/saturation.png" alt="image"></p>
+<p>而亮度是指颜色偏向于白色还是黑色。50%的亮度值表示颜色位于黑色和白色中间，这时颜色会基本保持原来的颜色不变。</p>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/value.png" alt="image"></p>
+<p>② 同时利用线性渐变 <code>linear-gradient</code> 做色层叠加实现。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.saturation-white</span> &#123;</div><div class="line">	<span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(to right, #fff, rgba(255,255,255,0));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.saturation-black</span> &#123;</div><div class="line">	<span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(to top, #000, rgba(0,0,0,0));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>色相组件（取颜色的那个条）</li>
+</ul>
+<p>上面谈到了色相环的概念，色相组件利用的就是色相环原理。</p>
+<p>将 EyeDropper 中的色相条与色相环对比，是不是有异曲同工之妙？答对了，直接将圆环拍平即可。</p>
+<p>获取色值时只需要获取当前位置对于最左端的百分比，换算成圆环角度。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Math</span>.round(<span class="number">360</span> * percent / <span class="number">100</span>);</div></pre></td></tr></table></figure>
+<ul>
+<li>色彩输入及转换器组件</li>
+</ul>
+<p>其中总共有 RGBA、HSL 和 HEX 三种格式的切换。</p>
+<p>在 Regualr 中，内嵌组件的传入属性会挂在子组件的 data 上，并实现数据绑定。但考虑数据处理的统一性，在所有颜色的获取处并不对颜色做处理，而是通过事件传递的方式，统一 $emit 到外层做统一的色值转换。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.$emit(<span class="string">'change'</span>, &#123;</div><div class="line">    <span class="attr">h</span>: hue,</div><div class="line">    <span class="attr">s</span>: saturation,</div><div class="line">    <span class="attr">v</span>: bright,</div><div class="line">    <span class="attr">a</span>: alpha</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 外层接收后统一处理</span></div><div class="line"><span class="keyword">this</span>.$on(<span class="string">'change'</span>, processor);</div></pre></td></tr></table></figure>
+<p>接收到不同格式的颜色后，利用 <a href="https://www.npmjs.com/package/tinycolor2" target="_blank" rel="noopener">tinycolor2</a> 对颜色进行处理，使所有格式转换为同一种颜色。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> color = tinycolor(colors);</div><div class="line"><span class="keyword">var</span> hsl = color.toHsl();</div><div class="line"><span class="keyword">var</span> hsv = color.toHsv();</div></pre></td></tr></table></figure>
+<h4 id="2-需要注意的问题"><a href="#2-需要注意的问题" class="headerlink" title="2. 需要注意的问题"></a>2. 需要注意的问题</h4><ul>
+<li>在使用鼠标拖动选择颜色时，需要做好节流处理，避免爆炸；</li>
+<li>由于 JS 对于浮点数的奇妙控制，需要在输入框做好统一截断处理；</li>
+<li>在鼠标拖动的时间绑定及解绑中，注意绑定对象与解绑对象的一致性。</li>
+</ul>
+<p>代码可以 <a href="https://github.com/Deol/regular-color" target="_blank" rel="noopener">戳我</a> 查看，具体实现如下：</p>
+<p><img src="https://7xidng.com1.z0.glb.clouddn.com/regular-color.jpg" alt="image"></p>
+<h2 id="附录："><a href="#附录：" class="headerlink" title="附录："></a>附录：</h2><ol>
+<li><p><a href="//developers.google.com/web/tools/chrome-devtools/inspect-styles/edit-styles">EyeDropper 介绍</a></p>
+</li>
+<li><p><a href="//www.youtube.com/playlist?list=PLNYkxOF6rcIB3ci6nwNyLYNU6RDOU3YyL">Totally Tooling Tips with Addy Osmani &amp; Matt Gaunt</a></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/31/chrome插件开发简介（一）——开发入门/" rel="next" title="chrome插件开发简介（一）——开发入门">
+                <i class="fa fa-chevron-left"></i> chrome插件开发简介（一）——开发入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/01/FormData介绍与使用/" rel="prev" title="FormData介绍与使用">
+                FormData介绍与使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是-EyeDropper"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是 EyeDropper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-原理解读"><span class="nav-number">2.</span> <span class="nav-text">2. 原理解读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#色彩的三属性"><span class="nav-number">2.1.</span> <span class="nav-text">色彩的三属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-色相（hue）"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 色相（hue）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-饱和度（saturation）"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. 饱和度（saturation）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-明度（value）"><span class="nav-number">2.1.3.</span> <span class="nav-text">3. 明度（value）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-方案设计"><span class="nav-number">3.</span> <span class="nav-text">3. 方案设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-模块梳理"><span class="nav-number">3.0.1.</span> <span class="nav-text">1. 模块梳理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-实际划分"><span class="nav-number">3.0.2.</span> <span class="nav-text">2. 实际划分</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-组件实现"><span class="nav-number">4.</span> <span class="nav-text">4. 组件实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-色彩获取功能实现"><span class="nav-number">4.0.1.</span> <span class="nav-text">1. 色彩获取功能实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-需要注意的问题"><span class="nav-number">4.0.2.</span> <span class="nav-text">2. 需要注意的问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录："><span class="nav-number">5.</span> <span class="nav-text">附录：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

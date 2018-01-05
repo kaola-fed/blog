@@ -1,0 +1,734 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="在与服务端进行异步请求时，你是否还在写着地狱般的回调，是否还在写着繁琐的配置，是否还觉得调用非常的混乱，这就是我们一直使用了很长时间的XMLHttpRequest来实现的ajax技术，尽管各种框架的封装就是为了解决上述的问题，但有时需要阅读到深层的源码时，又将会是另外一番痛苦，同时ajax技术也不符合关注分离的原则，因此，fetch应运而生了，它的出现正式为了解决传统xhr存在的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fetch简述">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/27/fetch简述/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="在与服务端进行异步请求时，你是否还在写着地狱般的回调，是否还在写着繁琐的配置，是否还觉得调用非常的混乱，这就是我们一直使用了很长时间的XMLHttpRequest来实现的ajax技术，尽管各种框架的封装就是为了解决上述的问题，但有时需要阅读到深层的源码时，又将会是另外一番痛苦，同时ajax技术也不符合关注分离的原则，因此，fetch应运而生了，它的出现正式为了解决传统xhr存在的问题。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5706155/27586474-ff0ed236-5b72-11e7-9586-df6dd72c11ec.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="fetch简述">
+<meta name="twitter:description" content="在与服务端进行异步请求时，你是否还在写着地狱般的回调，是否还在写着繁琐的配置，是否还觉得调用非常的混乱，这就是我们一直使用了很长时间的XMLHttpRequest来实现的ajax技术，尽管各种框架的封装就是为了解决上述的问题，但有时需要阅读到深层的源码时，又将会是另外一番痛苦，同时ajax技术也不符合关注分离的原则，因此，fetch应运而生了，它的出现正式为了解决传统xhr存在的问题。">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/5706155/27586474-ff0ed236-5b72-11e7-9586-df6dd72c11ec.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/27/fetch简述/"/>
+
+
+
+
+
+  <title>fetch简述 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/27/fetch简述/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                fetch简述
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-27T00:00:00+08:00">
+                2017-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+<p>在与服务端进行异步请求时，你是否还在写着地狱般的回调，是否还在写着繁琐的配置，是否还觉得调用非常的混乱，这就是我们一直使用了很长时间的XMLHttpRequest来实现的ajax技术，尽管各种框架的封装就是为了解决上述的问题，但有时需要阅读到深层的源码时，又将会是另外一番痛苦，同时ajax技术也不符合关注分离的原则，因此，fetch应运而生了，它的出现正式为了解决传统xhr存在的问题。</p>
+<a id="more"></a>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>fetch是基于标准的Promise设计的</strong>，使得语法上更加直观和简介，与前端ES6/ES7语法能更好的结合。既然fetch是新产生的技术，相信你心里肯定在想它的兼容性怎么样，是否能完美的运用到所需场景中去。那我们就先来看看它的兼容性以及不兼容的解决方法。<br><img src="https://user-images.githubusercontent.com/5706155/27586474-ff0ed236-5b72-11e7-9586-df6dd72c11ec.png" alt="fetch-polyfill"></p>
+<p>通过上图可以看到，很多低版本的浏览器，fetch还是如你所想的那样不被支持的，因此为了支持更多的浏览器，就需要实现fetch的polyfill了。思路其实很简单，就是判断浏览器是否支持原生的fetch，不支持的话，就仍然使用XMLHttpRequest的方式实现，同时结合Promise来进行封装。常见的polyfill就有：</p>
+<blockquote>
+<p><a href="https://github.com/stefanpenner/es6-promise" target="_blank" rel="noopener">es6-promise</a>、<a href="https://github.com/camsong/fetch-ie8" target="_blank" rel="noopener">fetch-ie8</a>、<a href="https://github.com/matthew-andrews/isomorphic-fetch" target="_blank" rel="noopener">isomorphic-fetch</a>等等。</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>fetch函数的参数本质就是一个<a href="https://developer.mozilla.org/en-US/docs/Web/API/Request" target="_blank" rel="noopener">Request</a>，函数本身返回一个promise，可以通过then方法接收一个<a href="https://developer.mozilla.org/en-US/docs/Web/API/Response" target="_blank" rel="noopener">Response</a>实例，因此基本用法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">let request = new Request(&apos;/someurl&apos;, &#123;</div><div class="line">    method: &apos;GET&apos;, </div><div class="line">    mode: &apos;cors&apos;, </div><div class="line">    headers: new Headers(&#123;</div><div class="line">        &apos;Content-Type&apos;: &apos;application/json&apos;</div><div class="line">    &#125;)</div><div class="line">&#125;);</div><div class="line">fetch(request).then((response) =&gt; &#123;</div><div class="line">	//处理返回的数据</div><div class="line">&#125;).catch((err) =&gt; &#123;</div><div class="line">	//错误处理</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//同样可以直接写成</div><div class="line">fetch(&apos;someurl&apos;, &#123;</div><div class="line">    method: &apos;POST&apos;, </div><div class="line">    mode: &apos;cors&apos;, </div><div class="line">    body: JSON.stringify(jsonData);</div><div class="line">    headers: new Headers(&#123;</div><div class="line">        &apos;Content-Type&apos;: &apos;application/json&apos;</div><div class="line">    &#125;)</div><div class="line">&#125;).then().catch()</div></pre></td></tr></table></figure>
+<hr>
+<p>关于Request的参数，这里挑几个重点说下</p>
+<ol>
+<li><p>mode</p>
+<p> 这个是设置跨域的参数，值为<strong>same-origin</strong>时，不允许跨域，它需要遵守同源策略。值为<strong>cors</strong>时，默认值，该模式支持跨域请求，顾名思义它是以CORS的形式跨域。值为<strong>no-cors</strong>时，该模式用于跨域请求但是服务器不带CORS响应头，也就是服务端不支持CORS，这也是fetch的特殊跨域请求方式，该模式允许浏览器发送本次跨域请求，但是不能访问响应返回的内容。</p>
+</li>
+<li><p>credentials</p>
+<p> fetch本身请求默认是不发送cookie的，需要带cookie就需要设置此参数。<strong>omit</strong>默认值，忽略传送cookie。<strong>same-origin</strong>表示cookie只允许同域传送，不允许跨域进行传送。<strong>include</strong>表示cookie都会被传送。</p>
+<blockquote>
+<p>fetch默认对服务端通过Set-Cookie头设置的cookie也会忽略，若想选择接受来自服务端的cookie信息，同样必须要配置credentials选项</p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<p>Response介绍</p>
+<p>response本身继承自<a href="https://developer.mozilla.org/en-US/docs/Web/API/Body" target="_blank" rel="noopener">Body</a>，因此可以使用Body的方法，例如返回的是json对象，可以这样获取到返回结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">fetch(/someurl.json).then((response) =&gt; &#123;</div><div class="line">	if (response.status &gt;= 200 &amp;&amp; response.status &lt; 300) &#123;</div><div class="line">		return response.json()</div><div class="line">	&#125;</div><div class="line">&#125;).then((data) =&gt; &#123;</div><div class="line"></div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 当使用了response.json()、response.blob()等方法后，body.bodyUsed就变为true了，将不能再继续使用这些方法了，否则会抛出错误。Body还有一个clone方法，但需要在response读取之前调用。</p>
+</blockquote>
+<h2 id="特殊处理"><a href="#特殊处理" class="headerlink" title="特殊处理"></a>特殊处理</h2><ul>
+<li>fetch对于网络响应400或500等状态并不会reject，相反它会被resolve，只有在网络本身发生错误时才会被reject，因此在我们使用的时候可以对其进行一层封装</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">const fetchApi = (url, cfg = &#123;&#125;) =&gt; &#123;</div><div class="line">    return new Promise((resolve, reject) =&gt; &#123;</div><div class="line">        fetch(url, cfg).then((response) =&gt; &#123;</div><div class="line">            if (response.ok || response.status &gt;= 200 &amp;&amp; response.status &lt; 300) &#123;</div><div class="line">                resolve(response.json())</div><div class="line">            &#125; else &#123;</div><div class="line">                throw response</div><div class="line">            &#125;</div><div class="line">        &#125;).catch((err) =&gt; &#123;</div><div class="line">            reject(err)</div><div class="line">        &#125;)</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>fetch本身不支持超时处理，因此我们可以通过自己进行一些polyfill。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">function timeout(ms = 5 * 60 * 1000) &#123;</div><div class="line">    return new Promise((resolve, reject) =&gt; &#123;</div><div class="line">        setTimeout(function () &#123;</div><div class="line">            reject(&#123;ok: false, text: &apos;timeout&apos;, title: &apos;服务器超时！请重试！&apos;&#125;);</div><div class="line">        &#125;, ms);</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">const fetchApi = (url, cfg = &#123;&#125;) =&gt; &#123;</div><div class="line">    return new Promise((resolve, reject) =&gt; &#123;</div><div class="line">        Promise.race([fetch(url, cfg), timeout()]).then((response) =&gt; &#123;</div><div class="line">            if (response.ok || response.status &gt;= 200 &amp;&amp; response.status &lt; 300) &#123;</div><div class="line">                resolve(response.json())</div><div class="line">            &#125; else &#123;</div><div class="line">                throw response</div><div class="line">            &#125;</div><div class="line">        &#125;).catch((err) =&gt; &#123;</div><div class="line">            reject(err)</div><div class="line">        &#125;)</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>fetch的timeout即使超时发生了，本次请求也不会被abort丢弃掉，它在后台仍然会发送到服务器端，只是本次请求的响应内容被丢弃而已</p>
+</blockquote>
+<ul>
+<li>fetch本身也是不支持取消的，因为promise本身是不能取消的，有提议希望未来出现一个可取消的Promise标准，但暂且我们也只能进行一个封装</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">const fetchApi = (url, cfg) =&gt; &#123;</div><div class="line">    retrun new Promise((resolve, reject) =&gt; &#123;</div><div class="line">        let abort = () =&gt; &#123;</div><div class="line">            reject(&#123;ok: false, text: &apos;abort&apos;, title: &apos;abort&apos;&#125;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        let p = fetch(url, cfg).then((response) =&gt; &#123;</div><div class="line">            if (response.ok || response.status &gt;= 200 &amp;&amp; response.status &lt; 300) &#123;</div><div class="line">                resolve(response.json())</div><div class="line">            &#125; else &#123;</div><div class="line">                throw response</div><div class="line">            &#125;</div><div class="line">        &#125;).catch((err) =&gt; &#123;</div><div class="line">            reject(err)</div><div class="line">        &#125;)</div><div class="line">        p.abort = abort</div><div class="line">        return p</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://github.com/camsong/blog/issues/2" target="_blank" rel="noopener">传统 Ajax 已死，Fetch 永生</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="noopener">fetch API</a></p>
+<p><a href="http://es6.ruanyifeng.com/#docs/promise" target="_blank" rel="noopener">es6 Promise</a></p>
+<p><a href="https://github.com/matthew-andrews/isomorphic-fetch" target="_blank" rel="noopener">isomorphic-fetch</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Request" target="_blank" rel="noopener">Request</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Response" target="_blank" rel="noopener">Response</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Body" target="_blank" rel="noopener">Body</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Headers" target="_blank" rel="noopener">Headers</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/27/generator函数与co函数库/" rel="next" title="generator函数与co函数库">
+                <i class="fa fa-chevron-left"></i> generator函数与co函数库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/27/JavaScript 模版引擎/" rel="prev" title="JavaScript 模版引擎">
+                JavaScript 模版引擎 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊处理"><span class="nav-number">3.</span> <span class="nav-text">特殊处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

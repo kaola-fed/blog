@@ -1,0 +1,740 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前言最近在学习MVVM的实现原理，刚好在sf上看到了剖析Vue原理&amp;amp;实现双向绑定MVVM一文，写的非常好，摘出Vue.js中的部分源码，改造后完成了一个简单的MVVM实现。实现了双向数据绑定，我自己在学习的过程中，也照着这篇文章中的源码重新实现了一遍。不同之处在于，我尽量将原来的实现写成了ES6的写法，比如使用class代替构造函数，将observer,dep,watcher,compil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVVM学习笔记">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/30/MVVM学习笔记/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="前言最近在学习MVVM的实现原理，刚好在sf上看到了剖析Vue原理&amp;amp;实现双向绑定MVVM一文，写的非常好，摘出Vue.js中的部分源码，改造后完成了一个简单的MVVM实现。实现了双向数据绑定，我自己在学习的过程中，也照着这篇文章中的源码重新实现了一遍。不同之处在于，我尽量将原来的实现写成了ES6的写法，比如使用class代替构造函数，将observer,dep,watcher,compil">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MVVM学习笔记">
+<meta name="twitter:description" content="前言最近在学习MVVM的实现原理，刚好在sf上看到了剖析Vue原理&amp;amp;实现双向绑定MVVM一文，写的非常好，摘出Vue.js中的部分源码，改造后完成了一个简单的MVVM实现。实现了双向数据绑定，我自己在学习的过程中，也照着这篇文章中的源码重新实现了一遍。不同之处在于，我尽量将原来的实现写成了ES6的写法，比如使用class代替构造函数，将observer,dep,watcher,compil">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/30/MVVM学习笔记/"/>
+
+
+
+
+
+  <title>MVVM学习笔记 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/30/MVVM学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MVVM学习笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-30T00:00:00+08:00">
+                2017-05-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习MVVM的实现原理，刚好在sf上看到了<a href="https://segmentfault.com/a/1190000006599500" target="_blank" rel="noopener">剖析Vue原理&amp;实现双向绑定MVVM</a>一文，写的非常好，摘出Vue.js中的部分源码，改造后完成了一个简单的MVVM实现。实现了双向数据绑定，我自己在学习的过程中，也照着这篇文章中的源码重新实现了一遍。不同之处在于，我尽量将原来的实现写成了ES6的写法，比如使用<code>class</code>代替构造函数，将<code>observer</code>,<code>dep</code>,<code>watcher</code>,<code>compiler</code>分成不同的模块，然后使用<code>import</code>,<code>export</code>来互相引入，导出，最后使用<a href="https://github.com/frostney/rollup-babel-lib-bundler" target="_blank" rel="noopener">rollup-babel-lib-bundler</a>打包了一下。所以这篇文章是对上面文章的学习总结，不会写的很细。大家也可以读一下上面的文章，简单易懂。</p>
+<a id="more"></a>
+<h2 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h2><p>这个简易的MVVM总共由<code>index.js(入口文件)</code>,<code>compiler.js</code>,<code>dep.js</code>,<code>observer.js</code>,<code>watcher.js</code>几部分组成。</p>
+<pre><code>.
+├── README.md
+├── dest
+│   ├── toy.es2015.js
+│   ├── toy.js
+│   └── toy.umd.js
+├── examples
+│   └── index.html
+├── package.json
+├── rollup.config.js
+└── src
+    ├── compiler.js
+    ├── dep.js
+    ├── index.js
+    ├── observer.js
+    └── watcher.js
+</code></pre><p><code>index.js</code>是整个框架的入口，比如我给这个框架起了个名字叫<code>Toy</code>，入口文件导出的其实就是<code>Toy</code>的构造函数：</p>
+<pre><code>//引入其它模块
+import { observe } from &apos;./observer.js&apos;
+import { Compiler } from &apos;./compiler.js&apos;
+import { Watcher } from &apos;./watcher.js&apos;
+
+//具体实现
+class Toy {
+    constructor(options){
+        //...
+    }
+}
+
+//导出模块
+export { Toy }
+</code></pre><p>初始化的过程分两步：</p>
+<ol>
+<li>劫持监听所有属性，通过<code>Object.defineProperty</code>将数据变成响应式的，同时在<code>get</code>和<code>set</code>上做一些手脚。</li>
+<li>编译html模板，事实上我们在使用框架时写的html已经填充了很多框架自己的指令，语法，所以要先进行编译替换才能正确展示视图。</li>
+</ol>
+<p>实现所有属性的监听就是通过<code>Object.defineProperty</code>递归地定义所以属性。每一个对象都会有一个对应的<code>Observer</code>实例，其中的每一个属性都对应有一个<code>Dep</code>的实例<code>dep</code>，<code>dep</code>使用自增的<code>uid</code>标识，作用是记录这个属性被那些订阅者(<code>Watcher</code>的实例)订阅了，好在属性变化时，通过遍历<code>dep.subs</code>去通知所有订阅了这个属性的<code>watcher</code>去做对应的更新。</p>
+<p>实现<code>Compiler</code>就是对带有框架特殊API的模板进行编译，指令解析。同时将DOM与数据关联起来(其实是通过Watcher实现的)。</p>
+<h2 id="本质上说"><a href="#本质上说" class="headerlink" title="本质上说"></a>本质上说</h2><p>每个部分负责的事情我是这样理解的：</p>
+<ul>
+<li><strong>index.js</strong> 框架的入口，提供对外的构造函数。</li>
+<li><strong>observer.js</strong> 将数据变成响应式，同时通过<code>dep</code>收集依赖(Watcher实例)。</li>
+<li><strong>dep.js</strong> 收集依赖用的，在<code>get</code>中收集依赖，在<code>set</code>中通知对应依赖更新。</li>
+<li><strong>watcher.js</strong> 数据的订阅者，一个Watcher的实例由<code>vm</code>,<code>exp</code>,<code>cb</code>,<code>deps</code>等几部分组成，<code>vm</code>是对ViewModel的引用，触发<code>get</code>方法将<code>watcher</code>自身添加至<code>dep</code>的<code>subs</code>中时会用到，<code>exp</code>则是当前Watcher实例监听的表达式，即数据的<code>key</code>，<code>cb</code>则是更新数据的回调。<br>当<code>vm</code>的数据改变后，会触发对应的<code>set</code>方法，这个属性对应的<code>dep</code>会通知所有的<code>subs</code>去执行自身的<code>update</code>方法，而这个<code>update</code>方法的内容其实只是<code>this.cb.call(this.vm, value, oldValue)</code>，<code>cb</code>实际上是调用了<code>updateFn</code>(在<code>compiler.js</code>中绑定的)，这时才将DOM的数据真正更新。</li>
+<li><strong>compiler.js</strong> 编辑DOM模板，并为每个<code>node节点</code>通过<code>new Watcher</code>的方式将属性表达式<code>exp</code>，<code>updateFn(真正更新DOM的函数)</code>与<code>node</code>关联，然后配合响应式数据就做到了<code>view</code>与<code>model</code>的双向绑定。</li>
+</ul>
+<p>所以整个框架的运行过程是这样的：</p>
+<ol>
+<li><code>observe</code>所有数据，改写了每个数据的get和set方法，并为每个数据关联了一个dep(通过闭包实现)。</li>
+<li><code>new Compiler</code>开始编译模板，编译过程中，可以提取出指令，<code>v-text</code>,<code>v-html</code>等，可以分析出事件函数<code>v-click</code>和绑定的表达式，这时通过<code>self.compileText(node, RegExp.$1)</code>,<code>self.compile(node)</code>将DOM节点和表达式建立关联。</li>
+<li>建立的关联，是DOM节点和数据表达式的关联，这一步是通过<code>new Watcher</code>实现的     </li>
+<li><code>new Watcher</code>的时候，Watcher实例会将Dep.target这个全局属性指向自身，然后出发一下需要监听属性的getter，这时<code>dep</code>会将Watcher实例添加到它的<code>subs</code>中，Watcher实例也会标记一下这个dep已经添加过自己了，防止重复添加。这时<code>dep</code>和Watcher实例已经关联起来了，数据的变化可以通知到对应的Watcher实例，Watcher实例的update方法会正确地更新DOM。</li>
+</ol>
+<p>其实到这里，数据的双向绑定就已经实现了。</p>
+<h2 id="过程中学习到的一些细节"><a href="#过程中学习到的一些细节" class="headerlink" title="过程中学习到的一些细节"></a>过程中学习到的一些细节</h2><p>记录一些在学习过程中遇到的小tips，其实都是很基础的东西。</p>
+<ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Node/textContent" target="_blank" rel="noopener">Node.textContent</a>: 表示一个节点及其内部节点的文本内容。之前一直都是用<code>innerText</code>的，看了MDN才知道<code>innerText</code>原来是IE私有的，<code>textContent</code>才是标准属性。而且<code>innerText</code>受样式影响，还会触发重排，所以还是用<code>textContent</code>代替吧。</li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Node/appendChild" target="_blank" rel="noopener">Node.appendChild</a>: 这个API有一个很有意思的行为：<strong>如果被插入的节点已经存在于当前文档的文档树中,则那个节点会首先从原先的位置移除,然后再插入到新的位置.</strong>，当时我在看<code>compiler.js</code>的<code>node2Fragment</code>方法：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">node2Fragment(el)&#123;</div><div class="line">    let fragment = document.createDocumentFragment()</div><div class="line">    let child</div><div class="line">    while(child = el.firstChild)&#123;</div><div class="line">        fragment.appendChild(child)</div><div class="line">    &#125;</div><div class="line">    return fragment</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当时很不解为什么while循环能成按照预期执行，我在浏览器多次调用<code>el.firstChild</code>拿到的也始终是第一个子节点，看了这个API的文档才发现还有这么个行为！</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes" target="_blank" rel="noopener">Node.attributes</a>: 可以方便地获取DOM节点的属性，返回值是一个对象，其中<code>name</code>是属性名，<code>value</code>是属性值。</li>
+</ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>终于明白了简易MVVM框架的运作原理，也发现了一些底层API的知识，写成一些总结，这篇文章中没有贴很多代码去说实现，因为<a href="https://segmentfault.com/a/1190000006599500" target="_blank" rel="noopener">剖析Vue原理&amp;实现双向绑定MVVM</a>一文已经很详细了，我也是按照这个去学习的，所以我记录的是我个人的一些思想上的总结，所以可能要先看代码才能了解。分享出来，希望能有人从中受益 :)</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/30/从event loop看vue的nextTick/" rel="next" title="从event loop看vue的nextTick">
+                <i class="fa fa-chevron-left"></i> 从event loop看vue的nextTick
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/30/重构与模式（二）——发布订阅模式与中介者模式实际使用/" rel="prev" title="重构与模式（二）——发布订阅模式与中介者模式实际使用">
+                重构与模式（二）——发布订阅模式与中介者模式实际使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体结构"><span class="nav-number">2.</span> <span class="nav-text">整体结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本质上说"><span class="nav-number">3.</span> <span class="nav-text">本质上说</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#过程中学习到的一些细节"><span class="nav-number">4.</span> <span class="nav-text">过程中学习到的一些细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

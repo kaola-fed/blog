@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="主流浏览器目前我们使用的主流浏览器包括：chrome, firefox, ie, safari, opera, uc等等。其中chrome浏览器所占的全球市场份额最高，其次是IE。下面截图数据来源于统计网站 https://www.netmarketshare.com/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊关于浏览器的那些事儿">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/28/聊聊关于浏览器的那些事儿(1)/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="主流浏览器目前我们使用的主流浏览器包括：chrome, firefox, ie, safari, opera, uc等等。其中chrome浏览器所占的全球市场份额最高，其次是IE。下面截图数据来源于统计网站 https://www.netmarketshare.com/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5309877/27668072-753a3682-5cb1-11e7-8c85-6c7cc99e8e5a.jpg">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5309877/27668124-b58a0582-5cb1-11e7-83b1-8be66b224cbd.jpg">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5309877/27668466-d27e97fa-5cb3-11e7-9e3c-276cb28c508e.jpg">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5309877/27669063-6b01d016-5cb7-11e7-9e4c-5aa2cee47a2f.jpg">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5309877/27669086-871be048-5cb7-11e7-983f-30074650ae0e.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊关于浏览器的那些事儿">
+<meta name="twitter:description" content="主流浏览器目前我们使用的主流浏览器包括：chrome, firefox, ie, safari, opera, uc等等。其中chrome浏览器所占的全球市场份额最高，其次是IE。下面截图数据来源于统计网站 https://www.netmarketshare.com/">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/5309877/27668072-753a3682-5cb1-11e7-8c85-6c7cc99e8e5a.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/28/聊聊关于浏览器的那些事儿(1)/"/>
+
+
+
+
+
+  <title>聊聊关于浏览器的那些事儿 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/28/聊聊关于浏览器的那些事儿(1)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                聊聊关于浏览器的那些事儿
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T00:00:00+08:00">
+                2017-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="主流浏览器"><a href="#主流浏览器" class="headerlink" title="主流浏览器"></a>主流浏览器</h2><p>目前我们使用的主流浏览器包括：chrome, firefox, ie, safari, opera, uc等等。其中chrome浏览器所占的全球市场份额最高，其次是IE。下面截图数据来源于统计网站 <a href="https://www.netmarketshare.com/" target="_blank" rel="noopener">https://www.netmarketshare.com/</a><br><img src="https://user-images.githubusercontent.com/5309877/27668072-753a3682-5cb1-11e7-8c85-6c7cc99e8e5a.jpg" alt="394b0beff48072dc26adfcc01d2a8bc7"></p>
+<a id="more"></a>
+<p>浏览器的主要目的就是向服务器发送请求，获取并展示服务器上的资源，资源文件可以是html文档，也可以是pdf,jpg等其他类型的文件。</p>
+<h2 id="浏览器组件"><a href="#浏览器组件" class="headerlink" title="浏览器组件"></a>浏览器组件</h2><p><strong>用户操作界面</strong>：包括地址栏、前进/后退按钮、书签菜单等。</p>
+<p><strong>浏览器引擎</strong>：在用户界面和呈现引擎之间传输指令。</p>
+<p><strong>呈现引擎</strong>：展示所请求的内容，比如解析HTML文档和CSS内容，将页面展示给用户浏览。</p>
+<p><strong>网络</strong>：用于网络调用，比如发起HTTP请求。其底层实现跟平台无关。</p>
+<p><strong>用户界面后端</strong>：用于绘制基本的窗口小部件，比如弹窗等。其底层使用操作系统的用户界面方法。</p>
+<p><strong>JavaScript解释器</strong>：用于解释和执行JS代码。</p>
+<p><strong>数据存储</strong>：用于浏览器在硬盘上存储数据，比如cookie,local storage等。HTML5的网络数据库就是浏览器内的完整的轻量的数据库。 </p>
+<p><img src="https://user-images.githubusercontent.com/5309877/27668124-b58a0582-5cb1-11e7-83b1-8be66b224cbd.jpg" alt="bf353b96e1f5dcc3695c5151a5551391"></p>
+<p>chrome浏览器的每个标签页分别对应一个呈现引擎实例，每个标签页都是一个独立的进程。</p>
+<h2 id="呈现引擎主流程"><a href="#呈现引擎主流程" class="headerlink" title="呈现引擎主流程"></a>呈现引擎主流程</h2><p>firefox使用的呈现引擎是 Mozilla 公司自制的 “Gecko” 引擎。Safari 和 chrome 使用的是 “Webkit” 引擎。 IE 使用的是 “trident” 引擎。webkit 是源代码开放的呈现引擎。</p>
+<p>呈现引擎通过网络层获取到请求文档的内容后，进行如下流程的解析：</p>
+<p><img src="https://user-images.githubusercontent.com/5309877/27668466-d27e97fa-5cb3-11e7-9e3c-276cb28c508e.jpg" alt="993bd8519803ef6134d172f9d87bf9e9"></p>
+<ol>
+<li>解析HTML文档生成DOM构造树。在遍历DOM树的同时，会请求外链的样式文件和脚本文件等其他资源文件。CSS文件获取后同时解析该CSS文件，生成CSSOM树。</li>
+<li>DOM树和CSSOM树结合后生成Render树。Render树是包含多个视觉属性（比如样式和尺寸）的矩形。矩形的排列顺序为节点在屏幕上显示的顺序。</li>
+<li>Render树构建完成后，进入layout布局阶段。也就是对每个节点在屏幕上展示的位置分配具体的坐标。此时节点的位置是有层级覆盖的。</li>
+<li>Render树的绘制。呈现引擎遍历Render树，由用户界面后端层将每个节点绘制出来。呈现引擎在绘制时不会等到整个HTML文件解析完毕，而是一边接收内容，一边绘制。</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/5309877/27669063-6b01d016-5cb7-11e7-9e4c-5aa2cee47a2f.jpg" alt="b5ad674ddb15e9cff14a4f436b52b314"></p>
+<h2 id="浏览器如何解析HTML文档"><a href="#浏览器如何解析HTML文档" class="headerlink" title="浏览器如何解析HTML文档"></a>浏览器如何解析HTML文档</h2><p>浏览器使用HTML解析器将HTML标记解析成解析树。解析器输出的“解析树”是由DOM元素和属性节点构成的树形结构，DOM是HTML文档的对象表示，同时也是JS调用的基础。</p>
+<p>因为HTML语言的包容性，HTML解析器无法使用常规的自上而下或自下而上的解析器进行解析，所以使用自定义的解析器来解析。解析过程包括两个阶段：标记化和树构建。</p>
+<p><strong>标记化</strong>：是词法分析过程，将输入内容分析成多个标记。HTML标记包括起始标记，结束标记，属性名称和属性值。</p>
+<p><strong>树构建</strong>：标记生成器识别标记后，传递给树构建器，由树构造器进行处理，然后再接受下一个字符继续识别，继续传递给树构建器，如此循环直到输入的结束。</p>
+<p><img src="https://user-images.githubusercontent.com/5309877/27669086-871be048-5cb7-11e7-983f-30074650ae0e.jpg" alt="26a18229d404c9e18e760e456c89d800"></p>
+<p>例如：下面HTML标记化过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">  &lt;body&gt;</div><div class="line">    Hello world</div><div class="line">  &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>初始状态是数据状态。遇到&lt; 字符时，状态更改为“标记打开状态”。接收一个 a-z 字符会创建“起始标记”，状态更改为“标记名称状态”。这个状态会一直保持到接收 &gt; 字符。在此期间接收的每个字符都会附加到新的标记名称上。在本例中，我们创建的标记是 html 标记。</p>
+<p>遇到 &gt; 标记时，会发送当前的标记，状态改回“数据状态”。<body> 标记也会进行同样的处理。目前 html 和 body 标记均已发出。现在我们回到“数据状态”。接收到 Hello world 中的 H 字符时，将创建并发送字符标记，直到接收 </body> 中的 &lt;。我们将为 Hello world 中的每个字符都发送一个字符标记。</p>
+<p>现在我们回到“标记打开状态”。接收下一个输入字符 / 时，会创建 end tag token 并改为“标记名称状态”。我们会再次保持这个状态，直到接收 &gt;。然后将发送新的标记，并回到“数据状态”。 输入也会进行同样的处理。</p>
+<p>例如：下面HTML的树构建过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">  &lt;body&gt;</div><div class="line">    Hello world</div><div class="line">  &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>树构建阶段的输入是一个来自标记化阶段的标记序列。第一个模式是“initial mode”。接收 HTML 标记后转为“before html”模式，并在这个模式下重新处理此标记。这样会创建一个 HTMLHtmlElement 元素，并将其附加到 Document 根对象上。</p>
+<p>然后状态将改为“before head”。此时我们接收“body”标记。即使我们的示例中没有“head”标记，系统也会隐式创建一个 HTMLHeadElement，并将其添加到树中。</p>
+<p>现在我们进入了“in head”模式，然后转入“after head”模式。系统对 body 标记进行重新处理，创建并插入 HTMLBodyElement，同时模式转变为“in body”。</p>
+<p>现在，接收由“Hello world”字符串生成的一系列字符标记。接收第一个字符时会创建并插入“Text”节点，而其他字符也将附加到该节点。</p>
+<p>接收 body 结束标记会触发“after body”模式。现在我们将接收 HTML 结束标记，然后进入“after after body”模式。接收到文件结束标记后，解析过程就此结束。</p>
+<h2 id="浏览器解析完成的操作"><a href="#浏览器解析完成的操作" class="headerlink" title="浏览器解析完成的操作"></a>浏览器解析完成的操作</h2><p>浏览器解析完成后，将文档标注为交互状态，并处理那些在文档解析完成后才执行的脚本。然后将文档状态设置为“完成”，并触发load加载事件。</p>
+<p>参考文章:<br><a href="https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/" target="_blank" rel="noopener">https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/27/JavaScript 模版引擎/" rel="next" title="JavaScript 模版引擎">
+                <i class="fa fa-chevron-left"></i> JavaScript 模版引擎
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/30/未来布局之星Grid/" rel="prev" title="未来布局之星Grid">
+                未来布局之星Grid <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#主流浏览器"><span class="nav-number">1.</span> <span class="nav-text">主流浏览器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器组件"><span class="nav-number">2.</span> <span class="nav-text">浏览器组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#呈现引擎主流程"><span class="nav-number">3.</span> <span class="nav-text">呈现引擎主流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器如何解析HTML文档"><span class="nav-number">4.</span> <span class="nav-text">浏览器如何解析HTML文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器解析完成的操作"><span class="nav-number">5.</span> <span class="nav-text">浏览器解析完成的操作</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

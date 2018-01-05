@@ -1,0 +1,702 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="背景在做开发的时候，某些接口的响应会比较慢，原因是服务器数据处理时间较长造成的。当响应较慢时，一般的做法只是是给用户提示加载中（转菊花），而不对界面的按钮进行禁用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异步请求功能性优化实践">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/19/异步请求功能性优化实践/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="背景在做开发的时候，某些接口的响应会比较慢，原因是服务器数据处理时间较长造成的。当响应较慢时，一般的做法只是是给用户提示加载中（转菊花），而不对界面的按钮进行禁用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="异步请求功能性优化实践">
+<meta name="twitter:description" content="背景在做开发的时候，某些接口的响应会比较慢，原因是服务器数据处理时间较长造成的。当响应较慢时，一般的做法只是是给用户提示加载中（转菊花），而不对界面的按钮进行禁用。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/19/异步请求功能性优化实践/"/>
+
+
+
+
+
+  <title>异步请求功能性优化实践 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/19/异步请求功能性优化实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                异步请求功能性优化实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-19T00:00:00+08:00">
+                2017-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在做开发的时候，某些接口的响应会比较慢，原因是服务器数据处理时间较长造成的。当响应较慢时，一般的做法只是是给用户提示加载中（转菊花），而不对界面的按钮进行禁用。</p>
+<a id="more"></a>
+<p>试想一个场景，在发出请求 A 后，由于响应较慢，一些不耐心的用户会随便再点击一下页面，再次触发请求 B，此时响应 A 在响应 B 之前到达。如果不对响应的失效进行处理，那么会出现在发出请求 B 的筛选条件下显示请求 A 的响应结果，这显然是一个bug。</p>
+<p>如果服务端无法更快速得响应请求，那么一个合理的方法是在数据加载过程中，不能允许用户重复可能触发该请求的操作，并给予提示。</p>
+<p>但是对于一个存在多模块多接口的页面而言，某些模块之间交互存在联系，禁止界面操作显然并不是一个简单可行的方案。它会影响用户的体验，在实现起来也有一定的难度。在不禁止界面交互的情况下，要解决显示数据匹配的问题，就只能对响应的有效性进行判断，一旦得到的响应与最新发出的请求不对应，则直接抛弃。</p>
+<p>在这里将对于日常业务开发中，常见的两种需求，loading 标记和响应有效星盘度，进行讨论，试图得到一个可行的解决方案。</p>
+<h2 id="loading标志位"><a href="#loading标志位" class="headerlink" title="loading标志位"></a>loading标志位</h2><p>loading标志位的在请求发出时设置为<code>true</code>，响应回来或错误时设置为<code>false</code>，再通过数据绑定将标志位传递到模版。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">getChart</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> data = <span class="keyword">this</span>.data;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/chart'</span>,</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">                <span class="keyword">this</span>.setChart(json.chartData);</div><div class="line">                data.loading = <span class="literal">false</span>;</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">onerror</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">                data.loading = <span class="literal">false</span>;</div><div class="line">            &#125;,</div><div class="line">        &#125;;</div><div class="line">        data.loading = <span class="literal">true</span>;</div><div class="line">        <span class="keyword">this</span>.$request(option.url, option);</div><div class="line">    &#125;,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>功能很简单，但是每个接口都写一遍就很麻烦了，因此将其封装到公用的<code>fetchData</code>方法当中。但有时候仅仅一个标志位是不够，如果一个页面或者组件中包含多个接口时，而不同接口对应于模块不同的部分，则需要多组标志位以对这些接口进行区别。因此可以在其中参数配置中设置标志位的名称，示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">fetchData</span>: <span class="function"><span class="keyword">function</span>(<span class="params">opt</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> data = that.data;</div><div class="line">        <span class="keyword">var</span> loadingFlag = opt.loadingFlag || <span class="string">'loading'</span>;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">                opt.onload.call(that, json);</div><div class="line">                data[loadingFlag] = <span class="literal">false</span>;</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">onerror</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">                data[loadingFlag] = <span class="literal">false</span>;</div><div class="line">            &#125;,</div><div class="line">        &#125;</div><div class="line">        data[loadingFlag] = <span class="literal">true</span>;</div><div class="line">        <span class="keyword">this</span>.$request(opt.url, opt);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>为了将数据绑定到模版中，所以要将数据挂载到组件的 data 上。使用的时候，只需正常调用方法发出异步请求，需要设置标志位的时候则通过<code>loadingFlag</code>进行设置，不需要写额外的逻辑。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Page = BaseComponent.extend(&#123;</div><div class="line">    <span class="attr">getChart</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/chart'</span>,</div><div class="line">            <span class="attr">loadingFlag</span>: <span class="string">'chartLoading'</span></div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">this</span>.fetchData(option);</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getTable</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/table'</span>,</div><div class="line">            <span class="attr">loadingFlag</span>: <span class="string">'tableLoading'</span></div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">this</span>.fetchData(option);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">chart</span> <span class="attr">loading</span>=<span class="string">&#123;chartLoading&#125;/</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">basic.table</span> <span class="attr">loading</span>=<span class="string">&#123;tableLoading&#125;/</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="请求有效性判断"><a href="#请求有效性判断" class="headerlink" title="请求有效性判断"></a>请求有效性判断</h2><p>对于迟到的响应，需要通过对比请求发出的时间进行判断，如果与最新的请求发出时间一致，则有效。这里的实现写得非常简单，但是在使用的时候需要特别注意。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">fetchData</span>: <span class="function"><span class="keyword">function</span>(<span class="params">opt</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> reqTime = +<span class="built_in">Date</span>.now();  <span class="comment">// 当前请求的时间</span></div><div class="line">        opt.lastTime = reqTime;     <span class="comment">// 更新最新请求时间</span></div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">                <span class="comment">// 判断该响应是否对应最新的请求</span></div><div class="line">                <span class="keyword">if</span>(reqTime &lt; opt.lastTime) &#123;</div><div class="line">                    <span class="keyword">return</span>;</div><div class="line">                &#125;</div><div class="line">                opt.onload.call(that, json);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.$request(opt.url, opt);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>写法一：</p>
+<p>直接使用，这里<code>option</code>是临时变量，因此在<code>fetchData</code>方法当中，<code>option.lastTime</code>是得不到持续性保留的，所以无法判断请求有效性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">getData</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/data'</span>,</div><div class="line">            <span class="attr">param</span>: &#123;<span class="comment">/*...*/</span>&#125;,</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">/*...*/</span>&#125;</div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">this</span>.fetchData(option);</div><div class="line">    &#125;,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>写法二：</p>
+<p>将<code>option</code>挂到<code>data</code>上，<code>option.lastTime</code>能得到持续性保留的，但是<code>data</code>上会多一个属性，污染了组件的 <code>data</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">data</span>: &#123;</div><div class="line">        <span class="attr">dataRequestOption</span>: &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/data'</span>,</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="comment">/*...*/</span>&#125;</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getData</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> option = <span class="keyword">this</span>.data.dataRequestOption;</div><div class="line">        option.param = &#123;<span class="comment">/*...*/</span>&#125;;</div><div class="line">        <span class="keyword">this</span>.fetchData(option);</div><div class="line">    &#125;,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>写法三：</p>
+<p>利用闭包将 <code>option</code> 保存起来，但这个 <code>option</code> 就成了静态方法的静态私有变量了，该组件的所有实例都只有一份，因此这个方法就相当于将 <code>option</code> 设置成组件的全局变量。对于一些不会重复在一个页面中实例化的业务组件而言，这种写法是可以直接用的，也写的方便明了，但是你得保证页面中该组件实例的唯一性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">getData</span>: (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/data'</span>,</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">                <span class="comment">/*...*/</span></div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            option.param = &#123;</div><div class="line">                <span class="comment">/*...*/</span></div><div class="line">            &#125;;</div><div class="line">            <span class="keyword">this</span>.fetchData(option);</div><div class="line">        &#125;</div><div class="line">    &#125;)(),</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>写法四：</p>
+<p>利用 make方法 构造实例的异步接口请求方法，比较麻烦，但适用于会存在多个实例的组件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">config</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.getData = <span class="keyword">this</span>.makeGetData();</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getData</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</div><div class="line">    <span class="attr">makeGetData</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> option = &#123;</div><div class="line">            <span class="attr">url</span>: <span class="string">'/data'</span>,</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</div><div class="line">                <span class="keyword">this</span>.setData(json.data);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            option.param = <span class="keyword">this</span>.getParam();</div><div class="line">            <span class="keyword">this</span>.fetchData(option);</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>其实可以像 <code>loading</code> 标志位一样加入一个自定义标志位字段的接口，将最新请求的时间记录到 <code>data[lastTimeFlag+&#39;LastTime&#39;]</code> 上，但这种写法需要对每个请求都进行命名，同时会在 <code>data</code> 上挂上大量的属性，污染 <code>data</code> 属性，而这些值最后也不需要给向外部传递，所以并不适用。</p>
+<p>下面是完整的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> defaultOnError = <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">    Notify.notify(&#123; <span class="attr">type</span>: <span class="string">'error'</span>, <span class="attr">message</span>: json.msg || <span class="string">'获取服务器数据异常'</span>&#125;);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> BaseComponent = Component.extend(&#123;</div><div class="line">    <span class="attr">fetchData</span>: <span class="function"><span class="keyword">function</span>(<span class="params">opt</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> data = that.data;</div><div class="line">        <span class="keyword">var</span> options;</div><div class="line">        <span class="keyword">var</span> reqTime = +<span class="built_in">Date</span>.now();  <span class="comment">// 获取当前请求时间</span></div><div class="line"></div><div class="line">        opt.lastTime = reqTime;     <span class="comment">// 更新最新请求时间</span></div><div class="line">        opt.strict = opt.strict === <span class="literal">undefined</span> ? <span class="literal">true</span> : opt.strict;</div><div class="line"></div><div class="line">        opt.autoLoading = opt.autoLoading === <span class="literal">undefined</span> ? <span class="literal">true</span> : opt.autoLoading;</div><div class="line">        <span class="keyword">var</span> loadingFlag = opt.loadingFlag = opt.loadingFlag || <span class="string">'loading'</span>;</div><div class="line">        <span class="keyword">var</span> setLoadingFlag = <span class="function"><span class="keyword">function</span>(<span class="params">val</span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span>(opt.autoLoading) &#123;</div><div class="line">                data[loadingFlag] = val;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        <span class="keyword">var</span> onload = opt.onload || opt.fn;</div><div class="line">        <span class="keyword">var</span> onerror = <span class="keyword">typeof</span> opt.onerror === <span class="string">'function'</span> ? opt.onerror : defaultOnError;</div><div class="line">        options = &#123;</div><div class="line">            <span class="attr">progress</span>: <span class="literal">true</span>,</div><div class="line">            <span class="attr">method</span>: opt.method || <span class="string">'POST'</span>,</div><div class="line">            <span class="attr">type</span>: opt.type,</div><div class="line">            <span class="attr">data</span>: opt.param,</div><div class="line">            <span class="attr">onload</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">                json = json || &#123;&#125;;</div><div class="line">                setLoadingFlag(<span class="literal">false</span> );</div><div class="line">                <span class="comment">// 在严格模式下，返回数据滞后于最新的请求，则不更新列表</span></div><div class="line">                <span class="keyword">if</span>(opt.strict &amp;&amp; reqTime &lt; opt.lastTime) &#123;</div><div class="line">                    <span class="keyword">return</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span>(json.code === <span class="number">200</span> &amp;&amp; <span class="keyword">typeof</span> opt.onload === <span class="string">'function'</span>) &#123;</div><div class="line">                    onload.call(that, json);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    onerror.call(that, json);</div><div class="line">                &#125;</div><div class="line">            &#125;,</div><div class="line">            <span class="attr">onerror</span>: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>) </span>&#123;</div><div class="line">                setLoadingFlag(<span class="literal">false</span>);</div><div class="line">                onerror.call(that, json);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        setLoadingFlag(<span class="literal">true</span>);</div><div class="line">        <span class="keyword">this</span>.$request(opt.url, options);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/16/vue-cli是如何工作的/" rel="next" title="vue-cli是如何工作的">
+                <i class="fa fa-chevron-left"></i> vue-cli是如何工作的
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/21/「译」用 Atomics 避免 SharedArrayBuffers 竞争条件/" rel="prev" title="「译」用 Atomics 避免 SharedArrayBuffers 竞争条件">
+                「译」用 Atomics 避免 SharedArrayBuffers 竞争条件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loading标志位"><span class="nav-number">2.</span> <span class="nav-text">loading标志位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求有效性判断"><span class="nav-number">3.</span> <span class="nav-text">请求有效性判断</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

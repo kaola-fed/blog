@@ -1,0 +1,708 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="由来:后台系统多, 用户也多.用户在使用过程中对系统中不合理或影响工作效率的地方, 需要有一个反馈的渠道. 如果每个系统都做一个反馈收集页, 将是重复的工作, 会耗费大量的人力. 因此, 最好能有一个统一的东西, 插入到需要收集反馈的系统中.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="feedback 开发过程中遇到的问题及解决">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/22/feedback 开发过程中遇到的问题及解决/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="由来:后台系统多, 用户也多.用户在使用过程中对系统中不合理或影响工作效率的地方, 需要有一个反馈的渠道. 如果每个系统都做一个反馈收集页, 将是重复的工作, 会耗费大量的人力. 因此, 最好能有一个统一的东西, 插入到需要收集反馈的系统中.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="feedback 开发过程中遇到的问题及解决">
+<meta name="twitter:description" content="由来:后台系统多, 用户也多.用户在使用过程中对系统中不合理或影响工作效率的地方, 需要有一个反馈的渠道. 如果每个系统都做一个反馈收集页, 将是重复的工作, 会耗费大量的人力. 因此, 最好能有一个统一的东西, 插入到需要收集反馈的系统中.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/22/feedback 开发过程中遇到的问题及解决/"/>
+
+
+
+
+
+  <title>feedback 开发过程中遇到的问题及解决 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/22/feedback 开发过程中遇到的问题及解决/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                feedback 开发过程中遇到的问题及解决
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-22T00:00:00+08:00">
+                2017-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="由来"><a href="#由来" class="headerlink" title="由来:"></a>由来:</h2><p>后台系统多, 用户也多.用户在使用过程中对系统中不合理或影响工作效率的地方, 需要有一个反馈的渠道.</p>
+<p>如果每个系统都做一个反馈收集页, 将是重复的工作, 会耗费大量的人力.</p>
+<p>因此, 最好能有一个统一的东西, 插入到需要收集反馈的系统中.</p>
+<a id="more"></a>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语:"></a>术语:</h2><p><code>宿主系统</code>: 用户实际使用的系统;</p>
+<p><code>反馈系统</code>: 收集用户反馈并统一存放供开发人员调查的系统;</p>
+<p><code>插件脚本</code>: 由反馈系统对外提供的一个js文件, 由宿主系统在页面中引入.</p>
+<h2 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述:"></a>需求描述:</h2><p>宿主系统中的每个页面中, 要出现一个按钮, 点击按钮, 弹出一个弹窗, 用户在弹窗中编辑反馈信息. 反馈信息包括页面地址, 所属系统, 当前用户, 反馈的文本, 截图, 以及点赞或踩等. 其中所属系统, 页面地址和用户名, 不需要用户手动输入. 用户编辑完这些信息后, 点击确定, 统一提交到反馈系统, 然后弹窗自动关闭.</p>
+<h2 id="问题与解决方案"><a href="#问题与解决方案" class="headerlink" title="问题与解决方案"></a>问题与解决方案</h2><h3 id="按钮嵌入宿主系统全部页面"><a href="#按钮嵌入宿主系统全部页面" class="headerlink" title="按钮嵌入宿主系统全部页面"></a>按钮嵌入宿主系统全部页面</h3><p>向宿主系统的全部页面中嵌入一个按钮, 肯定不能手动编辑所有的页面文件, 鉴于系统中所有的页面都会有导航条()这一特点, 决定将添加按钮的逻辑写到一个js文件中, 即插件脚本. 将此js放到公用组件的节点中, 即可实现全部页面嵌入按钮. 至于这个js文件, 因为js支持跨域请求,  可存放在反馈系统中.这样做的好处是避免每个系统拷贝一份这个js文件的代码, 统一管理, 统一修改. </p>
+<h3 id="系统间通信"><a href="#系统间通信" class="headerlink" title="系统间通信"></a>系统间通信</h3><p>如何将反馈信息在不同系统之间传送? 想到如下几种方案:</p>
+<p>1.将反馈信息提交到宿主系统后端, 宿主系统再调用反馈系统的接口, 进行通信;</p>
+<p>2.通过前端发送跨域请求, 直接将信息发送到反馈系统;</p>
+<p>3.将弹窗中加入一个反馈系统的iframe, 用户在iframe中编辑信息, 直接提交;</p>
+<p>第一种方案的缺点是需要每个系统添加后端通信的逻辑, 工作量大. 如果反馈系统的通信逻辑以后有改动, 每个系统都要改;</p>
+<p>第二个方案的缺点是需要有人去配置nginx的跨域信息, 比较麻烦. 而且表单校验, 发送数据以及一些弹窗校验等工作, 放在一个需要没有依赖的js中去完成, 相当于裸着写逻辑, 代码量将会很大, 而且不好维护. </p>
+<p>第三种方案相当于打开了一个反馈系统的页面, 只是看起来是一个宿主系统的弹窗. 遇到的问题是, 用户提交完成后iframe向外部传送信息比较麻烦. 单这个比起上面两种方案来说, 更加容易解决. </p>
+<p>因此选择第三种方案.</p>
+<h3 id="modal模态弹窗"><a href="#modal模态弹窗" class="headerlink" title="modal模态弹窗"></a>modal模态弹窗</h3><p>一下是比较常见的弹窗使用场景和需求:</p>
+<p>1.用户在提交反馈信息时, 如果有必须要填的字段没有填, 比如反馈的问题类型没选, 需要中断提交并提醒用户.</p>
+<p>2.管理员在删除一个反馈问题时, 需要二次确认. </p>
+<p>3.不同的弹窗, 内容可能会不一样, 但外框和遮罩层的样式以及打开和关闭的逻辑在一般情况下是一样的, 因此重复的逻辑和样式需要可继承; </p>
+<p>4.用于二次确认的弹窗, 需要知道用户点击的是确定还是取消. </p>
+<p> 在regular中, 继承和组合是不冲突的, 即可以在继承父组件的同时, 只重写父组件中的slot部分, 然后塞到父组件的模板中, 并在使用中也可以轻松的拿到new出来的弹窗引用, 如下:<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">//父组件 baseModal.js</div><div class="line">define([</div><div class="line">   &apos;pro/baseComponent&apos;,</div><div class="line">   &apos;text./modalTemplate.html&apos;</div><div class="line">], function(base, template) &#123;</div><div class="line">    return base.extend(&#123;</div><div class="line">        template: template</div><div class="line">        //...</div><div class="line">    &#125;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">//父组件模板 modalTemplate.html</div><div class="line">&lt;div class=&quot;mask&quot;&gt;</div><div class="line">   &lt;div class=&quot;head&quot;&gt;&#123;title&#125;&lt;/div&gt;</div><div class="line">   &lt;div class=&quot;body&quot;&gt;&#123;slot&#125;&lt;/div&gt;</div><div class="line">   &lt;div class=&quot;footer&quot;&gt;</div><div class="line">       &lt;button&gt;Confirm&lt;/button&gt;</div><div class="line">       &lt;button&gt;Cancel&lt;/button&gt;</div><div class="line">   &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line"></div><div class="line">//子组件</div><div class="line">define([</div><div class="line">   &apos;pro/baseModal&apos;,</div><div class="line">   &apos;text!./slot.html&apos;</div><div class="line">], function(base, tpl) &#123;</div><div class="line">    return base.extend(&#123;</div><div class="line">        content: tpl</div><div class="line">        //...</div><div class="line">    &#125;)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//使用时 main.js</div><div class="line"></div><div class="line">//...</div><div class="line">var modal = new Modal(&#123;</div><div class="line">    //...</div><div class="line">&#125;);</div><div class="line">modal.$on(&apos;confirm&apos;, someFun);</div><div class="line">modal.$on(&apos;cancel&apos;, someFun);</div><div class="line">//...</div></pre></td></tr></table></figure></p>
+<p> 但是在vue中, 子组件继承父组件后, 并不继承父组件的模板, 即template需要完全重新写. 这样的拷贝背离了我们继承的初衷, 因此只能使用组合, 即所谓的子组件, 并不是继承了父组件, 而是在模板中组合进一个父组件, 然后将自己的模板塞到父组件的slot中.<br> vue推荐将modal事先写好在template中, 用的时候设置一个flag使其显示出来, 作者解释说之所以这样, 是为了时模板看起来清晰明了, 详见<a href="https://www.zhihu.com/question/35820643" target="_blank" rel="noopener">vue作者的解释</a><br> 但这样产生一个问题, 直接将使用了slot的modal写到模板中, 无法拿到起引用, 即下面这样写是无效的.具体原因官方文档的解释并没有看懂.<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div&gt;</div><div class="line">   &lt;modal ref=&quot;xxx&quot;&gt;&lt;/modal&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure></p>
+<p> 既然拿不到引用, modal关闭时用户点击的是确定还是取消, 自然不知道了. 而且在使用时设置显示modal的逻辑比较大同小异, 因此将控制弹窗打开关闭的逻辑抽出来放到mixin中.<br> 至于弹窗关闭的事件, 刚开始做的时候自己也没想到好的解决方法, 参考了一下饿了么的弹窗组件, 他们的做法是, 在打开弹窗的方法中return一个promise, 将promise的resolve和reject方法包装到一个对象中压一个任务栈中, 当组合的父弹窗发出Confirm或cancel事件时, 从栈中弹出最上面的任务, 如果confirm, 则执行任务对象的resolve方法.<br> 代码如下:</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div></pre></td><td class="code"><pre><div class="line"> //父组件 modal.vue</div><div class="line"> &lt;style&gt;</div><div class="line">    //...</div><div class="line"> &lt;/style&gt;</div><div class="line"> &lt;template&gt;</div><div class="line">    &lt;div class=&quot;mask&quot;&gt;</div><div class="line">        &lt;div class=&quot;head&quot;&gt;&#123;title&#125;&lt;/div&gt;</div><div class="line">        &lt;div class=&quot;body&quot;&gt;</div><div class="line">            &lt;slot&gt;&lt;/slot&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">        &lt;div class=&quot;footer&quot;&gt;</div><div class="line">        &lt;button @click=&quot;confirm&quot;&gt;Confirm&lt;/button&gt;</div><div class="line">        &lt;button @click=&quot;cancel&quot;&gt;Cancel&lt;/button&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line"> &lt;/template&gt;</div><div class="line"> &lt;script&gt;</div><div class="line">    import xxx</div><div class="line">    </div><div class="line">    export default &#123;</div><div class="line">        //xxx</div><div class="line">    &#125;</div><div class="line"> &lt;/script&gt;</div><div class="line"> </div><div class="line"> //mixin modal.js</div><div class="line">module.exports = &#123;</div><div class="line">    data() &#123;</div><div class="line">        return &#123;</div><div class="line">            modalConfig: &#123;</div><div class="line">                status: &apos;modal-info&apos;,</div><div class="line">                title: &apos;提示&apos;,</div><div class="line">                show: false,</div><div class="line">                onlyClose: false</div><div class="line">            &#125;,</div><div class="line">            questionQueue: []</div><div class="line">        &#125;;</div><div class="line">    &#125;,</div><div class="line">    methods: &#123;</div><div class="line">        /**</div><div class="line">         *</div><div class="line">         * @param msg 文本内容</div><div class="line">         * @param status modal-warning modal-success modal-error modal-info</div><div class="line">         */</div><div class="line">        showWithOnlyCloseBtn(msg, status) &#123;</div><div class="line">            this.modalConfig = &#123;</div><div class="line">                show: true,</div><div class="line">                status: status,</div><div class="line">                title: &apos;提示&apos;,</div><div class="line">                content: msg,</div><div class="line">                onlyClose: true</div><div class="line">            &#125;;</div><div class="line">        &#125;,</div><div class="line">        showWarning(msg) &#123;</div><div class="line">            this.showWithOnlyCloseBtn(msg, &apos;modal-warning&apos;);</div><div class="line">        &#125;,</div><div class="line">        showError(msg) &#123;</div><div class="line">            this.showWithOnlyCloseBtn(msg, &apos;modal-danger&apos;);</div><div class="line">        &#125;,</div><div class="line">        showInfo(msg) &#123;</div><div class="line">            this.showWithOnlyCloseBtn(msg, &apos;modal-info&apos;);</div><div class="line">        &#125;,</div><div class="line">        showSuccess(msg) &#123;</div><div class="line">            this.showWithOnlyCloseBtn(msg, &apos;modal-success&apos;);</div><div class="line">        &#125;,</div><div class="line">        ask4Sure(msg) &#123;</div><div class="line">            this.modalConfig = &#123;</div><div class="line">                show: true,</div><div class="line">                status: &apos;modal-info&apos;,</div><div class="line">                title: &apos;提示&apos;,</div><div class="line">                content: msg,</div><div class="line">                onlyClose: true</div><div class="line">            &#125;;</div><div class="line">            return new Promise((resolve, reject) =&gt; &#123;</div><div class="line">                this.questionQueue.push(&#123;</div><div class="line">                    confirm: resolve,</div><div class="line">                    cancel: reject</div><div class="line">                &#125;);</div><div class="line">            &#125;);</div><div class="line">        &#125;,</div><div class="line">        onConfirm() &#123;</div><div class="line">            this.destroy();</div><div class="line">            if (!this.questionQueue.length) return;</div><div class="line">            let task = this.questionQueue.shift();</div><div class="line">            task.confirm();</div><div class="line">        &#125;,</div><div class="line">        onCancel() &#123;</div><div class="line">            this.destroy();</div><div class="line">            if (!this.questionQueue.length) return;</div><div class="line">            let task = this.questionQueue.shift();</div><div class="line">            task.cancel();</div><div class="line">        &#125;,</div><div class="line">        destroy() &#123;</div><div class="line">            this.modalConfig.show = false;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"> </div><div class="line"> //子组件 subModal.vue</div><div class="line">  &lt;style&gt;</div><div class="line">    //...</div><div class="line"> &lt;/style&gt;</div><div class="line"> &lt;template&gt;</div><div class="line">    &lt;modal @cancel=&quot;cancel&quot; @confirm=&quot;confirm&quot;&gt;</div><div class="line">        &lt;div&gt;xxxxxx&lt;/div&gt;</div><div class="line">    &lt;/modal&gt;</div><div class="line"> &lt;/template&gt;</div><div class="line"> &lt;script&gt;</div><div class="line">    import Modal from &apos;./modal.vue&apos;;</div><div class="line">    </div><div class="line">    export default &#123;</div><div class="line">        components: &#123;</div><div class="line">            modal</div><div class="line">        &#125;,</div><div class="line">        methods: &#123;</div><div class="line">            cancel() &#123;</div><div class="line">                this.$emit(&apos;cancel&apos;);</div><div class="line">            &#125;,</div><div class="line">            confirm() &#123;</div><div class="line">                this.$emit(&apos;confirm&apos;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line"> &lt;/script&gt;</div><div class="line"> </div><div class="line"> //使用时 main.js</div><div class="line"> //...</div><div class="line"> methods: &#123;</div><div class="line">    onRemoveSystem(system) &#123;</div><div class="line">        this.ask4Sure( &apos;确定删除此系统吗?&apos;)</div><div class="line">            .then(() =&gt; &#123;</div><div class="line">                this.removeSystem(system);</div><div class="line">            &#125;)</div><div class="line">            .catch(() =&gt; &#123;</div><div class="line">                console.info(&apos;取消删除&apos;);</div><div class="line">            &#125;);</div><div class="line">    &#125;,</div><div class="line">&#125;,</div><div class="line"> //...</div></pre></td></tr></table></figure>
+<p> ###自动获取当前环境信息</p>
+<p> 一般来说, 每个系统的导航组件上都会有一句欢迎语, xx用户, 你好blabla… 于是, 只要将用户名所在的标签加上一个id, 再将这个id放到插件脚本的dataset中, 插件脚本就会在执行时获取到用户名. 然后在打开iframe时, 将获取到的用户名, 系统一名等信息以参数的方式放到iframe的src中, 这样反馈系统即可从location.search中获取到这些信息.</p>
+<h3 id="提交反馈后自动关闭弹窗"><a href="#提交反馈后自动关闭弹窗" class="headerlink" title="提交反馈后自动关闭弹窗"></a>提交反馈后自动关闭弹窗</h3><p> 反馈的提交动作是在iframe中触发的. 不同源的iframe无法向其父window发送信息.</p>
+<p> 在网上查到一种比较繁琐的方式, 在子iframe中再嵌入一个与父容器同源的iframe, 由这个第三者iframe充当中转. 考虑到这种方式也比较复杂, 于是再想其他的解决方案. </p>
+<p> iframe有一个onload事件可以执行父容器传入的回调. 可不可以将要发送的信息放在iframe的src中然后通过onload来传输呢, 这样不就可以实现父容器知道用户何时提交了么.</p>
+<p> 只要在用户提交信息后, 将iframe跳转到另一个页面, 就可以触发onload了, 然后把要传出来的信息放到页面url中, 父容器通过event对象取获取, 一切大功告成.</p>
+<p> 然而经过实验, 在iframe跳转页面时, 的确触发了onload. 但是event对象中的src还是新建iframe时传入的src, 不会更新成新的src.</p>
+<p> 再回来结合业务场景思考, iframe在触发第一次onload时, 一定是刚新建好弹窗, 而第二次, 一定是用户提交成功后的跳转. 再往下就是我们将iframe隐藏起来并跳转会返回编辑页等待用户下一次打开”弹窗”提交反馈.</p>
+<p> 简而言之, 奇数次的onload是跳转到反馈编辑页, 偶数次的onload是用户提交了反馈信息. 于是, 在偶数次触发onload的时候, 在插件脚本中将iframe隐藏起来, 即达到了用户提交反馈后自动关闭弹窗的效果.</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p> 目前的feedback还只是实现一些基本功能的状态, 很多细节没有覆盖到, 如果后期增加业务, 可能会遇到更多问题. to be continued…</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/20/前端重构感想/" rel="next" title="前端重构感想">
+                <i class="fa fa-chevron-left"></i> 前端重构感想
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/22/浅谈浏览器本地存储-indexedDB/" rel="prev" title="浅谈浏览器本地存储-indexedDB">
+                浅谈浏览器本地存储-indexedDB <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#由来"><span class="nav-number">1.</span> <span class="nav-text">由来:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#术语"><span class="nav-number">2.</span> <span class="nav-text">术语:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#需求描述"><span class="nav-number">3.</span> <span class="nav-text">需求描述:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题与解决方案"><span class="nav-number">4.</span> <span class="nav-text">问题与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#按钮嵌入宿主系统全部页面"><span class="nav-number">4.1.</span> <span class="nav-text">按钮嵌入宿主系统全部页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统间通信"><span class="nav-number">4.2.</span> <span class="nav-text">系统间通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#modal模态弹窗"><span class="nav-number">4.3.</span> <span class="nav-text">modal模态弹窗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交反馈后自动关闭弹窗"><span class="nav-number">4.4.</span> <span class="nav-text">提交反馈后自动关闭弹窗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

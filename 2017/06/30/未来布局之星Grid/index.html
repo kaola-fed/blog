@@ -1,0 +1,748 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="grid是一个趋势Grid-layout不是为了取代flex-layout，它是flex的补充。grid擅长二维布局，flex擅长一维布局。他们需要各司其职。 千呼万唤始出来的grid-layout终于在2017年3月开始支持得到了部分浏览器的支持。flex并不能满足我们对于页面整体布局的需求，Don’t use flexbox for overall page layout这篇文章阐述了这么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="未来布局之星Grid">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/30/未来布局之星Grid/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="grid是一个趋势Grid-layout不是为了取代flex-layout，它是flex的补充。grid擅长二维布局，flex擅长一维布局。他们需要各司其职。 千呼万唤始出来的grid-layout终于在2017年3月开始支持得到了部分浏览器的支持。flex并不能满足我们对于页面整体布局的需求，Don’t use flexbox for overall page layout这篇文章阐述了这么">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/30/5956428c59396.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/30/595642db36e88.gif">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/30/59564780830e7.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.395Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="未来布局之星Grid">
+<meta name="twitter:description" content="grid是一个趋势Grid-layout不是为了取代flex-layout，它是flex的补充。grid擅长二维布局，flex擅长一维布局。他们需要各司其职。 千呼万唤始出来的grid-layout终于在2017年3月开始支持得到了部分浏览器的支持。flex并不能满足我们对于页面整体布局的需求，Don’t use flexbox for overall page layout这篇文章阐述了这么">
+<meta name="twitter:image" content="https://ooo.0o0.ooo/2017/06/30/5956428c59396.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/30/未来布局之星Grid/"/>
+
+
+
+
+
+  <title>未来布局之星Grid | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/30/未来布局之星Grid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                未来布局之星Grid
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T00:00:00+08:00">
+                2017-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+<h2 id="grid是一个趋势"><a href="#grid是一个趋势" class="headerlink" title="grid是一个趋势"></a>grid是一个趋势</h2><p>Grid-layout不是为了取代flex-layout，它是flex的补充。grid擅长二维布局，flex擅长一维布局。他们需要各司其职。</p>
+<p>千呼万唤始出来的grid-layout终于在2017年3月开始支持得到了部分浏览器的支持。<br><img src="https://ooo.0o0.ooo/2017/06/30/5956428c59396.png" alt=""><br>flex并不能满足我们对于页面整体布局的需求，<a href="https://jakearchibald.com/2014/dont-use-flexbox-for-page-layout/" target="_blank" rel="noopener">Don’t use flexbox for overall page layout</a>这篇文章阐述了这么一个观点：不要用弹性盒子布局整体的页面。而我们在平常使用中也能感受到flex在做整体页面布局的时候，还是有不完善的地方，还是需要大量的inline-box、float来排布内容（// TODO 售后单详情页作为例子）；另外一个问题我们后面了解了grid之后会再说</p>
+<a id="more"></a>
+<h2 id="grid-table2-0"><a href="#grid-table2-0" class="headerlink" title="grid = table2.0?"></a>grid = table2.0?</h2><p>二维布局方式，可以按照行列方式排列内容。把页面划分为几块，指定不同内容区块的大小、位置和层级。</p>
+<p>有观点说grid很像table2.0，他们是有相同之处的。比如都是把元素排列成行和列。但是表格和grid的区别在于，表格是有内容结构的，不能很自由地在里面做布局。而grid内部元素可以自由设定位置，允许重叠和设定层级的样。</p>
+<h2 id="几个术语"><a href="#几个术语" class="headerlink" title="几个术语"></a>几个术语</h2><h4 id="网格容器-grid-container"><a href="#网格容器-grid-container" class="headerlink" title="网格容器 grid-container"></a>网格容器 grid-container</h4><p>网格容器为其内容建立新的网格格式化上下文，是内部网格项的边界。</p>
+<h4 id="网格线-grid-line"><a href="#网格线-grid-line" class="headerlink" title="网格线 grid-line"></a>网格线 grid-line</h4><p>水平垂直分割线，构建出网格轨道、网格单元格和网格区域。就像经纬，分割出南北半球、东西半球，热带、南北温带、南北寒带。网格线是有数字索引的，也可以自己取名字。经纬线都是有数字的，也可以命名，比如本初子午线、赤道。</p>
+<h4 id="网格轨道-grid-track"><a href="#网格轨道-grid-track" class="headerlink" title="网格轨道 grid-track"></a>网格轨道 grid-track</h4><p>网格内容块之间的水平或垂直的空间。滨盛、滨和、滨兴、滨安、滨康，江陵、江晖、江汉、江虹。（郊区的经典命名，摊手）</p>
+<h4 id="网格单元格-grid-cell"><a href="#网格单元格-grid-cell" class="headerlink" title="网格单元格 grid-cell"></a>网格单元格 grid-cell</h4><p>网格内容的单位区块，是可以放置内容的最小区块。比如用横纵三条网格线划分了页面，那么单元格就是九宫格中的一块</p>
+<h4 id="网格区域-grid-area"><a href="#网格区域-grid-area" class="headerlink" title="网格区域 grid-area"></a>网格区域 grid-area</h4><p>以网格线为界划定一块区域。原本网易和阿里巴巴都是占用一个单元格，现在都要扩建了，占用两个，两个加起来就是它们各自的网格区域。</p>
+<h2 id="两个例子"><a href="#两个例子" class="headerlink" title="两个例子"></a>两个例子</h2><p>在了解具体的属性之前，<a href="https://codepen.io/AubreyDDun/pen/KmMmxr" target="_blank" rel="noopener">来一个最简单的例子</a></p>
+<p>这样看会觉得grid还是很有趣的，先分块，然后指定每一块的区域范围。块是可以重叠的。但是这只是开始，grid为我们带来了17个新特性，在了解属性之前再来看一个例子，经典布局方案 —— 圣杯布局 holy grail layout。</p>
+<ul>
+<li>网页常见布局：页眉、页脚、主要内容区块、两边都有一个侧边列。</li>
+<li>两边带有固定宽度，中间宽度可变</li>
+<li>中间三列内容等高</li>
+<li>页脚总处于窗口的底部，即使内容没有填满整个窗口的高度</li>
+<li>响应式布局，在较小的视窗中所有模块都100%宽度显示<br><img src="https://ooo.0o0.ooo/2017/06/30/595642db36e88.gif" alt=""></li>
+</ul>
+<p>大家可以迅速在脑子里码一下这个界面写个样式，不至于说复杂 但总之不简单吧。我们<a href="http://codepen.io/AubreyDDun/pen/Pmmexe" target="_blank" rel="noopener">看看grid是怎么做的</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">// key code</div><div class="line">.hg__header &#123; grid-area: header;&#125;</div><div class="line">.hg__footer &#123; grid-area: footer;&#125;</div><div class="line">.hg__main &#123; grid-area: main;&#125;</div><div class="line">.hg__left &#123; grid-area: navigation;&#125;</div><div class="line">.hg__right &#123; grid-area: ads;&#125;</div><div class="line"></div><div class="line">.hg &#123;</div><div class="line">    display: grid;</div><div class="line">    grid-template-areas:    &quot;header header header&quot;</div><div class="line">                            &quot;navigation main ads&quot;</div><div class="line">                            &quot;footer footer footer&quot;;</div><div class="line">    grid-template-columns: 250px 1fr 300px;</div><div class="line">    grid-template-rows: 100px </div><div class="line">                        1fr</div><div class="line">                        80px;</div><div class="line">    min-height: 100vh;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<ol>
+<li><p>定义网格</p>
+<ol>
+<li><p>设定网格区域别名，grid-area: <alias>，指定块所在区域的时候方便引用。前一个简单的例子，grid-area是用来指定网格区域上下左右的网格线各是什么，<strong>所以grid-area既可以指定网格区域的大小和位置，还可以设定区域的别名。</strong></alias></p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">grid-area: main;</div><div class="line">    grid-row-start: main;</div><div class="line">    grid-column-start: main;</div><div class="line">    grid-row-end: main;</div><div class="line">    grid-column-end: main;</div></pre></td></tr></table></figure>
+</li>
+<li><p>grid-template-areas: “- - -“ “- - -“ “- - -“;可以非常直观指定网格的布局。它的值是空格分隔的字符串数组，每一个字符串代表一行。每一个字符串中是空格分隔的网格单元格列表，一个网格区域要跨几列就写几次。比如例子中header、footer写了三次，它们都是跨整个区域宽度的。</p>
+</li>
+</ol>
+</li>
+<li><p>设定单元格的高度和宽度</p>
+<p> 有一个css3的新单位，fr，在一串数值中出现的话表示根据比例分配某个方向上的剩余空间。设定行高的时候分行写是为了清晰一点。</p>
+</li>
+<li><p>设定固定位置的页脚</p>
+</li>
+<li>响应式布局，使用媒体查询。重置布局和行高</li>
+</ol>
+<h2 id="grid-container"><a href="#grid-container" class="headerlink" title="grid-container"></a>grid-container</h2><h4 id="1-grid-template-columns-grid-template-rows"><a href="#1-grid-template-columns-grid-template-rows" class="headerlink" title="1. grid-template-columns | grid-template-rows"></a>1. grid-template-columns | grid-template-rows</h4><figure class="highlight plain"><figcaption><span><track list="">```，**定义网格的行数、列数、网格大小**。</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">有很多中形式，常见的是这么几种：</div></pre></td></tr></table></figure>
+<p>grid-template-columns: 100px 1fr;<br>grid-template-columns: [linename] 100px;    // 定义网格线名字<br>grid-template-columns: [linename1] 100px [linename2 linename3]; // 一条网格线多个名字<br>grid-template-columns: minmax(100px, 1fr);  // 最小100px, 最大满屏<br>grid-template-columns: fit-content(40%);    // 指定最大值不超过屏宽40%<br>grid-template-columns: repeat(3, 200px);    // 三列200px<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<p>// 给网格线指定名字<br>.box {<br>    grid-template-columns: [first] 40px [line2] 50px [line3] auto [col4-start] 50px [five] 40px [end];<br>    grid-template-rows: [row1-start] 25% [row1-end] 100px [third-line] auto [last-line];<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">![](https://ooo.0o0.ooo/2017/06/30/59564310ef48e.png)</div><div class="line"></div><div class="line">#### 2. grid-template-areas</div><div class="line">定义网格区域，使用grid-area调用声明好的网格区域名称放置对应的网格项目。定义一个显式的网格区域。</div><div class="line"></div><div class="line">#### 3. grid-row-gap、grid-column-gap</div><div class="line">定义网格之间的间距（不包括grid-item到容器边缘的间距）</div><div class="line"></div><div class="line">#### 4. justify-items: start | end | center | stretch(默认);</div><div class="line">定义网格子项的内容水平方向上的对齐方式，类似于flex-container的justify-content，只不过没有space-around和space-between</div><div class="line"></div><div class="line">![1bc096d4ee73927e.png](https://ooo.0o0.ooo/2017/06/30/595645fdcd8e6.png)</div><div class="line">![35fecd4fbf754a84.png](https://ooo.0o0.ooo/2017/06/30/59564646583a3.png)</div><div class="line">![9a2b4b82c9b6a65b.png](https://ooo.0o0.ooo/2017/06/30/5956465cded77.png)</div><div class="line">![85e7fb64351898e4.png](https://ooo.0o0.ooo/2017/06/30/5956465cde14e.png)</div><div class="line"></div><div class="line">#### 5. align-items: start | end | center | stretch(默认);</div><div class="line">定义网格子项的内容垂直方向上的对齐方式，类似于flex-container的align-items</div><div class="line"></div><div class="line">![7a410b6d17acd72e.png](https://ooo.0o0.ooo/2017/06/30/595646b3bac49.png)</div><div class="line">![20f8f733235797ea.png](https://ooo.0o0.ooo/2017/06/30/595646b3bbae7.png)</div><div class="line">![9e1f32b77d573d04.png](https://ooo.0o0.ooo/2017/06/30/595646b3bc94a.png) ![85e7fb64351898e4.png](https://ooo.0o0.ooo/2017/06/30/5956465cde14e.png)</div><div class="line"></div><div class="line">#### 6. justify-content: start | end | center | stretch | space-around | space-between | space-evenly;</div><div class="line">当出现网格容器容量大于网格总大小，比如每一个网格子项都用了固定值的时候，指定网格在网格容器中和纵轴的对齐方式。后面三个属性值的区别在：</div><div class="line"></div><div class="line">1. space-around: 始末两端的间距是网格间距的一半</div><div class="line">2. space-between: 始末两端的间距为零</div><div class="line">3. space-evenly: 始末两端的间距与网格间距相等</div><div class="line"></div><div class="line"> ![](https://ooo.0o0.ooo/2017/06/30/595643c22a6f6.png) ![](https://ooo.0o0.ooo/2017/06/30/595643c21892b.png)</div><div class="line"> ![](https://ooo.0o0.ooo/2017/06/30/5956456fe1790.png) ![](https://ooo.0o0.ooo/2017/06/30/595643c207705.png) ![](https://ooo.0o0.ooo/2017/06/30/595643c2179ad.png)</div><div class="line"> ![](https://ooo.0o0.ooo/2017/06/30/595643c21b9d2.png)</div><div class="line"> ![](https://ooo.0o0.ooo/2017/06/30/595643c21c6d4.png)</div><div class="line"></div><div class="line">#### 7. align-content: start | end | center | stretch | space-around | space-between | space-evenly;</div><div class="line"></div><div class="line">和justify-content对齐方向垂直，指定网格和横轴的对齐方式。</div><div class="line"></div><div class="line">![e14e12bdfbf2e3e4.png](https://ooo.0o0.ooo/2017/06/30/59564729c2235.png)</div><div class="line">![8006fb09977ce5c8.png](https://ooo.0o0.ooo/2017/06/30/59564729c3a50.png)</div><div class="line">![61ffebd9e0da3f0b.png](https://ooo.0o0.ooo/2017/06/30/59564729c2e4a.png) ![28e49f66a9c4455a.png](https://ooo.0o0.ooo/2017/06/30/5956475e38737.png)</div><div class="line">![b9bfc04642c818d7.png](https://ooo.0o0.ooo/2017/06/30/5956475e397f7.png)</div><div class="line">![f1845a4b578d8191.png](https://ooo.0o0.ooo/2017/06/30/5956475e3a809.png)</div><div class="line">![f06633de75642a36.png](https://ooo.0o0.ooo/2017/06/30/5956475e3b8e4.png)</div><div class="line"></div><div class="line">#### 8. grid-auto-columns、grid-auto-rows; grid-auto-flow</div><div class="line">grid-auto-columns | grid-auto-rows作用是网格单元格不够的时候创建隐式的网格放置grid-item。看一个[例子](https://codepen.io/AubreyDDun/pen/RVVywG)</div><div class="line"></div><div class="line">我们只定义了一个1×1的网格容器，box1放了进来，然后其他的三个怎么办呢？漏出来。box2接在box1后面渲染至屏幕右侧，box3和box4在底下渲染，高度仅仅为内容高度。</div><div class="line"></div><div class="line">指定了```grid-auto-columns： 200px; grid-auto-rows: 200px;```，相当于在容器中横纵都创建了更多的隐式的200*200的网格单元来盛放可能多出来的元素。</div><div class="line"></div><div class="line">与之相关的还有另一个属性：grid-auto-flow，在我们没有设定这个属性的时候，多余的元素也按照从左到右从上到下的顺序排列，这个属性是控制自动布局算法的。</div><div class="line"></div><div class="line">```grid-auto-flow: row | column | row dense | column dense;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>row为默认值，代表自动布局算法在每一行中依次填充，只有必要时才会添加新行。</li>
+<li>column代表自动布局算法在每一列中依次填充，只有必要时才会添加新行。</li>
+<li>dense代表告诉自动布局算法如果更小的子项出现时尝试在网格中填补漏洞。（不建议使用，可能会使布局产生混乱）</li>
+</ol>
+<h2 id="grid-item"><a href="#grid-item" class="headerlink" title="grid-item"></a>grid-item</h2><h4 id="1-grid-column-start-grid-column-end-grid-row-start-grid-row-end"><a href="#1-grid-column-start-grid-column-end-grid-row-start-grid-row-end" class="headerlink" title="1. grid-column-start | grid-column-end | grid-row-start | grid-row-end"></a>1. grid-column-start | grid-column-end | grid-row-start | grid-row-end</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">grid-row: grid-row-start / grid-row-end</div><div class="line">grid-column: grid-column-start / grid-column-end | grid-column-start | span &lt;value&gt;</div></pre></td></tr></table></figure>
+<p><img src="https://ooo.0o0.ooo/2017/06/30/59564780830e7.png" alt="f0988aebf7ce8786.png"></p>
+<p>如果没有显式设置grid-column-end/grid-row-end，网格子项将默认跨越一个网格单元。此外，网格子项可以互相重叠，可以使用z-index来控制他们的层叠顺序。</p>
+<p>有一些元素，我们想让它贯穿整个视口，比如像 header、footer，对于小屏幕，两列布局:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.header, .footer &#123;</div><div class="line">  grid-column: 1 / 3;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>不幸的是，当我们换到大屏的时候，一行12列，这些元素将仅仅占满前两列，并不会占满12列，我们需要定义新的grid-column-end，并且把他的值设为 13. 这种方式比较麻烦，还有一种简单的方式，grid-column: 1 / -1;，这样不论在什么屏幕尺寸下，它们都是占满整行的了。就像下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.header, .footer &#123;</div><div class="line">  grid-column: 1 / -1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="2-grid-area"><a href="#2-grid-area" class="headerlink" title="2. grid-area"></a>2. grid-area</h4><figure class="highlight plain"><figcaption><span><name> | grid-row-start / grid-column-start / grid-row-end / grid-column-end```</name></span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#### 3. justify-self: start | end | center | stretch 网格单元格内容水平方向上的对齐方式 。与flex中的justify-self。</div><div class="line"></div><div class="line">![c096a95f6300d932.png](https://ooo.0o0.ooo/2017/06/30/5956482659678.png)</div><div class="line">![bb01f2f4ea312d78.png](https://ooo.0o0.ooo/2017/06/30/595648265c3d6.png)</div><div class="line">![3ca2ef564834e834.png](https://ooo.0o0.ooo/2017/06/30/595648265b54a.png)</div><div class="line">![caddebe3320088bf.png](https://ooo.0o0.ooo/2017/06/30/595648265a684.png)</div><div class="line">#### 4. align-self: start | end | center | stretch 网格单元格内容垂直方向上的对齐方式 。类似与flex中的align-self。</div><div class="line"></div><div class="line">![1f1b1806e925fe2b.png](https://ooo.0o0.ooo/2017/06/30/59564a4d3fd2f.png)</div><div class="line">![grid-align-self-end.png](https://ooo.0o0.ooo/2017/06/30/59564a338ffd8.png)</div><div class="line">![0ad87bbf53ecc6a3.png](https://ooo.0o0.ooo/2017/06/30/59564a338f364.png)</div><div class="line">![caddebe3320088bf.png](https://ooo.0o0.ooo/2017/06/30/595648265a684.png)</div><div class="line"></div><div class="line">## grid-layout带来的函数</div><div class="line">#### 1. repeat()</div><div class="line">repeat()提供了一个紧凑的声明方式。如果行列太多并且是规则的分布，我们可以用函数来做网格线的排布。</div></pre></td></tr></table></figure>
+<p>grid-template-columns: repeat(3, 20px [col-start]) 5%;<br>// 等价于<br>grid-template-columns: 20px [col-start] 20px [col-start] 20px [col-start] 5%;<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#### 2. minmax()</div><div class="line">minmax()相当于为网格线间隔指定一个最小到最大的区间。如果min&gt;max，这个区间就失效了，展示的是min。</div><div class="line"></div><div class="line">#### 3. fit-content()</div><div class="line">fit-content(&lt;length-percentage&gt;)相当于 min(&apos;max-content&apos;, max(&apos;auto&apos;, argument));</div><div class="line"></div><div class="line"></div><div class="line">## flex布局的另一个问题</div><div class="line">flex-layout的布局另外一个问题是，在有大量内容绘制到页面上、或者内容更改的情况下，在2g或者网络加载不稳定的时候，页面是不稳定的。[Flexbox vs Grid page layout](https://www.youtube.com/watch?v=vPryjyFP5FM&amp;feature=youtu.be)。内容以流式从服务端获取用户可以在页面全部加载出来之前就看到内容，但是在flex布局下会导致布局的重排。正是因为flex本身就是一个弹性的布局。但grid也不是完全可以避免布局重排的问题——有前提：</div><div class="line"></div><div class="line">    必须让你的网格划分是可以预先确定的，比如是根据视窗宽高确定的。如果是根据内容而定，那么也是会崩坏的。</div><div class="line"></div><div class="line">下面的例子中，网格的列宽根据内容而定，因此也会根据内容而变。后面的aside并没有定义在网格容器当中，是一个动态创建的元素。一旦被创建就会导致页面重绘</div></pre></td></tr></table></figure></p>
+<p>.container {<br>    display: grid;<br>    grid-template-columns:<br>    (foo)   max-content,<br>    (bar)   min-content,<br>    (hello) auto;<br>}</p>
+<p>aside {<br>    grid-column: 4;<br>}<br>```<br>但是也不要放弃flex-layout，它是目前为止最厉害的页面布局属性，是时代召唤的结果，只是它并不适合布局整个页面框架。flex在响应式布局中是很关键的，它是内容驱动型的布局。不需要预先知道会有什么内容，可以设定元素如何分配剩余的空间以及在空间不足的时候如何表现。显得较为强大的是一维布局的能力，而grid优势在于二维布局。这也是他们设计的初衷。</p>
+<p>大概可以设想，网格布局被广泛支持之后会出现很多网格布局内嵌flex的布局情形。</p>
+<p>subgrid暂时还没有浏览器支持，规范也是在改动之中的，所以先不介绍了。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://jakearchibald.com/2014/dont-use-flexbox-for-page-layout/" target="_blank" rel="noopener">Don’t use flexbox for overall page layout</a></p>
+<p><a href="https://segmentfault.com/a/1190000007651321" target="_blank" rel="noopener">(译)原生CSS网格布局学习笔记</a></p>
+<p><a href="https://fe.ele.me/wang-ge-bu-ju-css-grid-layout-qian-tan/" target="_blank" rel="noopener">网格布局（CSS Grid Layout）浅谈</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout" target="_blank" rel="noopener">CSS Grid Layout</a></p>
+<p><a href="http://www.xingbofeng.com/css-grid-flex/" target="_blank" rel="noopener">拥抱未来的CSS布局方式：flex与grid布局</a></p>
+<p><a href="http://chris.house/blog/a-complete-guide-css-grid-layout/" target="_blank" rel="noopener">A Complete Guide to CSS Grid Layout</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/28/聊聊关于浏览器的那些事儿(1)/" rel="next" title="聊聊关于浏览器的那些事儿">
+                <i class="fa fa-chevron-left"></i> 聊聊关于浏览器的那些事儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/30/自定义浏览器返回逻辑/" rel="prev" title="自定义浏览器返回逻辑">
+                自定义浏览器返回逻辑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#grid是一个趋势"><span class="nav-number">1.</span> <span class="nav-text">grid是一个趋势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grid-table2-0"><span class="nav-number">2.</span> <span class="nav-text">grid = table2.0?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个术语"><span class="nav-number">3.</span> <span class="nav-text">几个术语</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#网格容器-grid-container"><span class="nav-number">3.0.1.</span> <span class="nav-text">网格容器 grid-container</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网格线-grid-line"><span class="nav-number">3.0.2.</span> <span class="nav-text">网格线 grid-line</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网格轨道-grid-track"><span class="nav-number">3.0.3.</span> <span class="nav-text">网格轨道 grid-track</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网格单元格-grid-cell"><span class="nav-number">3.0.4.</span> <span class="nav-text">网格单元格 grid-cell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网格区域-grid-area"><span class="nav-number">3.0.5.</span> <span class="nav-text">网格区域 grid-area</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个例子"><span class="nav-number">4.</span> <span class="nav-text">两个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grid-container"><span class="nav-number">5.</span> <span class="nav-text">grid-container</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-grid-template-columns-grid-template-rows"><span class="nav-number">5.0.1.</span> <span class="nav-text">1. grid-template-columns | grid-template-rows</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grid-item"><span class="nav-number">6.</span> <span class="nav-text">grid-item</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-grid-column-start-grid-column-end-grid-row-start-grid-row-end"><span class="nav-number">6.0.1.</span> <span class="nav-text">1. grid-column-start | grid-column-end | grid-row-start | grid-row-end</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-grid-area"><span class="nav-number">6.0.2.</span> <span class="nav-text">2. grid-area</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

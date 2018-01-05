@@ -1,0 +1,673 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前阵子评论系统的后端开发同学反馈，偶尔会收到 NaN-00-00 00:00:00 这样格式的时间，希望我这边能协助排查一下。 根据提供的信息，很容易联想的格式化时间的时候出现了问题。评论系统页面并不多，并且查询条件也很类似，因此找了一个比较典型的页面开始分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="请谨慎使用nej框架提供的工具函数_$format">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/30/请谨慎使用nej框架提供的工具函数_$format/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="前阵子评论系统的后端开发同学反馈，偶尔会收到 NaN-00-00 00:00:00 这样格式的时间，希望我这边能协助排查一下。 根据提供的信息，很容易联想的格式化时间的时候出现了问题。评论系统页面并不多，并且查询条件也很类似，因此找了一个比较典型的页面开始分析。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="请谨慎使用nej框架提供的工具函数_$format">
+<meta name="twitter:description" content="前阵子评论系统的后端开发同学反馈，偶尔会收到 NaN-00-00 00:00:00 这样格式的时间，希望我这边能协助排查一下。 根据提供的信息，很容易联想的格式化时间的时候出现了问题。评论系统页面并不多，并且查询条件也很类似，因此找了一个比较典型的页面开始分析。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/30/请谨慎使用nej框架提供的工具函数_$format/"/>
+
+
+
+
+
+  <title>请谨慎使用nej框架提供的工具函数_$format | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/30/请谨慎使用nej框架提供的工具函数_$format/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                请谨慎使用nej框架提供的工具函数_$format
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T00:00:00+08:00">
+                2017-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前阵子评论系统的后端开发同学反馈，偶尔会收到 NaN-00-00 00:00:00 这样格式的时间，希望我这边能协助排查一下。</p>
+<p>根据提供的信息，很容易联想的格式化时间的时候出现了问题。评论系统页面并不多，并且查询条件也很类似，因此找了一个比较典型的页面开始分析。</p>
+<a id="more"></a>
+<p>从时间相关的参数下手，找到了 _u.<em>$format 函数的身影（代码太多了，不贴了），顺藤摸瓜，又牵扯数了\</em>$var2date的函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">_p._$var2date = <span class="function"><span class="keyword">function</span>(<span class="params">_time</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> _date = _time;</div><div class="line">    <span class="keyword">if</span> (_p._$isString(_time))&#123;</div><div class="line">        _date = <span class="keyword">new</span> <span class="built_in">Date</span>(</div><div class="line">            _h.__str2time(_time)</div><div class="line">        );</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (!_p._$isDate(_date))&#123;</div><div class="line">        _date = <span class="keyword">new</span> <span class="built_in">Date</span>(_time);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> _date;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>接着，我们来看下_h.__str2time的使用姿势:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">NEJ.define([</div><div class="line">    <span class="string">'./global.js'</span>,</div><div class="line">    <span class="string">'&#123;platform&#125;util.js'</span></div><div class="line">],<span class="function"><span class="keyword">function</span>(<span class="params">NEJ,_h,_p,_o,_f,_r</span>)</span>&#123;</div><div class="line">    </div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>请注意这里的{platform}，根据nej框架的<a href="https://github.com/genify/nej/blob/master/doc/PLATFORM.md" target="_blank" rel="noopener">平台适配系统</a>介绍，这是用于处理跨平台的配置参数。顺理成章，找到了util.js和他的兄弟util.patch.js。</p>
+<p>util.js中都是正常的实现，util.patch.js则是针对非标准浏览器的实现。</p>
+<p>大家应该都经历过，在使用new Date()时，需要先将’2017-05-25 08:20:30’ 中的 ‘-‘ 替换为 ‘/‘，否则，在一些浏览器上会存在兼容性问题。</p>
+<p>在util.patch.js中，也找到了nej用于兼容旧版浏览器的解决方案。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * YYYY-MM-DDTHH:mm:ss.sssZ格式时间串转时间戳</div><div class="line"> * @param  &#123;String&#125; 时间串</div><div class="line"> * @return &#123;Number&#125; 时间戳</div><div class="line"> */</div><div class="line">_h.__str2time = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> _reg = <span class="regexp">/-/g</span>;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">_str</span>)</span>&#123;</div><div class="line">        <span class="comment">// only support YYYY/MM/DDTHH:mm:ss</span></div><div class="line">        <span class="keyword">return</span> <span class="built_in">Date</span>.parse(_str.replace(_reg,<span class="string">'/'</span>).split(<span class="string">'.'</span>)[<span class="number">0</span>]);</div><div class="line">    &#125;;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>一切都看似很完美，按说这样处理过就不会有问题了，但是，当我掏出那个不常用的IE10浏览器来验证时，还是出现了开头所说的问题。接着，在IE10的控制台上进行了验证，确认了IE10在使用new Date()时是不支持 ‘2017-05-25 08:20:30’这种格式的。</p>
+<p>接着，经过调试，IE10并没有调用util.patch.js中的方法，那么问题就很明确了，nej的兼容性配置应该存在问题，并没有把IE10列入到需要打补丁的浏览器中。</p>
+<p>仔细看了一遍util.patch.js的文件描述:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * ------------------------------------------</div><div class="line"> * 平台适配接口实现文件</div><div class="line"> * @version  1.0</div><div class="line"> * @author   genify(caijf@corp.netease.com)</div><div class="line"> * ------------------------------------------</div><div class="line"> */</div><div class="line">NEJ.define([</div><div class="line">    <span class="string">'./util.js'</span>,</div><div class="line">    <span class="string">'base/platform'</span></div><div class="line">],<span class="function"><span class="keyword">function</span>(<span class="params">_h,_m,_p,_o,_f,_r</span>)</span>&#123;</div><div class="line">    <span class="comment">// for ie8-</span></div><div class="line">    NEJ.patch(<span class="string">'TR&lt;=4.0'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    </div><div class="line">    &#125;);</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>至此，问题就有了答案了：<br>‘for ie8-‘、TR&lt;=4.0’，这个补丁分明就是只是针对IE8以下的嘛，IE10（Trident/6.0）这种看似正常却又不完整的浏览器根本不在人家的考虑范畴内哇！</p>
+<p>总结：使用nej提供的_$format函数时，请先确保传入的是时间对象或者已经转为标准格式的 ‘2017/05/25 08:20:30’ 字符串，否则，IE10下会有兼容性问题。另外，nej框架内置的一些util函数在跨平台上并没有考虑的非常周全，需要谨慎使用。</p>
+<!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/30/Web表单/" rel="next" title="Web表单">
+                <i class="fa fa-chevron-left"></i> Web表单
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/03/呈现系统简介/" rel="prev" title="呈现系统简介">
+                呈现系统简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

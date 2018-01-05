@@ -1,0 +1,722 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="引子前段时间因为iphone 5s的摄像头坏了，但因为摄像头坏了换手机又比较可惜，无意间网上查找，5s摄像头坏掉是通病，淘宝上也因为5s的摄像头坏掉有专门的一门生意，卖新摄像头及拆机工具，所以也立马下了一单，到手后开始拆机，很惊讶，这样的一个小物件，里面的组件化做得这么好，摄像头，电池，屏幕，指纹都是一个个组件，往主板插上就可以使用。对于这么小的一个物件，居然有这么好的组件化，我们的生活中到处有组">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何进行组件化开发">
+<meta property="og:url" content="https://blog.kaolafed.com/2016/06/17/如何进行组件化开发/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="引子前段时间因为iphone 5s的摄像头坏了，但因为摄像头坏了换手机又比较可惜，无意间网上查找，5s摄像头坏掉是通病，淘宝上也因为5s的摄像头坏掉有专门的一门生意，卖新摄像头及拆机工具，所以也立马下了一单，到手后开始拆机，很惊讶，这样的一个小物件，里面的组件化做得这么好，摄像头，电池，屏幕，指纹都是一个个组件，往主板插上就可以使用。对于这么小的一个物件，居然有这么好的组件化，我们的生活中到处有组">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://georgemdallas.files.wordpress.com/2013/10/pca3.jpg?w=646">
+<meta property="og:image" content="https://georgemdallas.files.wordpress.com/2013/10/pca9.jpg?w=646">
+<meta property="og:image" content="https://georgemdallas.files.wordpress.com/2013/10/pca8.jpg?w=646">
+<meta property="og:image" content="https://haitao.nos.netease.com/13716b2554de42f3a92384dc7ef3e718.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/c964402a705e4d02bc98cd5b45a66d8a.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/95661c529d25422d876cdae0d8ea3533.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何进行组件化开发">
+<meta name="twitter:description" content="引子前段时间因为iphone 5s的摄像头坏了，但因为摄像头坏了换手机又比较可惜，无意间网上查找，5s摄像头坏掉是通病，淘宝上也因为5s的摄像头坏掉有专门的一门生意，卖新摄像头及拆机工具，所以也立马下了一单，到手后开始拆机，很惊讶，这样的一个小物件，里面的组件化做得这么好，摄像头，电池，屏幕，指纹都是一个个组件，往主板插上就可以使用。对于这么小的一个物件，居然有这么好的组件化，我们的生活中到处有组">
+<meta name="twitter:image" content="https://georgemdallas.files.wordpress.com/2013/10/pca3.jpg?w=646">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2016/06/17/如何进行组件化开发/"/>
+
+
+
+
+
+  <title>如何进行组件化开发 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2016/06/17/如何进行组件化开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何进行组件化开发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-17T00:00:00+08:00">
+                2016-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>前段时间因为iphone 5s的摄像头坏了，但因为摄像头坏了换手机又比较可惜，无意间网上查找，5s摄像头坏掉是通病，淘宝上也因为5s的摄像头坏掉有专门的一门生意，卖新摄像头及拆机工具，所以也立马下了一单，到手后开始拆机，很惊讶，这样的一个小物件，里面的组件化做得这么好，摄像头，电池，屏幕，指纹都是一个个组件，往主板插上就可以使用。对于这么小的一个物件，居然有这么好的组件化，我们的生活中到处有组件的使用，对于码农来说，组件更是必不可少，也是码农升华的必经之路。</p>
+<a id="more"></a>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>万物都是一样的表现呈现在世人面前，但每个人的解读都会有所不同，这是什么原因造成的呢？直接的影响应该是对同一件事件的认知不同，因为学习环境，知识积累的不同，同样的一个事物对每个人的认知都会有所偏差。 认知其实是经过的分析后得出的结论，无论你承不承认自己有没有经过分析，已经造成了不同的认识了。在这一节里，我想指出的是，无论什么样的一个事物，都要经过主动的分析，不要让大脑无意识的分析，主动分析的结果，会动用现在的知识体系，去分析事物表层下的一些关系。至于分析的结论正确与否，但至少我们已经有一个主动分析的意识在里面，后面就要是丰富自己的知识体系，提高和扩大自己的认识面，通过不停的学习，增加知识，积累知识，通过学习丰富知识体系，相信最后的结果是能得到一个相对正确的分析结果。</p>
+<ul>
+<li>表层现象<br><img src="https://georgemdallas.files.wordpress.com/2013/10/pca3.jpg?w=646" alt=""></li>
+</ul>
+<p>在张图，粗略一个是一堆三角形围成一圈坐在一起</p>
+<ul>
+<li>分析方法引入<br><img src="https://georgemdallas.files.wordpress.com/2013/10/pca9.jpg?w=646" alt=""></li>
+</ul>
+<p>引入水平距离的分析方法</p>
+<p><img src="https://georgemdallas.files.wordpress.com/2013/10/pca8.jpg?w=646" alt=""></p>
+<p>引入垂直距离的分析方法</p>
+<h3 id="上面的两个分析方法的引入，可以相对正解的得出第二种分析方法更能说明问题，但对于没有一定的知识积累，因为没有分析方法的引入，只能做粗略的分析，这里想强调的是分析方法是通过知识积累和经验积累所生产的，在有意识的分析前提下，需要不停的摄取知识和经验，产生不同的生析方法，最后才会越来越接近本质。"><a href="#上面的两个分析方法的引入，可以相对正解的得出第二种分析方法更能说明问题，但对于没有一定的知识积累，因为没有分析方法的引入，只能做粗略的分析，这里想强调的是分析方法是通过知识积累和经验积累所生产的，在有意识的分析前提下，需要不停的摄取知识和经验，产生不同的生析方法，最后才会越来越接近本质。" class="headerlink" title="上面的两个分析方法的引入，可以相对正解的得出第二种分析方法更能说明问题，但对于没有一定的知识积累，因为没有分析方法的引入，只能做粗略的分析，这里想强调的是分析方法是通过知识积累和经验积累所生产的，在有意识的分析前提下，需要不停的摄取知识和经验，产生不同的生析方法，最后才会越来越接近本质。"></a>上面的两个分析方法的引入，可以相对正解的得出第二种分析方法更能说明问题，但对于没有一定的知识积累，因为没有分析方法的引入，只能做粗略的分析，这里想强调的是分析方法是通过知识积累和经验积累所生产的，在有意识的分析前提下，需要不停的摄取知识和经验，产生不同的生析方法，最后才会越来越接近本质。</h3><h2 id="页面组件开发"><a href="#页面组件开发" class="headerlink" title="页面组件开发"></a>页面组件开发</h2><p>对于前端开发，如果进行组件化开发呢，还是从分析开始。<br>对于这样的一个效果图，我们能用什么样的分析方法来拆分组件呢？<br><img src="https://haitao.nos.netease.com/13716b2554de42f3a92384dc7ef3e718.jpg" alt=""></p>
+<ul>
+<li>由大到小的拆分组件</li>
+</ul>
+<p>上面的效果图，可以看出整个页面分为上面两部分，上部分是通栏的中型模块1，下部是居中的中型模块2。从大模块开始拆分模块。<br><img src="https://haitao.nos.netease.com/c964402a705e4d02bc98cd5b45a66d8a.jpg" alt=""></p>
+<ul>
+<li>拆分中型模块</li>
+</ul>
+<p>中型模块1，可以拆成一个居中的次中型模块3，在次中型模块3中，有logo模块4，登录模块5，下载模块6，可以从上面的分析看出中型模块3和中型模块2是两个大小相同的居中模块，可以应用同一组样式进行大小和居中的控制。<br>登录模块5分为左右两个模块，左边是广告图片，右边是一个tab切换的登录方式的切换，注意右上角有个小图标，也是用来切换登录方式，这样的拆份以后，上部通栏的组件都已经被拆卸出来，也基本可以照着拆卸的组件进行开发了。 下部居中的模块大的拆份是左右两栏固定宽度的布局，每左边模块是一条一条的微博，右边是一个一个的特色模块，左边微博模块还可以拆得更细，这里不做再细的拆分。右边的特色模块的拆分，外部都是标题+内容区域，这个模块的主框架，然后通过模块的扩展，再把丰富模块的表现形式，从页面上看，微博频道、热特微博才是这么模块最应该有的方式，热门话题反而是扩展出来的模块，完成自有的样式。<br><img src="https://haitao.nos.netease.com/95661c529d25422d876cdae0d8ea3533.jpg" alt=""></p>
+<ul>
+<li>拆分小模块</li>
+</ul>
+<p>拆模块，最终要能拆到不可拆为止，但太小的粒度也不利于组件的使用，所以这是一个对立面，拆到模块不能拆，也是太绝对的一个事，拆到一个认为可以独立完成一个功能，或是能提供一个独立功能，拆到这种呈度基本也可以了。所以上面的两种登录方式的模块还是有必要拆出模块来。</p>
+<ul>
+<li>注重细点</li>
+</ul>
+<p>把页面上的每一个点都扫描到，不要漏掉细节，细节处理到位了，会让一个工作成为点精之作。</p>
+<h3 id="从大到小拆分模块，把模块拆分到能提供独立功能为止。把页面想象成各种组件组合起来，就像5s一样，通过插口把组件布在页面上，组件可以脱离于页面本身独立，组件不要依赖于布局样式，在使用时根据容器节点放置组件即可。"><a href="#从大到小拆分模块，把模块拆分到能提供独立功能为止。把页面想象成各种组件组合起来，就像5s一样，通过插口把组件布在页面上，组件可以脱离于页面本身独立，组件不要依赖于布局样式，在使用时根据容器节点放置组件即可。" class="headerlink" title="从大到小拆分模块，把模块拆分到能提供独立功能为止。把页面想象成各种组件组合起来，就像5s一样，通过插口把组件布在页面上，组件可以脱离于页面本身独立，组件不要依赖于布局样式，在使用时根据容器节点放置组件即可。"></a>从大到小拆分模块，把模块拆分到能提供独立功能为止。把页面想象成各种组件组合起来，就像5s一样，通过插口把组件布在页面上，组件可以脱离于页面本身独立，组件不要依赖于布局样式，在使用时根据容器节点放置组件即可。</h3><h2 id="js的组件开发"><a href="#js的组件开发" class="headerlink" title="js的组件开发"></a>js的组件开发</h2><p>一个组件有哪些特性</p>
+<ul>
+<li>封装性</li>
+</ul>
+<p>不依赖于外部的属性和方法，自己的方法和属性也不能让外部调用，但在js里是没有强限制让外部不进行调用，在代码规范要需要区分出，哪些方法是可以外部调用，哪些方法不能让外部调，如果外部调了，可能导致组件不能正常工作。封装性还有一个表现是如何进行参数定义，一个组件让用户使用需要有好的参数说明和定义，且支持默认参数的默认值，以及组件和外部的消息通信。</p>
+<ul>
+<li>扩展性</li>
+</ul>
+<p>如何去扩展一个组件，在开发中用到的最多的是继承，还可以用组合，在继承上可以用虚函数（空函数），把对象的接口预留起来，让子类具体实现接口。在最初设计组件时，应该不会太考虑接口预留的问题。能做好尽量的解耦组件已经是一个很成功的组件了。用组合的方式可以横向的扩展组件，使组件拥有更多的功能，</p>
+<ul>
+<li>事件通信 </li>
+</ul>
+<p>在组件开始工作后，需要和外部进行事件通信，以使外部获取组件内的工作状态，同事更新组件使用者的状态。</p>
+<h3 id="综上述js组件开发，抽象组件的功能，定义组件的参数，定义组件的通信事件，以及有一套面向对象的体系支持组件的扩展。"><a href="#综上述js组件开发，抽象组件的功能，定义组件的参数，定义组件的通信事件，以及有一套面向对象的体系支持组件的扩展。" class="headerlink" title="综上述js组件开发，抽象组件的功能，定义组件的参数，定义组件的通信事件，以及有一套面向对象的体系支持组件的扩展。"></a>综上述js组件开发，抽象组件的功能，定义组件的参数，定义组件的通信事件，以及有一套面向对象的体系支持组件的扩展。</h3><h3 id="再次调强养成主动分析的意识，重视学习的重要性，为了能得出正确的分析结果，不断的学习，把学到的知识进行创新的应用，使自己在分析问题更全面，得到的结论更接近于事物"><a href="#再次调强养成主动分析的意识，重视学习的重要性，为了能得出正确的分析结果，不断的学习，把学到的知识进行创新的应用，使自己在分析问题更全面，得到的结论更接近于事物" class="headerlink" title="再次调强养成主动分析的意识，重视学习的重要性，为了能得出正确的分析结果，不断的学习，把学到的知识进行创新的应用，使自己在分析问题更全面，得到的结论更接近于事物"></a>再次调强养成主动分析的意识，重视学习的重要性，为了能得出正确的分析结果，不断的学习，把学到的知识进行创新的应用，使自己在分析问题更全面，得到的结论更接近于事物</h3>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/17/impress.js调研报告/" rel="next" title="impress.js调研报告">
+                <i class="fa fa-chevron-left"></i> impress.js调研报告
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/05/浏览器页面资源加载过程与优化/" rel="prev" title="浏览器页面资源加载过程与优化">
+                浏览器页面资源加载过程与优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">2.</span> <span class="nav-text">思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#上面的两个分析方法的引入，可以相对正解的得出第二种分析方法更能说明问题，但对于没有一定的知识积累，因为没有分析方法的引入，只能做粗略的分析，这里想强调的是分析方法是通过知识积累和经验积累所生产的，在有意识的分析前提下，需要不停的摄取知识和经验，产生不同的生析方法，最后才会越来越接近本质。"><span class="nav-number">2.1.</span> <span class="nav-text">上面的两个分析方法的引入，可以相对正解的得出第二种分析方法更能说明问题，但对于没有一定的知识积累，因为没有分析方法的引入，只能做粗略的分析，这里想强调的是分析方法是通过知识积累和经验积累所生产的，在有意识的分析前提下，需要不停的摄取知识和经验，产生不同的生析方法，最后才会越来越接近本质。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面组件开发"><span class="nav-number">3.</span> <span class="nav-text">页面组件开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从大到小拆分模块，把模块拆分到能提供独立功能为止。把页面想象成各种组件组合起来，就像5s一样，通过插口把组件布在页面上，组件可以脱离于页面本身独立，组件不要依赖于布局样式，在使用时根据容器节点放置组件即可。"><span class="nav-number">3.1.</span> <span class="nav-text">从大到小拆分模块，把模块拆分到能提供独立功能为止。把页面想象成各种组件组合起来，就像5s一样，通过插口把组件布在页面上，组件可以脱离于页面本身独立，组件不要依赖于布局样式，在使用时根据容器节点放置组件即可。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#js的组件开发"><span class="nav-number">4.</span> <span class="nav-text">js的组件开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#综上述js组件开发，抽象组件的功能，定义组件的参数，定义组件的通信事件，以及有一套面向对象的体系支持组件的扩展。"><span class="nav-number">4.1.</span> <span class="nav-text">综上述js组件开发，抽象组件的功能，定义组件的参数，定义组件的通信事件，以及有一套面向对象的体系支持组件的扩展。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#再次调强养成主动分析的意识，重视学习的重要性，为了能得出正确的分析结果，不断的学习，把学到的知识进行创新的应用，使自己在分析问题更全面，得到的结论更接近于事物"><span class="nav-number">4.2.</span> <span class="nav-text">再次调强养成主动分析的意识，重视学习的重要性，为了能得出正确的分析结果，不断的学习，把学到的知识进行创新的应用，使自己在分析问题更全面，得到的结论更接近于事物</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

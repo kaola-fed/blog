@@ -1,0 +1,700 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="如今数据驱动视图的框架已经成为前端开发的主流，如react、vue、angular等，当然还包括我们用的regular。这些框架大大提高了我们的开发效率，但同时现在的页面结构越来越复杂，虽然有这些mv*的框架，但如果我们使用不当，也会造成状态数据管理混乱，代码难以维护的困扰。 因此组件化的思想就是为了提高开发效率和后期维护的效率。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="组件的一些思考">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/08/06/组件的一些思考/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="如今数据驱动视图的框架已经成为前端开发的主流，如react、vue、angular等，当然还包括我们用的regular。这些框架大大提高了我们的开发效率，但同时现在的页面结构越来越复杂，虽然有这些mv*的框架，但如果我们使用不当，也会造成状态数据管理混乱，代码难以维护的困扰。 因此组件化的思想就是为了提高开发效率和后期维护的效率。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5706155/29003203-de472382-7ae4-11e7-94d2-d31f46bc8d76.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="组件的一些思考">
+<meta name="twitter:description" content="如今数据驱动视图的框架已经成为前端开发的主流，如react、vue、angular等，当然还包括我们用的regular。这些框架大大提高了我们的开发效率，但同时现在的页面结构越来越复杂，虽然有这些mv*的框架，但如果我们使用不当，也会造成状态数据管理混乱，代码难以维护的困扰。 因此组件化的思想就是为了提高开发效率和后期维护的效率。">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/5706155/29003203-de472382-7ae4-11e7-94d2-d31f46bc8d76.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/08/06/组件的一些思考/"/>
+
+
+
+
+
+  <title>组件的一些思考 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/08/06/组件的一些思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                组件的一些思考
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-06T00:00:00+08:00">
+                2017-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如今数据驱动视图的框架已经成为前端开发的主流，如react、vue、angular等，当然还包括我们用的regular。这些框架大大提高了我们的开发效率，但同时现在的页面结构越来越复杂，虽然有这些mv*的框架，但如果我们使用不当，也会造成状态数据管理混乱，代码难以维护的困扰。</p>
+<p>因此组件化的思想就是为了提高开发效率和后期维护的效率。</p>
+<a id="more"></a>
+<h2 id="什么是组件化"><a href="#什么是组件化" class="headerlink" title="什么是组件化"></a>什么是组件化</h2><blockquote>
+<p>一个组件只做一件事，基于功能做好职责划分。</p>
+</blockquote>
+<p>对组件的封装都是为了对数据逻辑业务的梳理，使得不同组件各司其职，即把大块的业务界面，拆分成若干小块，然后进行组装。当然这里不局限与js，其实css同样适用（如nec规范）。</p>
+<h2 id="组件的划分"><a href="#组件的划分" class="headerlink" title="组件的划分"></a>组件的划分</h2><p><img src="https://user-images.githubusercontent.com/5706155/29003203-de472382-7ae4-11e7-94d2-d31f46bc8d76.jpg" alt="module-and-components"></p>
+<h3 id="无状态组件"><a href="#无状态组件" class="headerlink" title="无状态组件"></a>无状态组件</h3><p>数据驱动视图，顾名思义视图的状态肯定是根据数据进行变化的，因此数据的状态管理就变得尤为重要。</p>
+<p>无状态组件为只接受props，根据props的不同展示出不同的样式，并且会抛出事件来通知外部组件需要的更改（<em>ps. 按照react以及vue的单向绑定原则，props传入是不能被更改的，这和regular的双向绑定不同</em>)</p>
+<blockquote>
+<p>单向绑定能更好的帮助我们控制住数据的状态，特别对于越来越复杂的前端</p>
+</blockquote>
+<h3 id="UI组件"><a href="#UI组件" class="headerlink" title="UI组件"></a>UI组件</h3><p>这部分就是我们视图上看到的各个UI单元，如输入框、tab框、表格、下拉框等等，其中有一些其实可以是我们上述所说的无状态组件，我们常见的UI库如ant-design(react)、eleme-element(vue)以及nek、kmui等。</p>
+<blockquote>
+<p>特点：复用性强，根据接受参数显示不同的视图，以及开放一些接口与外部通信。就如同一个对html标签的扩展</p>
+</blockquote>
+<h3 id="业务组件"><a href="#业务组件" class="headerlink" title="业务组件"></a>业务组件</h3><p>就是按照一个页面的业务逻辑进行划分的单元，如优惠券、商品1x2、商品1x3、倒计时等等，它们中有一些有一定的复用性，但大部分可能只会在特定的业务中使用。它们里面是由一个个UI组件组成。</p>
+<h3 id="容器组件"><a href="#容器组件" class="headerlink" title="容器组件"></a>容器组件</h3><p>一个包裹业务模块的盒子，一般来说一个业务模块的入口。它接收着业务组件所需要的所有数据，然后根据每个业务组件的需要来进行分发数据，使对应的数据进入到对应的业务组件中。如下是一个使用了redux和react的container组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import &#123;connect&#125; from &apos;react-redux&apos;;</div><div class="line"></div><div class="line">import Topic from &apos;../components/topic&apos;;</div><div class="line"></div><div class="line">const mapStateToProps = (state) =&gt; &#123;</div><div class="line">    return &#123;</div><div class="line">        info: state.topicInfo</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const mapDispatchToProps = (dispatch) =&gt; &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">export default connect(mapStateToProps, mapDispatchToProps)(Topic)</div></pre></td></tr></table></figure>
+<p>上面的container就是将topic的业务组件进行了一个包裹并将数据通过props传入给了topic。</p>
+<h2 id="组件的原则"><a href="#组件的原则" class="headerlink" title="组件的原则"></a>组件的原则</h2><ol>
+<li>state状态应尽量简单</li>
+<li>单向原则，子组件不应该影响父组件，当某个子组件删除后，只会影响此子组件的UI展示，其他组件都不应该产生影响</li>
+<li>参数的扁平化，接收的props应该尽量做到是基本数据类型。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/31/「译」PromisesA+规范/" rel="next" title="「译」Promises/A+规范">
+                <i class="fa fa-chevron-left"></i> 「译」Promises/A+规范
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/10/js 的正则表达式/" rel="prev" title="js 的正则表达式">
+                js 的正则表达式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是组件化"><span class="nav-number">1.</span> <span class="nav-text">什么是组件化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件的划分"><span class="nav-number">2.</span> <span class="nav-text">组件的划分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无状态组件"><span class="nav-number">2.1.</span> <span class="nav-text">无状态组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UI组件"><span class="nav-number">2.2.</span> <span class="nav-text">UI组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务组件"><span class="nav-number">2.3.</span> <span class="nav-text">业务组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器组件"><span class="nav-number">2.4.</span> <span class="nav-text">容器组件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件的原则"><span class="nav-number">3.</span> <span class="nav-text">组件的原则</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

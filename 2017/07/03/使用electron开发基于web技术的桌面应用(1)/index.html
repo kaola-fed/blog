@@ -1,0 +1,689 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="随着互联网的发展, 越来越多C/S模式的应用正逐渐变成B/S模式, 有些没有S端的应用, 也从桌面转移到web, 这得益于web的轻量, 开发迅速, 不用装卸等优点. 但是, web应用有一个局限–无法对文件系统执行操作. 当我们既想要web开发的快捷, 又想要对操作系统的api调用时, 基于浏览器内核的桌面开发技术应运而生.没记错的话, 有道云笔记客户端就是基于这一技术开发的, 具体解决方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用electron开发基于web技术的桌面应用">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/03/使用electron开发基于web技术的桌面应用(1)/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="随着互联网的发展, 越来越多C/S模式的应用正逐渐变成B/S模式, 有些没有S端的应用, 也从桌面转移到web, 这得益于web的轻量, 开发迅速, 不用装卸等优点. 但是, web应用有一个局限–无法对文件系统执行操作. 当我们既想要web开发的快捷, 又想要对操作系统的api调用时, 基于浏览器内核的桌面开发技术应运而生.没记错的话, 有道云笔记客户端就是基于这一技术开发的, 具体解决方案">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用electron开发基于web技术的桌面应用">
+<meta name="twitter:description" content="随着互联网的发展, 越来越多C/S模式的应用正逐渐变成B/S模式, 有些没有S端的应用, 也从桌面转移到web, 这得益于web的轻量, 开发迅速, 不用装卸等优点. 但是, web应用有一个局限–无法对文件系统执行操作. 当我们既想要web开发的快捷, 又想要对操作系统的api调用时, 基于浏览器内核的桌面开发技术应运而生.没记错的话, 有道云笔记客户端就是基于这一技术开发的, 具体解决方案">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/03/使用electron开发基于web技术的桌面应用(1)/"/>
+
+
+
+
+
+  <title>使用electron开发基于web技术的桌面应用 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/03/使用electron开发基于web技术的桌面应用(1)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用electron开发基于web技术的桌面应用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-03T00:00:00+08:00">
+                2017-07-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+<p>随着互联网的发展, 越来越多C/S模式的应用正逐渐变成B/S模式, 有些没有S端的应用, 也从桌面转移到web, 这得益于web的轻量, 开发迅速, 不用装卸等优点.</p>
+<p>但是, web应用有一个局限–无法对文件系统执行操作.</p>
+<p>当我们既想要web开发的快捷, 又想要对操作系统的api调用时, 基于浏览器内核的桌面开发技术应运而生.<br>没记错的话, 有道云笔记客户端就是基于这一技术开发的, 具体解决方案叫什么, 我忘了, 总之今天我们不介绍这个.</p>
+<a id="more"></a>
+<p>今天要介绍的, 是<a href="https://electron.atom.io/" target="_blank" rel="noopener">electron</a>.</p>
+<p>electron是基于nodejs, chromium内核, V8引擎的一套web应用执行环境.</p>
+<p>基于electron开发出来的产品, 笔者用过 文本编辑器Atom, 版本管理工具GitKraken, VSC, github desktop等. 总体来说, 除了性能偶尔比较差之外, 其他体验都是比较不错的.</p>
+<p>闲言少叙, 下面正式开始介绍使用姿势:</p>
+<ol>
+<li>安装<br>找一个你喜欢的文件夹, 打开terminal, 执行 <code>npm init</code>, 一路填下来, 就生成了一个基本的npm 项目结构, 然后执行<code>npm i electron</code></li>
+</ol>
+<p>或直接新建一个<code>package.json</code>文件, 内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;name&quot;: &quot;electron-demo&quot;,</div><div class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</div><div class="line">  &quot;main&quot;: &quot;main.js&quot;,</div><div class="line">  &quot;scripts&quot;: &#123;</div><div class="line">    &quot;start&quot;: &quot;./node_modules/.bin/electron .&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;author&quot;: &quot;your name&quot;,</div><div class="line">  &quot;license&quot;: &quot;ISC&quot;,</div><div class="line">  &quot;devDependencies&quot;: &#123;</div><div class="line">    &quot;electron&quot;: &quot;~1.6.2&quot;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后执行<code>npm i</code></p>
+<p>总之, 一个最简单的electron项目, 项目依赖方面, 只需要安装一个electron包就可以了</p>
+<p>ok, electron的开发环境准备完毕, 然后可以开始coding了.</p>
+<p>下面讲一下electron的文件组成. 一个最简单的electron项目, 需要有一个html文件作为视图, 一个后台js文件用于启动工程. 当然, 这样仅仅能渲染出一个静态的页面. 所以如果想要页面中有交互逻辑, 前台js是必不可少的.</p>
+<p>所谓前台js, 是指html文件引用到的js. 而后台js, 则是运行主进程的js. 既然提到了主进程, 就介绍下electron的进程结构.</p>
+<p>electron有两种进程: 主进程(Main Process)和渲染进程(Render Process). 主进程用来将生成<code>BrowserWindow</code>实例, 也就是网页执行的环境, 每一个BrowserWindow对象, 对应有一个渲染进程. 一个BrowserWindow被销毁, 它的渲染进程也被销毁. 主进程管理所有的网页对象和它们对应的渲染进程. 渲染进程之间是隔离的, 渲染进程只关心自己所运行的网页对象.</p>
+<p>简而言之, 主进程和渲染进程是一对多的关系.package.json中的main字段, 指向的就是主进程的逻辑入口</p>
+<p>下面来新建一个index.html文件, 内容如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">  &lt;head&gt;</div><div class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</div><div class="line">    &lt;title&gt;Test electron&lt;/title&gt;</div><div class="line">  &lt;/head&gt;</div><div class="line">  &lt;body&gt;</div><div class="line">    &lt;div id=&quot;page&quot;&gt;hello world&lt;/div&gt;</div><div class="line">  &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p>文件内容十分简单, 用浏览器打开看看, 页面里一行文字: hello world</p>
+<p>当然, 用浏览器打开, 就不是electron应用了. 我们要用electron把这个页面渲染出来.<br>前面说过, 渲染一个页面, 需要有主进程来生成BrowserWindow实例.<br>那么接下来写主进程 main.js, 代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">const &#123; app, BrowserWindow &#125; = require(&apos;electron&apos;);</div><div class="line">const path = require(&apos;path&apos;);</div><div class="line">const url = require(&apos;url&apos;);</div><div class="line"></div><div class="line">// Keep a global reference of the window object, if you don&apos;t, the window will</div><div class="line">// be closed automatically when the JavaScript object is garbage collected.</div><div class="line">let win;</div><div class="line">function loadFile(src) &#123;</div><div class="line">    win.loadURL(url.format(&#123;</div><div class="line">        pathname: path.join(__dirname, src),</div><div class="line">        protocol: &apos;file:&apos;,</div><div class="line">        slashes: true</div><div class="line">    &#125;));</div><div class="line">&#125;</div><div class="line"></div><div class="line">function createWindow() &#123;</div><div class="line">    // Create the browser window.</div><div class="line">    win = new BrowserWindow(&#123;</div><div class="line">        width: 1000,</div><div class="line">        height: 800</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    loadFile(&apos;index.html&apos;);</div><div class="line"></div><div class="line">    // 打开你喜欢的 DevTools, 看看你写的bug</div><div class="line">    win.webContents.openDevTools();</div><div class="line"></div><div class="line">    // Emitted when the window is closed.</div><div class="line">    win.on(&apos;closed&apos;, () =&gt; &#123;</div><div class="line">        win = null;</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">app.on(&apos;ready&apos;, createWindow);</div><div class="line"></div><div class="line">app.on(&apos;activate&apos;, () =&gt; &#123;</div><div class="line">    // On macOS it&apos;s common to re-create a window in the app when the</div><div class="line">    // dock icon is clicked and there are no other windows open.</div><div class="line">    if (win === null) &#123;</div><div class="line">        createWindow();</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>代码很简单, 定义了一个<code>createWindow</code>方法, 当app收到<code>ready</code>信号或<code>activate</code>信号时, 执行它.<br>从第一行的require可以看出, app是electron对外提供的一个模块, 指我们构建的这个应用.<br>createWindow方法也很简单, new了一个BrowserWindow对象, 定了个长宽, 然后调用<code>loadFile</code>方法, 加载刚才我们写好的index.html.</p>
+<p>两个文件写好了, 怎么执行呢?</p>
+<p>有两种方式.</p>
+<ol>
+<li>如果你全局安装了electron, 直接在当前代码文件路径下, 执行<code>electron .</code></li>
+<li>否则, 运行package.json里定义的命令 <code>npm run start</code></li>
+</ol>
+<p>此时, 一个浏览器窗口样的东西展现在屏幕上, 还开了devTool.</p>
+<p>到此, 一个静态的electron应用就开发好了, 它的功能就是现实一句话.</p>
+<p>下一期, 我们将讲解如何添加交互逻辑, 以及主进程和渲染进程的通信等细节.</p>
+<p>同学们, 再见 </p>
+<p>P.S. 全部实验代码可以到<a href="https://github.com/yubaoquan/electron_study" target="_blank" rel="noopener">这里</a>下载</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/03/呈现系统简介/" rel="next" title="呈现系统简介">
+                <i class="fa fa-chevron-left"></i> 呈现系统简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/03/记一次优化总结/" rel="prev" title="记一次优化总结">
+                记一次优化总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

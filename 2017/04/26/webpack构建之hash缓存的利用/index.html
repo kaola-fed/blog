@@ -1,0 +1,697 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="webpack构建之hash缓存的利用众所周知，优化一个页面的方法之一就是利用浏览器的缓存机制，在文件名不改变的情况下，使客户端不用频繁向服务端请求和重复下载相同的资源，节约了流量的开销。 现在前端的主要构建工具就是使用webpack，现在就说说使用webpack时遇到的hash的坑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack构建之hash缓存的利用">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/26/webpack构建之hash缓存的利用/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="webpack构建之hash缓存的利用众所周知，优化一个页面的方法之一就是利用浏览器的缓存机制，在文件名不改变的情况下，使客户端不用频繁向服务端请求和重复下载相同的资源，节约了流量的开销。 现在前端的主要构建工具就是使用webpack，现在就说说使用webpack时遇到的hash的坑。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/5706155/25329966/83f95b50-2910-11e7-9376-af537aa9649c.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/5706155/25329965/83f6f932-2910-11e7-9a79-f326e6357080.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.382Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack构建之hash缓存的利用">
+<meta name="twitter:description" content="webpack构建之hash缓存的利用众所周知，优化一个页面的方法之一就是利用浏览器的缓存机制，在文件名不改变的情况下，使客户端不用频繁向服务端请求和重复下载相同的资源，节约了流量的开销。 现在前端的主要构建工具就是使用webpack，现在就说说使用webpack时遇到的hash的坑。">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/5706155/25329966/83f95b50-2910-11e7-9376-af537aa9649c.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/26/webpack构建之hash缓存的利用/"/>
+
+
+
+
+
+  <title>webpack构建之hash缓存的利用 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/26/webpack构建之hash缓存的利用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                webpack构建之hash缓存的利用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T00:00:00+08:00">
+                2017-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="webpack构建之hash缓存的利用"><a href="#webpack构建之hash缓存的利用" class="headerlink" title="webpack构建之hash缓存的利用"></a>webpack构建之hash缓存的利用</h1><p>众所周知，优化一个页面的方法之一就是利用浏览器的缓存机制，在文件名不改变的情况下，使客户端不用频繁向服务端请求和重复下载相同的资源，节约了流量的开销。</p>
+<p>现在前端的主要构建工具就是使用webpack，现在就说说使用webpack时遇到的hash的坑。</p>
+<a id="more"></a>
+<p>在生产环境发布时，为了利用缓存，都会加一个标识，webpack打包时也可加入这个功能，对于一个基本的应用，最开始的用法估计这样，见如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">module.exports = &#123;</div><div class="line">    entry: &#123;</div><div class="line">        index: path.resolve(__dirname, &apos;../src/js/index.js&apos;),</div><div class="line">        index2: path.resolve(__dirname, &apos;../src/js/index2.js&apos;),</div><div class="line">        vendor: [&apos;react&apos;, &apos;react-dom&apos;] //第三方模块</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    output: &#123;</div><div class="line">        path: path.resolve(__dirname, &apos;../dist&apos;),</div><div class="line">        filename: &apos;[name].[hash:8].js&apos;,</div><div class="line">        publicPath: &apos;/&apos;</div><div class="line">    &#125;,</div><div class="line">    </div><div class="line">    module: &#123;</div><div class="line">        rules: [&#123;</div><div class="line">            test: /\.jsx?$/,</div><div class="line">            use: [&apos;babel-loader&apos;],</div><div class="line">            exclude: /node_modules/</div><div class="line">        &#125;</div><div class="line">        //省略其他loader</div><div class="line">        ]</div><div class="line">    &#125;,</div><div class="line">    </div><div class="line">    plugins: [</div><div class="line">    	 new CommonsChunkPlugin(&#123;</div><div class="line">            name: &apos;vendor&apos;</div><div class="line">        &#125;)</div><div class="line">        //省略其他plugin</div><div class="line">    ] </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打包结果如下：<br><img width="715" alt="hash1" src="https://cloud.githubusercontent.com/assets/5706155/25329966/83f95b50-2910-11e7-9376-af537aa9649c.png"></p>
+<p>这里的hash是每次编译时所计算出来的一个值，因此当任何一个文件修改，hash都将会改变，而且所打包出来的文件名也将不一样了，这样对于需频繁发布的项目不是很友好，会造成每次有新版本，用户浏览器都将重新下载所有的文件，为了避免这种情况，webpack还提供了chunkhash（<strong>注</strong>：这里提取出的css文件hash值不一样，是因为使用的是extract-text-webpack-plugin插件，它提供了自己的一个contenhash，也是对于css文件建议的一种用法，保证了css有自己独立的hash，不会受到js文件的干扰）</p>
+<p>将上述代码中的hash换成chunkhash后打包结果如下：<br><img width="647" alt="hash2" src="https://cloud.githubusercontent.com/assets/5706155/25329965/83f6f932-2910-11e7-9a79-f326e6357080.png"><br>看到每个chunk有自己单独的hash值，此时只修改某一个模块里的文件，将不会影响到其他的模块打包出的hash值了，这样也就能充分利用hash缓存了。</p>
+<hr>
+<p>你以为到此处就结束了吗，too young too simple！</p>
+<p>你可以试试改动一个文件，打包后vendor的hash值每次都是在变化的，第三方模块是最不长改动的模块，更应该被缓存住，可为什么vendor的chunkhash总是变化，是因为webpack runtime由于entry对应的Id变化而发生了变化，chunkhash的计算又依赖于runtime，因此vendor的chunkhash也发生了变化。</p>
+<p>为了解决这个问题，我们首先得保证chunkId的稳定，参考webpack2的文档<a href="https://webpack.js.org/guides/caching/" target="_blank" rel="noopener">caching</a>，可以使用HashedModuleIdsPlugin的插件(webpack1也可以使用，但需要将<a href="https://github.com/webpack/webpack/blob/master/lib/HashedModuleIdsPlugin.js" target="_blank" rel="noopener">HashedModuleIdsPlugin.js</a>自行引入)，然后就是创建一个额外的chunk来提取runtime，就是文档中说的manifest，部分代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">plugins: [</div><div class="line">    new CommonsChunkPlugin(&#123;</div><div class="line">	names: [&apos;vendor&apos;, &apos;manifest&apos;],</div><div class="line">        minChunks: Infinity</div><div class="line">    &#125;),</div><div class="line">    new webapck.HashedModuleIdsPlugin()</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>打包后将多出一个很小的manifest.js的文件，但保证了vendor的hash没有改变，对于manifest的内容我们需要优先引入，在此可以借助<a href="https://github.com/szrenwei/inline-manifest-webpack-plugin" target="_blank" rel="noopener">inline-manifest-webpack-plugin</a>将manifest内容内联进html文件中，以免多发一次js的请求，使用方式可直接参考文档。</p>
+<p>至此对于hash的变化才算真正结束，才能达到利用hash的变化真正的控制住缓存。</p>
+<p><em>PS.</em> 建议不要用webpack-md5-hash，会有坑的，见<a href="https://github.com/erm0l0v/webpack-md5-hash/issues/7" target="_blank" rel="noopener">webpack-md5-hash-issue</a></p>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p><a href="https://webpack.js.org/guides/caching/" target="_blank" rel="noopener">webpack的cache</a></p>
+<p><a href="https://github.com/webpack-contrib/extract-text-webpack-plugin" target="_blank" rel="noopener">extract-text-webpack-plugin</a></p>
+<p><a href="https://github.com/erm0l0v/webpack-md5-hash" target="_blank" rel="noopener">webpack-md5-hash</a></p>
+<p><a href="http://harttle.com/2017/04/04/using-http-cache.html" target="_blank" rel="noopener">http缓存</a></p>
+<p><a href="https://github.com/szrenwei/inline-manifest-webpack-plugin" target="_blank" rel="noopener">inline-manifest-webpack-plugin</a></p>
+<p><a href="https://github.com/erm0l0v/webpack-md5-hash/issues/7" target="_blank" rel="noopener">webpack-md5-hash-issue</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/25/SVG Sprite 使用简介/" rel="next" title="SVG Sprite 使用简介">
+                <i class="fa fa-chevron-left"></i> SVG Sprite 使用简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/28/让我们来谈谈人生：关于技术人员能力的瞎想/" rel="prev" title="让我们来谈谈人生：关于技术人员能力的瞎想">
+                让我们来谈谈人生：关于技术人员能力的瞎想 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#webpack构建之hash缓存的利用"><span class="nav-number">1.</span> <span class="nav-text">webpack构建之hash缓存的利用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料："><span class="nav-number">1.1.</span> <span class="nav-text">参考资料：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

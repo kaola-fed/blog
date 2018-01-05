@@ -1,0 +1,820 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="简介根据新出的交互设计规范，列表（table）除了有固定的显示样式以外，最主要的是需要在指定条件下对表格的头部和底部进行悬浮显示，在列表超出一屏时依然能够将头部和底部操作栏显示给用户，并对与横向宽度过长的 table 对两头的列进行固定，将重要的信息保持显示。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KLTable组件开发总结">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/13/KLTable组件开发总结/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="简介根据新出的交互设计规范，列表（table）除了有固定的显示样式以外，最主要的是需要在指定条件下对表格的头部和底部进行悬浮显示，在列表超出一屏时依然能够将头部和底部操作栏显示给用户，并对与横向宽度过长的 table 对两头的列进行固定，将重要的信息保持显示。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://og40ypzfa.bkt.clouddn.com/table.png">
+<meta property="og:image" content="http://og40ypzfa.bkt.clouddn.com/table.2.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KLTable组件开发总结">
+<meta name="twitter:description" content="简介根据新出的交互设计规范，列表（table）除了有固定的显示样式以外，最主要的是需要在指定条件下对表格的头部和底部进行悬浮显示，在列表超出一屏时依然能够将头部和底部操作栏显示给用户，并对与横向宽度过长的 table 对两头的列进行固定，将重要的信息保持显示。">
+<meta name="twitter:image" content="http://og40ypzfa.bkt.clouddn.com/table.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/13/KLTable组件开发总结/"/>
+
+
+
+
+
+  <title>KLTable组件开发总结 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/13/KLTable组件开发总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                KLTable组件开发总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-13T00:00:00+08:00">
+                2017-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>根据新出的交互设计规范，列表（table）除了有固定的显示样式以外，最主要的是需要在指定条件下对表格的头部和底部进行悬浮显示，在列表超出一屏时依然能够将头部和底部操作栏显示给用户，并对与横向宽度过长的 table 对两头的列进行固定，将重要的信息保持显示。</p>
+<a id="more"></a>
+<p>因此，对于用户而言，作为基础组件的 <a href="http://nek-ui.kaolafed.com/components/layout_KLTable_.html" target="_blank" rel="noopener">KLTable</a> 应当承担的最重要的功能就是对表格、列、底部的展现方式进行控制，将相关的逻辑集成到组件内部。</p>
+<p>KLTable 实际就是一个列表框架，列表中内容的类型、展现方式、交互等在不同的业务情景下都不尽相同，为了满足不同业务需求，则需要尽可能增加组件的的自定义功能。</p>
+<h2 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h2><h3 id="头部"><a href="#头部" class="headerlink" title="头部"></a>头部</h3><ol>
+<li>sticky（悬浮在页面）</li>
+<li>表头固定在顶部</li>
+<li>宽度可拖动</li>
+<li>多级表头</li>
+<li>表头模版自定义</li>
+<li>基础的功能：提示，升降排序</li>
+</ol>
+<h3 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h3><ol>
+<li>左右固定列</li>
+<li>内容模版自定义</li>
+<li>多选</li>
+<li>下钻内容（打开行）</li>
+</ol>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
+<li>翻页器</li>
+<li>footer 包括翻页器，水平滚动条，需要 sticky</li>
+<li>footer 自定义模版</li>
+</ol>
+<h2 id="组件结构"><a href="#组件结构" class="headerlink" title="组件结构"></a>组件结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">├─KLTableCol       列</div><div class="line">├─TableHeader      表头</div><div class="line">├─TableBody      内容区</div><div class="line">├─KLTableTemplate  模版容器</div><div class="line">├─TDElements       预设内容样式</div><div class="line">├─THElements       预设表头样式</div><div class="line">├</div><div class="line">├─index.html</div><div class="line">├─index.js</div><div class="line">├─index.mcss</div><div class="line">├─utils.js</div><div class="line">└─index.md</div></pre></td></tr></table></figure>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>表格组件主要是以列表的形式展现内容，每一列的展现形式可能都不相同，因此可以通过对不同列进行配置来确定每一列的表现形式。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><h4 id="通过数据配置"><a href="#通过数据配置" class="headerlink" title="通过数据配置"></a>通过数据配置</h4><p>从数据结构的角度看，表格列配置可以存放在数组 <code>columns</code> 当中，而内容数据则存放在 <code>source</code> 数组当中。而排序、分页这两组可选数据，则分别存放到 <code>sorting</code>，<code>paging</code> 两个对象当中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> table = &#123;</div><div class="line">    <span class="attr">columns</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">name</span>: <span class="string">'名称'</span>,</div><div class="line">            <span class="attr">key</span>: <span class="string">'name'</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">name</span>: <span class="string">'价格'</span>,</div><div class="line">            <span class="attr">key</span>: <span class="string">'price'</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">source</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">name</span>: <span class="string">'商品1'</span>,</div><div class="line">            <span class="attr">price</span>: <span class="number">100</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">name</span>: <span class="string">'商品2'</span>,</div><div class="line">            <span class="attr">price</span>: <span class="number">200</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">sorting</span>: &#123;</div><div class="line">        <span class="attr">isAsc</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">key</span>: <span class="string">'price'</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">paging</span>: &#123;</div><div class="line">        <span class="attr">current</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">totalPage</span>: <span class="number">10</span>,</div><div class="line">        <span class="attr">pageSize</span>: <span class="number">10</span>,</div><div class="line">        <span class="attr">total</span>: <span class="number">100</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">loading</span>: <span class="literal">false</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">kl-table</span></span></div><div class="line">    <span class="attr">columns</span>=<span class="string">&#123;table.columns&#125;</span></div><div class="line">    <span class="attr">source</span>=<span class="string">&#123;table.source&#125;</span></div><div class="line">    <span class="attr">paging</span>=<span class="string">&#123;table.paging&#125;</span></div><div class="line">    <span class="attr">sorting</span>=<span class="string">&#123;table.sorting&#125;</span></div><div class="line">    <span class="attr">loading</span>=<span class="string">&#123;table.loading&#125;</span></div><div class="line">/&gt;</div></pre></td></tr></table></figure>
+<h4 id="通过模版配置"><a href="#通过模版配置" class="headerlink" title="通过模版配置"></a>通过模版配置</h4><p>上面是单纯用数据来配置表格，但在某种程度上，纯数据的配置不是那么直观，因为列配置是与展示紧密相关的，如果列配置能够模版当中定义，那么表格组件在使用时，就能更好地将数据与表现进行分离。在此时，在<code>js</code>，表现层配置就能够与业务逻辑分离。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">kl-table</span></span></div><div class="line">    <span class="attr">source</span>=<span class="string">&#123;table.source&#125;</span></div><div class="line">    <span class="attr">paging</span>=<span class="string">&#123;table.paging&#125;</span></div><div class="line">    <span class="attr">sorting</span>=<span class="string">&#123;table.sorting&#125;</span></div><div class="line">    <span class="attr">loading</span>=<span class="string">&#123;table.loading&#125;</span></div><div class="line">&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"名称"</span> <span class="attr">key</span>=<span class="string">"name"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"价格"</span> <span class="attr">key</span>=<span class="string">"price"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">kl-table</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>当然，在某些需求下，列配置可能会有变动的可能，此时如果使用数据而非模版来进行列配置，列配置修改就会变得更为方便。因此保留两种配置形式是有价值的。虽让两种接口在表面上有所区别，但时间上，通过模版配置表格的场景在初始化的时候同样会构建一个 <code>columns</code>数组，在实现上是一致的。</p>
+<h4 id="通过模版进行配置的实现方式"><a href="#通过模版进行配置的实现方式" class="headerlink" title="通过模版进行配置的实现方式"></a>通过模版进行配置的实现方式</h4><p>在<code>regular</code>中，需要通过<code>{</code>#include this.$body}<code>才能将嵌套在里面的组件实例化，在实例化的过程中，</code>config<code>和</code>init`的执行顺序是:</p>
+<pre><code>名称 config
+名称 init
+信息 config
+地址 config
+地址 init
+电话 config
+电话 init
+信息 init
+</code></pre><p>在实例化的时候，要读取嵌套组件的数据，则需要在视觉父组件的<code>init</code>中进行。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">kl-table</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"名称"</span> <span class="attr">key</span>=<span class="string">"name"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"信息"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"地址"</span> <span class="attr">key</span>=<span class="string">"addr"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"电话"</span> <span class="attr">key</span>=<span class="string">"tel"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">kl-table-col</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">kl-table</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>为了方便起见，实现的时候是通过子组件向视觉父组件注入数据的形式来传递子组件包含的数据，利用了<code>this.$outer</code>来获取父组件。简化的代码如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> TableCol = BaseComponent.extend(&#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'kl-table-col'</span>,</div><div class="line">    <span class="attr">template</span>: <span class="string">'&lt;div ref="bodyContainer" style="display:none"&gt;&#123;`#include this.$body&#125;&lt;/div&gt;'</span>,</div><div class="line">    <span class="attr">init</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">this</span>._register();  </div><div class="line">    &#125;,</div><div class="line">    <span class="attr">_register</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.$outer.data._innerColumns.push(&#123;<span class="keyword">this</span>.data&#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>利用<code>this.$outer</code>属性，能够在子组件实例化的过程中逐级向上传递数据，从而构建树结构<code>columns</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// columns</span></div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'名称'</span>,</div><div class="line">        <span class="attr">key</span>: <span class="string">'name'</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'信息'</span>,</div><div class="line">        <span class="attr">children</span>: [</div><div class="line">            &#123;</div><div class="line">                <span class="attr">name</span>: <span class="string">'地址'</span>,</div><div class="line">                <span class="attr">key</span>: <span class="string">'addr'</span></div><div class="line">            &#125;,</div><div class="line">            &#123;</div><div class="line">                <span class="attr">name</span>: <span class="string">'电话'</span>,</div><div class="line">                <span class="attr">key</span>: <span class="string">'tel'</span></div><div class="line">            &#125;</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>但于内容列而言，只是一个一维数组，因此需要将<code>columns</code>中的叶都提取出来构造出一个一维数组<code>_dataColumns</code>。两个数组分别用于构建表格的表头和内容。提取时并不会进行深拷贝，所以对<code>columns</code>上各项的改动会直接映射到<code>_dataColumns</code>上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// _dataColumns</span></div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'名称'</span>,</div><div class="line">        <span class="attr">key</span>: <span class="string">'name'</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'地址'</span>,</div><div class="line">        <span class="attr">key</span>: <span class="string">'addr'</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'电话'</span>,</div><div class="line">        <span class="attr">key</span>: <span class="string">'tel'</span></div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p><code>TableBody</code> 中的模版片段<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;`#list source as item by item_index&#125;</div><div class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">  &#123;`#list _dataColumns as column by column_index&#125;</div><div class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;item[column.key]&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">  &#123;/list&#125;</div><div class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">&#123;/list&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="表头和内容区的自定义模版"><a href="#表头和内容区的自定义模版" class="headerlink" title="表头和内容区的自定义模版"></a>表头和内容区的自定义模版</h3><h4 id="通过模版kl-table-template定义"><a href="#通过模版kl-table-template定义" class="headerlink" title="通过模版kl-table-template定义"></a>通过模版<code>kl-table-template</code>定义</h4><p>其实现方式与<code>kl-table-col</code>类似，也是向父组件注入模版字符串，这里的区别在于，在定义模版时，对于插值需要特殊处理。如果在两端不加上<code>{&#39;</code>、<code>&#39;}</code>，那么进行父组件渲染的时候，<code>{item.name}</code>会被当作是父组件的插值进行解析和替换，因此可以通过插值字符串的形式绕开这一步，保留自定义模版中的插值语法。这样写虽然比较丑陋，但是有效。</p>
+<p>考虑的另一种方式，是使用其他符号替换regular默认的插值符合，例如<code>$:item.name:$</code>，在<code>kl-table-template</code>实例化的时候将两端的<code>$:</code>、<code>:$</code>再替换成<code>{</code>、<code>}</code>，但在使用<code>r-class</code>、<code>r-style</code>时的<code>{</code>、<code>}</code>也会被解析，所以还是不可行。</p>
+<p>定义时声明 <code>type</code> 为 <code>header</code> 则为表头模版，默认值是 <code>content</code>，即内容模版。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">kl-table</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">key</span>=<span class="string">"name"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">kl-table-template</span> <span class="attr">type</span>=<span class="string">"header"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">span</span>&gt;</span>名称<span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">kl-table-template</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">kl-table-template</span>&gt;</span></div><div class="line">            &#123;'<span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;item.name&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>'&#125;</div><div class="line">        <span class="tag">&lt;/<span class="name">kl-table-template</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">kl-table-col</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">kl-table</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>实际上，在完成实例化后，该模版字符串会被注入到列的<code>template</code>属性当中。</p>
+<h4 id="通过数据进行配置"><a href="#通过数据进行配置" class="headerlink" title="通过数据进行配置"></a>通过数据进行配置</h4><p>利用数组配置，可以直接将模版字符串赋予<code>template</code>，此时就不需要考虑插值的解析问题了。</p>
+<p>由于可以在js定义模版，那么其形式不应该仅限于字符串，对于不同的情景可以采用不同的形式。</p>
+<ol>
+<li>template，模版字符串；</li>
+<li>format，纯粹的字符串格式化，不对html进行渲染，保留插值语法；</li>
+<li>formatter，通过函数返回模版字符串，适用于当模版需要动态运算生成的情景。</li>
+</ol>
+<h3 id="多级表头"><a href="#多级表头" class="headerlink" title="多级表头"></a>多级表头</h3><p><code>table</code>元素是通过<code>colSpan</code>和<code>rolSpan</code>控制每个单元格左占列和行的多少。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">thead</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">th</span> <span class="attr">colspan</span>=<span class="string">"1"</span> <span class="attr">rowspan</span>=<span class="string">"2"</span>&gt;</span><span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">th</span> <span class="attr">colspan</span>=<span class="string">"2"</span> <span class="attr">rowspan</span>=<span class="string">"1"</span>&gt;</span><span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">th</span> <span class="attr">colspan</span>=<span class="string">"1"</span> <span class="attr">rowspan</span>=<span class="string">"1"</span>&gt;</span><span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">th</span> <span class="attr">colspan</span>=<span class="string">"1"</span> <span class="attr">rowspan</span>=<span class="string">"1"</span>&gt;</span><span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="http://og40ypzfa.bkt.clouddn.com/table.png" alt=""></p>
+<p>要实现多级表头，则同样需要利用这种特性，它将依赖一个二维数组。因此需要将<code>columns</code>这个树结构根据树的层级建立一个二维数组。</p>
+<p><img src="http://og40ypzfa.bkt.clouddn.com/table.2.png" alt=""></p>
+<p>模版通过嵌套<code>kl-table-col</code>进行配置</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 一个多级表头的例子--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">kl-table</span> <span class="attr">source</span>=<span class="string">&#123;table.source&#125;</span> <span class="attr">count</span>=<span class="string">&#123;count&#125;</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"name"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"info"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"addr"</span> /&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"phone"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">kl-table-col</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">kl-table</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>生成的<code>columns</code>如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// column的结构</span></div><div class="line">columns = [</div><div class="line">  &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'name'</span></div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'info'</span></div><div class="line">    children: [</div><div class="line">      &#123; <span class="attr">name</span>: <span class="string">'addr'</span> &#125;,</div><div class="line">      &#123; <span class="attr">name</span>: <span class="string">'phone'</span> &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>要将这个树的每一个节点的宽度和深度都计算出来，并映射出一个二维数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> updateHeaderSpan = <span class="function"><span class="keyword">function</span> (<span class="params">headers</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> len = headers.length;</div><div class="line">  headers.forEach(<span class="function">(<span class="params">row, rowIndex</span>) =&gt;</span> &#123;</div><div class="line">    row.forEach(<span class="function">(<span class="params">header</span>) =&gt;</span> &#123;</div><div class="line">      header._headerColSpan = header._nodeWidth;</div><div class="line">      header._headerRowSpan = len - rowIndex - (header._nodeDepth - <span class="number">1</span>);</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line">&#125;;</div><div class="line"><span class="comment">// 转化headers的方法</span></div><div class="line">_.getHeaders = <span class="function"><span class="keyword">function</span> (<span class="params">_columns</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> headers = [];</div><div class="line">  <span class="keyword">const</span> extractHeaders = <span class="function"><span class="keyword">function</span> (<span class="params">columns, depth</span>) </span>&#123;</div><div class="line">    columns.forEach(<span class="function">(<span class="params">column</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">if</span> (hasChildren(column)) &#123;</div><div class="line">        extractHeaders(column.children, depth + <span class="number">1</span>);</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">if</span> (!headers[depth]) &#123;</div><div class="line">        headers[depth] = [];</div><div class="line">      &#125;</div><div class="line">      <span class="comment">// 计算深度和宽度</span></div><div class="line">      <span class="keyword">if</span> (hasChildren(column)) &#123;</div><div class="line">        column._nodeDepth =</div><div class="line">          <span class="number">1</span> +</div><div class="line">          column.children.reduce(</div><div class="line">            <span class="function">(<span class="params">previous, current</span>) =&gt;</span> (</div><div class="line">              current._nodeDepth &gt; previous</div><div class="line">                ? current._nodeDepth</div><div class="line">                : previous</div><div class="line">            ),</div><div class="line">            <span class="number">0</span>,</div><div class="line">          );</div><div class="line">        column._nodeWidth = column.children.reduce(</div><div class="line">          <span class="function">(<span class="params">previous, current</span>) =&gt;</span> previous + (current._nodeWidth || <span class="number">0</span>),</div><div class="line">          <span class="number">0</span>,</div><div class="line">        );</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        column._nodeDepth = <span class="number">1</span>;</div><div class="line">        column._nodeWidth = <span class="number">1</span>;</div><div class="line">      &#125;</div><div class="line">      headers[depth].push(column);</div><div class="line">    &#125;);</div><div class="line">  &#125;;</div><div class="line">  extractHeaders(_columns, <span class="number">0</span>);</div><div class="line">  <span class="keyword">return</span> updateHeaderSpan(headers);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 生成的二维数组</span></div><div class="line">headers = [</div><div class="line">  [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">name</span>: <span class="string">'name'</span>,</div><div class="line">      <span class="attr">_nodeDepth</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_nodeWidth</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_headerColSpan</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_headerRowSpan</span>: <span class="number">2</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">name</span>: <span class="string">'info'</span>,</div><div class="line">      <span class="attr">_nodeDepth</span>: <span class="number">2</span>,</div><div class="line">      <span class="attr">_nodeWidth</span>: <span class="number">2</span>,</div><div class="line">      <span class="attr">_headerColSpan</span>: <span class="number">2</span>,</div><div class="line">      <span class="attr">_headerRowSpan</span>: <span class="number">1</span></div><div class="line">    &#125;</div><div class="line">  ],ee</div><div class="line">  [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">name</span>: <span class="string">'addr'</span>,</div><div class="line">      <span class="attr">_nodeDepth</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_nodeWidth</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_headerColSpan</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_headerRowSpan</span>: <span class="number">1</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">name</span>: <span class="string">'phone'</span>,</div><div class="line">      <span class="attr">_nodeDepth</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_nodeWidth</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_headerColSpan</span>: <span class="number">1</span>,</div><div class="line">      <span class="attr">_headerRowSpan</span>: <span class="number">1</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">]</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 简化的模版片段--&gt;</span></div><div class="line">&#123;`#list headers as headerRow by headerRow_index&#125;</div><div class="line">  <span class="tag">&lt;<span class="name">tr</span> <span class="attr">class</span>=<span class="string">"tb_hd_tr"</span>&gt;</span></div><div class="line">    &#123;`#list headerRow as header by header_index&#125;</div><div class="line">      <span class="tag">&lt;<span class="name">th</span></span></div><div class="line">        <span class="attr">colspan</span>=<span class="string">&#123;header._headerColSpan&#125;</span></div><div class="line">        <span class="attr">rowspan</span>=<span class="string">&#123;header._headerRowSpan&#125;</span></div><div class="line">        &gt;</div><div class="line">          &#123;header.name&#125;</div><div class="line">      <span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">    &#123;/list&#125;</div><div class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">&#123;/list&#125;</div></pre></td></tr></table></figure>
+<h3 id="表头-fixed-与-sticky"><a href="#表头-fixed-与-sticky" class="headerlink" title="表头 fixed 与 sticky"></a>表头 fixed 与 sticky</h3><p>在页面可视范围有限的情况下，表头、列的固定能够提升用户的使用体验。对于表头的固定，通常有两种实现方式，固定在表格中，或者悬浮在页面顶部。</p>
+<p>参考饿了么的组件库<code>element</code>，它是采用了前一种方式，主要原理是将表格拆分成两部分，分别是表头和内容，当需要固定表头时，实际上就是设置内容的高度，并使其可以滚动。</p>
+<p>但在我们的交互规范中，是使用 sticky 方式，将表头固定在页面顶部。实现方式是，比较滚动的高度与表格的位置，满足条件时通过<code>position:fixed</code>定位使能悬浮。在表头脱离表格时，设置一个与表头同高的占位 <code>div</code>占位，防止内容上移。</p>
+<p>尽管两种固定模式不太一样，但都可以基于同一种结构实现，因此两种模式可以共存，可以选择保留两种固定模式。</p>
+<p>而对于水平滚动条和表格底部的分页器，我们可以将二者放到<code>table_footer</code>中，同样利用<code>sticky</code>的方式来进行固定，使得表格头尾固定，方便操作。</p>
+<h4 id="fixed"><a href="#fixed" class="headerlink" title="fixed"></a>fixed</h4><p>表头固定在表格上，通过样式进行控制。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"kl_table_header"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">table-header</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"kl_table_body"</span> <span class="attr">style</span>=<span class="string">"overflow: auto"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">table-body</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="sticky"><a href="#sticky" class="headerlink" title="sticky"></a>sticky</h4><ol>
+<li>滚动监听</li>
+</ol>
+<p>由于滚动的容器不一定是页面，因此需要指定滚动监听的对象，默认监听<code>window</code>的滚动，否则通过<code>document.querySelector(scrollParent)</code>获取监听对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">_getScrollParentNode() &#123;</div><div class="line">  <span class="keyword">const</span> data = <span class="keyword">this</span>.data;</div><div class="line">  <span class="keyword">if</span> (data.scrollParentNode) &#123;</div><div class="line">    <span class="keyword">return</span> data.scrollParentNode;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (data.scrollParent) &#123;</div><div class="line">    <span class="keyword">return</span> (data.scrollParentNode =</div><div class="line">      <span class="built_in">document</span>.querySelector(data.scrollParent) || <span class="built_in">window</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> (data.scrollParentNode = <span class="built_in">window</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>位置计算</li>
+</ol>
+<p>页面滚动高度</p>
+<p><code>scrollY = window.pageYOffset || document.documentElement.scrollTop</code></p>
+<p>非页面容器滚动高度</p>
+<p><code>scrollY = scrollParentNode.scrollTop</code></p>
+<p>表格位于页面中的高度，需要利用<code>getBoundingClientRect</code>方法计算</p>
+<p><code>tableTop = tableRect.top - parentRect.top + scrollParentNode.scrollTop</code></p>
+<p><code>tableBottom = tableRect.bottom - parentRect.top + scrollParentNode.scrollTop</code></p>
+<p>通过比较表格位置与容器滚动高度的大小，判断是否<code>sticky</code>悬浮显示的状态。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(scrollY + headerHeight &gt; tableBottom</div><div class="line">  || scrollY &lt; tableTop) &#123;</div><div class="line">  <span class="keyword">this</span>.data.stickyActive = <span class="literal">false</span>;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">  <span class="keyword">this</span>.data.stickyActive = <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>表头占位</li>
+</ol>
+<p>当表头利用<code>position:fixed</code>属性固定到页面中后，表头原来的位置就会有空缺，需要设置一个占位用的block防止表格下部往上跳。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"header_placeholder"</span></span></div><div class="line">  <span class="attr">r-style</span>=<span class="string">&#123;</span>`&#123;</div><div class="line">    <span class="attr">height:</span> <span class="attr">stickyHeader</span> &amp;&amp; <span class="attr">stickyHeaderActive</span> ? <span class="attr">headerHeight</span> + '<span class="attr">px</span>' <span class="attr">:</span> <span class="attr">0</span></div><div class="line">&#125;`&#125;/&gt;</div></pre></td></tr></table></figure>
+<h3 id="列固定"><a href="#列固定" class="headerlink" title="列固定"></a>列固定</h3><p>列固定的实现用到了则是对表格本地进行拷贝，利用<code>position:absolute</code>固定到左边和右边，固定表格的可视宽度由固定列的总宽度决定，从而实现显示所需固定列的效果。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 列固定的基本原理 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></div><div class="line">   <span class="selector-class">.table-fixed</span> &#123;</div><div class="line">      <span class="attribute">position</span>: absolute;</div><div class="line">      <span class="attribute">overflow</span>: hidden;</div><div class="line">   &#125;</div><div class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"table-fixed"</span> <span class="attr">style</span>=<span class="string">"width:&#123;fixedTableWidth&#125;;left:0;"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">table-header</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">table-body</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"table-fixed table-fixed-right"</span> <span class="attr">style</span>=<span class="string">"width:&#123;fixedTableRightWidth&#125;;right:0;"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">table-header</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">table-body</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="可变列宽"><a href="#可变列宽" class="headerlink" title="可变列宽"></a>可变列宽</h3><p>参考<a href="http://element.eleme.io/#/zh-CN/component/table" target="_blank" rel="noopener">element-table</a>的实现方式，检查鼠标在表头的位置，进入可拖动范围后更改鼠标图案，在第一次点击时记录鼠标与表格左边的距离，鼠标释放后再次记录鼠标与左边的距离，然后计算当前拖动列表的新宽度，并通过数据绑定更新到表格的各个部件。</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>宽度计算</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line">_startResizing(e, header, headerIndex, headerTrIndex) &#123;</div><div class="line">  <span class="keyword">const</span> self = <span class="keyword">this</span>;</div><div class="line">  <span class="comment">// 表格左边的位置</span></div><div class="line">  <span class="keyword">const</span> tableLeft = self.$parent.$refs.table.getBoundingClientRect().left;</div><div class="line">  <span class="comment">// 根据id获取当前要拖动宽度的表头</span></div><div class="line">  <span class="keyword">const</span> headerEle = self.$refs[<span class="string">`table_th_<span class="subst">$&#123;headerTrIndex&#125;</span>_<span class="subst">$&#123;headerIndex&#125;</span>   `</span>];</div><div class="line">  <span class="comment">// 获取拖动表头的左边位置</span></div><div class="line">  <span class="keyword">const</span> headerLeft = headerEle.getBoundingClientRect().left;</div><div class="line"></div><div class="line">  header._resizeParam = &#123;</div><div class="line">    tableLeft,</div><div class="line">    headerLeft,</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="comment">// 获取标尺</span></div><div class="line">  <span class="keyword">const</span> resizeProxy = self.$parent.$refs.resizeProxy;</div><div class="line">  resizeProxy.style.visibility = <span class="string">'visible'</span>;</div><div class="line"></div><div class="line">  <span class="comment">// 鼠标移动时更改标尺的位置</span></div><div class="line">  <span class="keyword">const</span> onMouseMove = <span class="function"><span class="keyword">function</span> (<span class="params">_e</span>) </span>&#123;</div><div class="line">    _e.preventDefault();</div><div class="line"></div><div class="line">    <span class="keyword">const</span> proxyLeft = _e.pageX - tableLeft;</div><div class="line">    <span class="keyword">const</span> headerWidth = _e.pageX - headerLeft;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (headerWidth &gt; HEADER_MIN_WIDTH) &#123;</div><div class="line">      resizeProxy.style.left = <span class="string">`<span class="subst">$&#123;proxyLeft&#125;</span>px`</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="comment">// 鼠标放开时开始设置新的宽度</span></div><div class="line">  <span class="comment">// 当更改一个多级表头的宽度时，所拖动的是该节点下所有最又边节点的宽度</span></div><div class="line">  <span class="keyword">const</span> onMouseUp = <span class="function"><span class="keyword">function</span> (<span class="params">_e</span>) </span>&#123;</div><div class="line">    _e.preventDefault();</div><div class="line">    resizeProxy.style.visibility = <span class="string">'hidden'</span>;</div><div class="line">  </div><div class="line">    <span class="comment">// 当前鼠标到表格最左边的距离</span></div><div class="line">    <span class="keyword">const</span> headerWidth = _e.pageX - headerLeft;</div><div class="line">    <span class="comment">// 获取当前header节点的宽度信息</span></div><div class="line">    <span class="comment">// 当前节点总的宽度</span></div><div class="line">    <span class="comment">// 当前节点的最右边一个叶节点的宽度</span></div><div class="line">    <span class="keyword">const</span> leftLeavesWidth = getLeftLeavesWidth(header);</div><div class="line">    setColumnWidth(</div><div class="line">      header,</div><div class="line">    </div><div class="line">      <span class="comment">// headerWidth - leftLeavesWidth 则是新的列宽度</span></div><div class="line">      headerWidth - leftLeavesWidth,</div><div class="line">    );</div><div class="line"></div><div class="line">    self.$emit(<span class="string">'columnresize'</span>, &#123;</div><div class="line">      <span class="attr">sender</span>: self,</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="built_in">document</span>.removeEventListener(<span class="string">'mousemove'</span>, onMouseMove);</div><div class="line">    <span class="built_in">document</span>.removeEventListener(<span class="string">'mouseup'</span>, onMouseUp);</div><div class="line"></div><div class="line">    header._isDragging = <span class="literal">false</span>;</div><div class="line">    self._disableResize();</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="built_in">document</span>.addEventListener(<span class="string">'mousemove'</span>, onMouseMove);</div><div class="line">  <span class="built_in">document</span>.addEventListener(<span class="string">'mouseup'</span>, onMouseUp);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 计算当前表头节点下非最右边叶节点列的总宽度</span></div><div class="line"><span class="keyword">const</span> getLeftLeavesWidth = <span class="function"><span class="keyword">function</span> (<span class="params">column</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> info = getColumnWidth(column);</div><div class="line">  <span class="comment">// leftLeavesWidth = widthInfo.width - widthInfo.lastLeafWidth</span></div><div class="line">  <span class="keyword">return</span> info.width - info.lastLeafWidth;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 计算出当前表头节点的总宽度和最后一个叶节点的宽度。</span></div><div class="line"><span class="keyword">const</span> getColumnWidth = <span class="function"><span class="keyword">function</span> (<span class="params">column</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> ret = &#123;</div><div class="line">    <span class="attr">width</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">lastLeafWidth</span>: <span class="number">0</span>,</div><div class="line">  &#125;;</div><div class="line">  <span class="keyword">if</span> (hasChildren(column)) &#123;</div><div class="line">    column.children.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">const</span> tmp = getColumnWidth(item);</div><div class="line">      <span class="keyword">if</span> (index === column.children.length - <span class="number">1</span>) &#123;</div><div class="line">        ret.lastLeafWidth = tmp.width;</div><div class="line">      &#125;</div><div class="line">      ret.width += tmp.width;</div><div class="line">    &#125;);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">width</span>: column._width,</div><div class="line">      <span class="attr">lastLeafWidth</span>: column._width,</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> ret;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 找到该节点下最右边一个节点并设置列宽度</span></div><div class="line"><span class="keyword">const</span> setColumnWidth = <span class="function"><span class="keyword">function</span> (<span class="params">column, width</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> children = column.children;</div><div class="line">  <span class="keyword">if</span> (hasChildren(column)) &#123;</div><div class="line">    setColumnWidth(children[children.length - <span class="number">1</span>], width);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  column._width = <span class="built_in">Math</span>.max(width, HEADER_MIN_WIDTH);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="下钻"><a href="#下钻" class="headerlink" title="下钻"></a>下钻</h3><p>目前功能还没有完善，初步的设计方案与其他自定义模版类似，<code>table.template</code>的<code>type</code>设置为<code>expand</code> 。也可以直接赋值<code>expandTemplate</code>字段定义下钻内容的模版。</p>
+<p>通过<code>column.expandable &amp;&amp; !item.disexpandable</code>控制是否可以下钻，支持多个下钻的列对应不同的模版</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">_onExpand(item, itemIndex, column) &#123;</div><div class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.data.fixedCol) &#123;</div><div class="line">    <span class="keyword">this</span>._expandTr(item, itemIndex, column);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">this</span>.$emit(<span class="string">'expand'</span>, &#123;</div><div class="line">    <span class="attr">sender</span>: <span class="keyword">this</span>,</div><div class="line">    <span class="attr">expand</span>: item.expand,</div><div class="line">    column,</div><div class="line">    item,</div><div class="line">    <span class="attr">index</span>: itemIndex,</div><div class="line">  &#125;);</div><div class="line">&#125;,</div><div class="line">_expandTr(item, itemIndex, column) &#123;</div><div class="line">  item._expanddingColumn = column;</div><div class="line">  item.expand = !item.expand;</div><div class="line">  <span class="keyword">if</span> (column.expandable) &#123;</div><div class="line">    <span class="keyword">this</span>._updateSubTrHeight(item, itemIndex);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;`#if item.expand&#125;</div><div class="line"><span class="tag">&lt;<span class="name">tr</span> <span class="attr">class</span>=<span class="string">"tb_bd_tr td_bd_tr_nohover"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">td</span> <span class="attr">ref</span>=<span class="string">"td&#123;item_index&#125;"</span></span></div><div class="line">    <span class="attr">r-style</span>=<span class="string">&#123;</span>`&#123;</div><div class="line">        <span class="attr">height:</span> <span class="attr">item._expandHeight</span> &amp;&amp; <span class="attr">fixedCol</span> ? <span class="attr">item._expandHeight</span> + '<span class="attr">px</span>' <span class="attr">:</span> '<span class="attr">auto</span>'</div><div class="line">    &#125;`&#125;</div><div class="line">    <span class="attr">class</span>=<span class="string">"m-sub-protable-td &#123;column.tdClass&#125;"</span></div><div class="line">    <span class="attr">colspan</span>=<span class="string">&#123;_dataColumns.length&#125;</span>&gt;</div><div class="line">      &#123;`#include item._expanddingColumn.expandTemplate&#125;</div><div class="line">  <span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">&#123;/if&#125;</div></pre></td></tr></table></figure>
+<p>使用例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">kl-table</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"名称"</span> <span class="attr">key</span>=<span class="string">"name"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-template</span> <span class="attr">type</span>=<span class="string">"expand"</span>&gt;</span></div><div class="line">      &#123;'<span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;item.name&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>'&#125;</div><div class="line">    <span class="tag">&lt;/<span class="name">kl-table-template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">kl-table-col</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">kl-table</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="自定义事件传递"><a href="#自定义事件传递" class="headerlink" title="自定义事件传递"></a>自定义事件传递</h3><p>内容和表头都可以自定义模版，那么相关的时间需要传递出来可以利用 <code>emit(&#39;eventtype&#39;, event)</code> 将事件抛出，并可在表格中可以绑定该事件。</p>
+<p>由于是表头和内容都是独立的组件，因此不能直接调用<code>this.$emit</code>触发事件，可以调用封装过的<code>this.emit</code>来进行触发。</p>
+<p>当然也可以直接通过<code>this.$table.$parent</code>调用外部方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">emit(...args) &#123;</div><div class="line">  this.$parent.$emit.call(this.$parent, ...args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">kl-table</span> <span class="attr">on-linkclick</span>=<span class="string">&#123;this.onLinkClick($event)&#125;</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">kl-table-col</span> <span class="attr">name</span>=<span class="string">"title"</span> <span class="attr">key</span>=<span class="string">"title"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">kl-table-template</span>&gt;</span></div><div class="line">      &#123;'<span class="tag">&lt;<span class="name">a</span> <span class="attr">on-click</span>=<span class="string">&#123;this.emit(</span>'<span class="attr">linkclick</span>', <span class="attr">item</span>)&#125;&gt;</span>&#123;item.title&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span>'&#125;</div><div class="line">    <span class="tag">&lt;/<span class="name">kl-table-template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">kl-table-col</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">kl-table</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="filter-注册实现"><a href="#filter-注册实现" class="headerlink" title="filter 注册实现"></a>filter 注册实现</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> oldFilterFunc = KLTable.filter;</div><div class="line"></div><div class="line">KLTable.filter = <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>) </span>&#123;</div><div class="line">  TableHeader.filter(...args);</div><div class="line">  TableBody.filter(...args);</div><div class="line">  oldFilterFunc.apply(KLTable, args);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="未实现的功能"><a href="#未实现的功能" class="headerlink" title="未实现的功能"></a>未实现的功能</h3><ol>
+<li>多级内容的展示</li>
+</ol>
+<p>正如多级表头的实现，需要一个二维数组才能利用<code>rowspan</code>、<code>colspan</code>实现多级展示，但在实际的业务当中，所取得的没一行的<code>item</code>的数据格式、字段都难以确定，如何转换为一个二维数组是个令人头疼的问题。</p>
+<ol>
+<li>下钻</li>
+</ol>
+<p>功能尚未完善，因为还没有具体的交互规范，但基本的功能设计已经完成，如上文所述。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ol>
+<li>对不同业务场景的适应性。</li>
+</ol>
+<p>由于不同的项目中有不同的应用场景和需求，在开发初期，考虑得不够周全，随着组件在业务中投入使用，收集到了许多问题和功能需求，因此在不断地往组件上添加属性、接口。但还是要尽可能得保持组件的简洁，因为简洁才容易使用，各项功能之间的影响和干扰会容易得到控制。</p>
+<ol>
+<li>性能优化。</li>
+</ol>
+<p>在组件有部分功能需要使用到定时器，用于更新某些属性。因为是在非Regular组件范围内，因此在更新时一般会用到<code>this.$update</code>方法。<code>this.$update</code>执行后，会向上”冒泡”到它的父组件上，直到根组件或设置了<code>isolate</code>属性的组件为止，因此频繁的在定时器中调用<code>this.$update</code>是可能会导致大批的Regular组件强制进入到<code>$digest</code>过程中，降低页面性能。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 容易导致性能低的写法</span></div><div class="line">setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">this</span>.data.prop = <span class="keyword">this</span>.getProp();</div><div class="line">  <span class="keyword">this</span>.$update();</div><div class="line">  <span class="comment">// this.$update('prop', this.getProp());</span></div><div class="line">&#125;, <span class="number">200</span>);</div></pre></td></tr></table></figure>
+<p>因此需要尽可能地减少<code>this.$udpate</code>的调用。如果确实有要调用<code>this.$update</code>的地方，则可以先行对该值进行判断，然后再调用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">updateData(key, val) &#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.data[key] !== val) &#123;</div><div class="line">        <span class="keyword">this</span>.$update(key, val);</div><div class="line">    &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<h2 id="links"><a href="#links" class="headerlink" title="links"></a>links</h2><p><a href="https://github.com/kaola-fed/nek-ui/tree/master/src/js/components/layout/KLTable" target="_blank" rel="noopener">code</a></p>
+<p><a href="http://nek-ui.kaolafed.com/components/layout_KLTable_.html" target="_blank" rel="noopener">demo</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://element.eleme.io/#/zh-CN/component/table" target="_blank" rel="noopener">element-table</a></p>
+<p>by <a href="https://github.com/elcarim5efil" target="_blank" rel="noopener">Elcarim</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/09/js事件捕获、冒泡一些容易忽略的方面/" rel="next" title="js事件捕获、冒泡一些容易忽略的方面">
+                <i class="fa fa-chevron-left"></i> js事件捕获、冒泡一些容易忽略的方面
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/16/关于Git冲突解决引入问题的思考/" rel="prev" title="关于Git冲突解决引入问题的思考">
+                关于Git冲突解决引入问题的思考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主要功能"><span class="nav-number">2.</span> <span class="nav-text">主要功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#头部"><span class="nav-number">2.1.</span> <span class="nav-text">头部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内容"><span class="nav-number">2.2.</span> <span class="nav-text">内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">2.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件结构"><span class="nav-number">3.</span> <span class="nav-text">组件结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口"><span class="nav-number">4.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方式"><span class="nav-number">4.1.</span> <span class="nav-text">使用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过数据配置"><span class="nav-number">4.1.1.</span> <span class="nav-text">通过数据配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过模版配置"><span class="nav-number">4.1.2.</span> <span class="nav-text">通过模版配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过模版进行配置的实现方式"><span class="nav-number">4.1.3.</span> <span class="nav-text">通过模版进行配置的实现方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表头和内容区的自定义模版"><span class="nav-number">4.2.</span> <span class="nav-text">表头和内容区的自定义模版</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过模版kl-table-template定义"><span class="nav-number">4.2.1.</span> <span class="nav-text">通过模版kl-table-template定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过数据进行配置"><span class="nav-number">4.2.2.</span> <span class="nav-text">通过数据进行配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多级表头"><span class="nav-number">4.3.</span> <span class="nav-text">多级表头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表头-fixed-与-sticky"><span class="nav-number">4.4.</span> <span class="nav-text">表头 fixed 与 sticky</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fixed"><span class="nav-number">4.4.1.</span> <span class="nav-text">fixed</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sticky"><span class="nav-number">4.4.2.</span> <span class="nav-text">sticky</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列固定"><span class="nav-number">4.5.</span> <span class="nav-text">列固定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可变列宽"><span class="nav-number">4.6.</span> <span class="nav-text">可变列宽</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现"><span class="nav-number">4.6.1.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下钻"><span class="nav-number">4.7.</span> <span class="nav-text">下钻</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义事件传递"><span class="nav-number">4.8.</span> <span class="nav-text">自定义事件传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filter-注册实现"><span class="nav-number">4.9.</span> <span class="nav-text">filter 注册实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#未实现的功能"><span class="nav-number">4.10.</span> <span class="nav-text">未实现的功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">5.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#links"><span class="nav-number">6.</span> <span class="nav-text">links</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

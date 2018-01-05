@@ -1,0 +1,823 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="翻译自：Avoiding race conditions in SharedArrayBuffers with Atomics 这是图解 SharedArrayBuffers 系列的第三篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「译」用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/21/「译」用 Atomics 避免 SharedArrayBuffers 竞争条件/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="翻译自：Avoiding race conditions in SharedArrayBuffers with Atomics 这是图解 SharedArrayBuffers 系列的第三篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.int64ago.org/1wv03eqe.png">
+<meta property="og:image" content="https://cdn.int64ago.org/d6jew52f.png">
+<meta property="og:image" content="https://cdn.int64ago.org/vpxkwldp.png">
+<meta property="og:image" content="https://cdn.int64ago.org/6a6p3wh.png">
+<meta property="og:image" content="https://cdn.int64ago.org/xfs6t7vm.png">
+<meta property="og:image" content="https://cdn.int64ago.org/1f9e9i2a.png">
+<meta property="og:image" content="https://cdn.int64ago.org/l7cfs46e.png">
+<meta property="og:image" content="https://cdn.int64ago.org/xcawm0s.png">
+<meta property="og:image" content="https://cdn.int64ago.org/bz6bbjju2.png">
+<meta property="og:image" content="https://cdn.int64ago.org/38lgf34p.png">
+<meta property="og:image" content="https://cdn.int64ago.org/r578i5n4.png">
+<meta property="og:image" content="https://cdn.int64ago.org/0zyrbyww.png">
+<meta property="og:image" content="https://cdn.int64ago.org/9p697sac.png">
+<meta property="og:image" content="https://cdn.int64ago.org/5e3o7ki9.png">
+<meta property="og:image" content="https://cdn.int64ago.org/jwatjmek.png">
+<meta property="og:image" content="https://cdn.int64ago.org/kw8xhrw.png">
+<meta property="og:image" content="https://cdn.int64ago.org/ats5rtul.png">
+<meta property="og:image" content="https://cdn.int64ago.org/7r17txa.png">
+<meta property="og:image" content="https://cdn.int64ago.org/8cxk52wm.png">
+<meta property="og:image" content="https://cdn.int64ago.org/hyaeeyq7.png">
+<meta property="og:image" content="https://cdn.int64ago.org/wc8dgia1.png">
+<meta property="og:image" content="https://cdn.int64ago.org/wem2vu9c.png">
+<meta property="og:image" content="https://cdn.int64ago.org/0ga09ftf.png">
+<meta property="og:image" content="https://cdn.int64ago.org/9ghuenzb.png">
+<meta property="og:image" content="https://cdn.int64ago.org/igxc4v0l.png">
+<meta property="og:image" content="https://cdn.int64ago.org/3ooo5g4a.png">
+<meta property="og:image" content="https://cdn.int64ago.org/g0b68hbr.png">
+<meta property="og:image" content="https://cdn.int64ago.org/1krxycg.png">
+<meta property="og:image" content="https://cdn.int64ago.org/at3pxv4c.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="「译」用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta name="twitter:description" content="翻译自：Avoiding race conditions in SharedArrayBuffers with Atomics 这是图解 SharedArrayBuffers 系列的第三篇：  内存管理碰撞课程 图解 ArrayBuffers 和 SharedArrayBuffers 用 Atomics 避免 SharedArrayBuffers 竞争条件">
+<meta name="twitter:image" content="https://cdn.int64ago.org/1wv03eqe.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/21/「译」用 Atomics 避免 SharedArrayBuffers 竞争条件/"/>
+
+
+
+
+
+  <title>「译」用 Atomics 避免 SharedArrayBuffers 竞争条件 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/21/「译」用 Atomics 避免 SharedArrayBuffers 竞争条件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                「译」用 Atomics 避免 SharedArrayBuffers 竞争条件
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T00:00:00+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>翻译自：<a href="https://hacks.mozilla.org/2017/06/avoiding-race-conditions-in-sharedarraybuffers-with-atomics/" target="_blank" rel="noopener">Avoiding race conditions in SharedArrayBuffers with Atomics</a></p>
+<p>这是图解 SharedArrayBuffers 系列的第三篇：</p>
+<ol>
+<li><a href="https://github.com/kaola-fed/blog/issues/70" target="_blank" rel="noopener">内存管理碰撞课程</a></li>
+<li><a href="https://github.com/kaola-fed/blog/issues/71" target="_blank" rel="noopener">图解 ArrayBuffers 和 SharedArrayBuffers</a></li>
+<li>用 Atomics 避免 SharedArrayBuffers 竞争条件</li>
+</ol>
+<a id="more"></a>
+<blockquote>
+<p>译者注：文中会多次出现“线程（threads）”，这个翻译其实并不准确，但不会妨碍理解</p>
+</blockquote>
+<p><a href="https://github.com/kaola-fed/blog/issues/71" target="_blank" rel="noopener">上篇文章</a>我介绍了什么情况下使用 SharedArrayBuffers 会导致竞争条件，这让使用 SharedArrayBuffers 变得很困难，我们并不希望应用开发者直接就这么使用 SharedArrayBuffers</p>
+<p>但是在多线程编程方面经验丰富的库开发者可以使用这些底层 API 创造出高级的工具，应用开发者可以直接使用这些工具而不用去直接接触 SharedArrayBuffers 和 Atomics</p>
+<p><img src="https://cdn.int64ago.org/1wv03eqe.png" alt=""></p>
+<p>即使你工作中不需要直接接触 SharedArrayBuffers 和 Atomics，我觉得去理解它的工作原理也是很有意思的。因此，在这篇文章里我会解释下哪些竞争条件会产生，以及 Atomics 是如何解决这些问题的</p>
+<p>但是，首先，什么是竞争条件呢？</p>
+<p><img src="https://cdn.int64ago.org/d6jew52f.png" alt=""></p>
+<h2 id="竞争条件：之前看过的例子"><a href="#竞争条件：之前看过的例子" class="headerlink" title="竞争条件：之前看过的例子"></a>竞争条件：之前看过的例子</h2><p>如果有两个线程使用同一个变量，那么就有可能产生竞争条件，这是最简单的情况。再具体点，假设一个线程要加载一个文件，而另一个线程要检查这个文件是否存在（译者注：这里应该是检查并设置存在标志位），它们会使用到同一个变量 fileExists 去通信</p>
+<p>初始的时候，fileExists 被设置为 false</p>
+<p><img src="https://cdn.int64ago.org/vpxkwldp.png" alt=""></p>
+<p>一旦线程 2 先运行，文件就会被加载</p>
+<p><img src="https://cdn.int64ago.org/6a6p3wh.png" alt=""></p>
+<p>但是如果线程 1 先运行，就会向用户抛一个错误，说文件不存在</p>
+<p><img src="https://cdn.int64ago.org/xfs6t7vm.png" alt=""></p>
+<p>但是这不是问题的关键，文件存在与否问题不大，真正的问题在于竞争条件</p>
+<p>即使在单线程代码里，许多 JavaScript 开发者也会遇到这类竞争条件，你不需要理解多线程就能搞明白为什么会竞争</p>
+<p>然而，有些竞争条件在单线程里就没法发生，只可能在有内存共享的多线程里发生</p>
+<h2 id="不同类型的竞争条件以及-Atomics-是如何解决的"><a href="#不同类型的竞争条件以及-Atomics-是如何解决的" class="headerlink" title="不同类型的竞争条件以及 Atomics 是如何解决的"></a>不同类型的竞争条件以及 Atomics 是如何解决的</h2><p>现在说点多线程里不同类型的竞争条件，看看如何用 Atomics 解决的。这个并没有覆盖所有情况，但是却会给你提供一些思路去理解为什么 Atomics 的 API 会提供这些方法</p>
+<p>开始之前，需要再次重申：你不应该直接使用 Atomics！写多线的代码本来就是个很苦难的事情，你应该直接使用可靠的库去处理多线程中共享内存问题</p>
+<p><img src="https://cdn.int64ago.org/1f9e9i2a.png" alt=""></p>
+<h2 id="单个运算的竞争条件"><a href="#单个运算的竞争条件" class="headerlink" title="单个运算的竞争条件"></a>单个运算的竞争条件</h2><p>假设有两个线程同时增加某个变量的值，你可能认为，无论哪个线程先运行，最终的结果是一样的</p>
+<p><img src="https://cdn.int64ago.org/l7cfs46e.png" alt=""></p>
+<p>在代码里，即使增加一个变量这种操作看起来像是一个操作，但如果看到编译后的代码，会发现并不是</p>
+<p>从 CPU 层面看，增加一个变量值需要三条指令，这是因为计算机同时有长期存储器和短期存储器（这个在其它文章里会说）</p>
+<p><img src="https://cdn.int64ago.org/xcawm0s.png" alt=""></p>
+<p>所有的线程共享同一个长期存储器（内存），但是短期存储器（寄存器）并不是共享的</p>
+<p>每个线程需要把值先从内存搬到寄存器，之后就可以在寄存器上进行计算了，再然后会把计算后的值写回内存</p>
+<p><img src="https://cdn.int64ago.org/bz6bbjju2.png" alt=""></p>
+<p>如果线程 1 的所有的操作都先执行，之后执行所有线程 2 的操作，最终会得到我们的预期的结果</p>
+<p><img src="https://cdn.int64ago.org/38lgf34p.png" alt=""></p>
+<p>但是，如果它们间隔着执行，从线程 2 的里移到寄存器的值就无法与内存的值同步了，这意味着线程 2 会无法用到线程 1 的计算结果。相反，它线程 2 会用覆盖掉线程 1 写回内存的值</p>
+<p><img src="https://cdn.int64ago.org/r578i5n4.png" alt=""></p>
+<p>原子操作做的一件事就是在多线程中让计算机按照人所想的单操作方式工作</p>
+<p>这就是为什么被叫做原子操作，因为它可以让一个包含多条指令（指令可以暂停和恢复）的操作执行起来像是一下子就完了，就好像一条指令，类似一个不可分割的原子</p>
+<p><img src="https://cdn.int64ago.org/0zyrbyww.png" alt=""></p>
+<p>使用原子操作会让加法变得有点不一样</p>
+<p><img src="https://cdn.int64ago.org/9p697sac.png" alt=""></p>
+<p>现在，我们可以使用 <code>Atomics.add</code> 了，加法执行过程中不会因为多线程而被打乱。一个线程在执行完原子操作前会阻止其它线程执行，之后其它线程才会执行自己的原子操作</p>
+<p><img src="https://cdn.int64ago.org/5e3o7ki9.png" alt=""></p>
+<p>Atomics 中帮助避免竞争的方法有：</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/add" target="_blank" rel="noopener">Atomics.add</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/sub" target="_blank" rel="noopener">Atomics.sub</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/and" target="_blank" rel="noopener">Atomics.and</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/or" target="_blank" rel="noopener">Atomics.or</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/xor" target="_blank" rel="noopener">Atomics.xor</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/exchange" target="_blank" rel="noopener">Atomics.exchange</a></li>
+</ul>
+<p>你会发现这个列表数量很有限，甚至没有除法和乘法。不过，库的开发者会提供类似这些常见原子操作的</p>
+<p>库的开发者会借助 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/compareExchange" target="_blank" rel="noopener">Atomics.compareExchange</a> 从 SharedArrayBuffer 拿到值，应用相应的操作，然后只有在自上次检查到现在没有其它线程更新的情况下才会去写回。如果期间有其它线程更新了，则会先拿到新的值重新运算一次</p>
+<h2 id="多运算的竞争条件"><a href="#多运算的竞争条件" class="headerlink" title="多运算的竞争条件"></a>多运算的竞争条件</h2><p>这些 Atomic 运算符成功避免了“单运算”中的竞争条件。但是，有时你会同时改变一个对象上的多个值（使用多个运算），在此期间，你并不希望有其它的任务也在修改这个对象。简单说，就是在你修改这个对象期间，这个对象是处于禁闭状态，其它线程不可以访问</p>
+<p>Atomics 没有提供任何方法去做这个事，但是却为库开发者提供了相应的方案，库开发者可以通过锁来达到目的</p>
+<p><img src="https://cdn.int64ago.org/jwatjmek.png" alt=""></p>
+<p>如果代码想使用某个被锁住的数据，首先它需要去请求锁，之后它会用这个锁把其它线程锁在外面，只有它可以访问和更新这块数据</p>
+<p>库开发者会通过使用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wait" target="_blank" rel="noopener">Atomics.wait</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wake" target="_blank" rel="noopener">Atomics.wake</a>，以及可选的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/compareExchange" target="_blank" rel="noopener">Atomics.compareExchange</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/store" target="_blank" rel="noopener">Atomics.store</a> 创建一个锁。想了解更多可以看下这篇文章 <a href="https://github.com/lars-t-hansen/js-lock-and-condition" target="_blank" rel="noopener">简单锁的实现</a></p>
+<p>这种情况下，线程 2 会请求到锁，并把值设置为 true，这意味着直到线程 2 交出锁前，线程 1 是无法访问的</p>
+<p><img src="https://cdn.int64ago.org/kw8xhrw.png" alt=""></p>
+<p>如果线程 1 想要访问这块数据，它会试图请求锁。但是因为锁处于被使用状态，它无法拿到，它于是只能出于等待状态直到锁可用</p>
+<p><img src="https://cdn.int64ago.org/ats5rtul.png" alt=""></p>
+<p>一旦线程 2 结束了，它会调用 unlock，锁会通知其它等待的线程自己空出来啦</p>
+<p><img src="https://cdn.int64ago.org/7r17txa.png" alt=""></p>
+<p>那个线程就会拿起锁，锁住数据供自己使用</p>
+<p><img src="https://cdn.int64ago.org/8cxk52wm.png" alt=""></p>
+<p>实现一个锁可能需要依赖很多 Atomics 的方法，但是用的最多的是下面两个：</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wait" target="_blank" rel="noopener">Atomics.wait</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wake" target="_blank" rel="noopener">Atomics.wake</a></li>
+</ul>
+<h2 id="指令重排导致的竞争条件"><a href="#指令重排导致的竞争条件" class="headerlink" title="指令重排导致的竞争条件"></a>指令重排导致的竞争条件</h2><p>这里还有第三种同步问题需要用 Atomics 处理，这类问题可能会很神奇</p>
+<p>你可能感觉不到，你写的代码很可能根本没按你期望的顺序执行，因为编译器和 CPU 会尝试重排指令使得代码更快地运行</p>
+<p>比如，你写了一些代码去计算总和，你想的是计算完了要设置一个标记</p>
+<p><img src="https://cdn.int64ago.org/hyaeeyq7.png" alt=""></p>
+<p>编译的时候需要决定每个变量该用哪个寄存器，之后就可以把代码翻译成机器的指令了</p>
+<p><img src="https://cdn.int64ago.org/wc8dgia1.png" alt=""></p>
+<p>目前为止，一切都在掌握中</p>
+<p>如果你对计算机芯片级的原理不理解的话，可能你没发现到第 2 行需要等待下才能执行</p>
+<p>大多数的计算机会把一个指令拆分为多个步骤，这使得 CPU 可以被充分利用</p>
+<p>下面是一个指令执行步骤的例子：</p>
+<ol>
+<li>从内存里拿到下一个指令</li>
+<li>指令解码，从寄存器拿值</li>
+<li>执行指令</li>
+<li>结果写回寄存器</li>
+</ol>
+<p><img src="https://cdn.int64ago.org/wem2vu9c.png" alt=""><br><img src="https://cdn.int64ago.org/0ga09ftf.png" alt=""><br><img src="https://cdn.int64ago.org/9ghuenzb.png" alt=""><br><img src="https://cdn.int64ago.org/igxc4v0l.png" alt=""></p>
+<p>这就是指令如何像流水线工人一样工作，理想的情况是第二个指令会紧紧地跟着第一个指令，当第一个指令进行到步骤 2 的时候，第二个指令进行步骤 1</p>
+<p>问题是，指令 1 和指令 2 存在依赖</p>
+<p><img src="https://cdn.int64ago.org/3ooo5g4a.png" alt=""></p>
+<p>CPU 需要一直等待直到指令 1 更新了寄存器里的 <code>subTotal</code>，但是这就使执行变慢了</p>
+<p>为了让这一切更加高效，很多编译器和 CPU 会记录好代码，找到不依赖 <code>subTotal</code> 或 <code>total</code> 的指令，然后移到两个指令之间</p>
+<p><img src="https://cdn.int64ago.org/g0b68hbr.png" alt=""></p>
+<p>这会让指令执行保持着一个很稳定的流水线</p>
+<p>因为第三行不依赖任何前两行的值，编译器和 CPU 认为它是安全的。在单线程里运行时，直到运行完不会有其它代码看到这些</p>
+<p>但是当有另一个 CPU 上的线程也在同时运行，情况就不妙了。其它线程不需要一直等到函数执行完毕，只要值写到内存里它就可以看到，因此，它会认为 <code>isDone</code> 是在 <code>total</code> 前设置的</p>
+<p>如果你用 <code>isDone</code> 作为 <code>total</code> 被计算好用于其它线程的标记，这里就会产生竞争条件</p>
+<p>Atomics 试图去解决这些问题，使用 Atomic 的时候就像在代码块上加了个围栏</p>
+<p>Atomic 操作相互之间不会重排，其它操作也不会移动到它们的周围。其中，有两个经常用到的操作：</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/load" target="_blank" rel="noopener">Atomics.load</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Atomics/store" target="_blank" rel="noopener">Atomics.store</a></li>
+</ul>
+<p><code>Atomics.store</code> 之前的代码可以保证在 <code>Atomics.store</code> 之前运行完并把值写回内存。即使非原子指令相互之间重排了，也不会移到 <code>Atomics.store</code> 的下面</p>
+<p>所有 <code>Atomics.load</code> 后面的变量可以保证只会在 <code>Atomics.load</code> 后面取得值。即使非原子指令重排了，也不会有指令会移到 <code>Atomics.load</code> 上面</p>
+<p><img src="https://cdn.int64ago.org/1krxycg.png" alt=""></p>
+<p><em>提示：这里我写的一个 while 循环使用了自旋锁，很低效。如果它在主线程上运行的话，会让你的应用程序有无响应一段时间，你不应该在实际代码里用</em></p>
+<p>再次提醒，这些方法不建议直接在应用程序里使用，库开发者会用这些创造锁供使用</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有内存共享的多线程编程是很困难的，有太多竞争条件的陷进等着你往里跳</p>
+<p><img src="https://cdn.int64ago.org/at3pxv4c.png" alt=""></p>
+<p>这就是为什么你不会喜欢直接在应用程序里使用 SharedArrayBuffers 和 Atomics。相反，你应该使用一个由多线程方面经验丰富的开发者开发的可靠的库，他肯定会内存模型研究很透彻</p>
+<p>SharedArrayBuffer 和 Atomics 才出来没多久，这样的库还没有呢，但是新的 API 已经足够去构建这些</p>
+<p>By <a href="https://github.com/int64ago" target="_blank" rel="noopener">Cody</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/19/异步请求功能性优化实践/" rel="next" title="异步请求功能性优化实践">
+                <i class="fa fa-chevron-left"></i> 异步请求功能性优化实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/21/「译」内存管理碰撞课程/" rel="prev" title="「译」内存管理碰撞课程">
+                「译」内存管理碰撞课程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#竞争条件：之前看过的例子"><span class="nav-number">1.</span> <span class="nav-text">竞争条件：之前看过的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同类型的竞争条件以及-Atomics-是如何解决的"><span class="nav-number">2.</span> <span class="nav-text">不同类型的竞争条件以及 Atomics 是如何解决的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单个运算的竞争条件"><span class="nav-number">3.</span> <span class="nav-text">单个运算的竞争条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多运算的竞争条件"><span class="nav-number">4.</span> <span class="nav-text">多运算的竞争条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指令重排导致的竞争条件"><span class="nav-number">5.</span> <span class="nav-text">指令重排导致的竞争条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

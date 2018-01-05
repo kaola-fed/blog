@@ -1,0 +1,726 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一、为什么要升级https 保护用户数据传输过程中的安全。 运营商网络劫持问题越来越严重，各种广告插入、强制跳App下载等手段严重影响用户体验，如果有违法内容或者用户被骗，还会牵连到考拉。 Apple要求iOS平台App在2017.1.1开始强制启用https，否则不允许上架App Store；启用https的应用如果要在各平台都正常，需应用内部webview打开的站点也全部启用https。 随着">
+<meta property="og:type" content="article">
+<meta property="og:title" content="考拉升级https经验">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/27/考拉升级https经验/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="一、为什么要升级https 保护用户数据传输过程中的安全。 运营商网络劫持问题越来越严重，各种广告插入、强制跳App下载等手段严重影响用户体验，如果有违法内容或者用户被骗，还会牵连到考拉。 Apple要求iOS平台App在2017.1.1开始强制启用https，否则不允许上架App Store；启用https的应用如果要在各平台都正常，需应用内部webview打开的站点也全部启用https。 随着">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="考拉升级https经验">
+<meta name="twitter:description" content="一、为什么要升级https 保护用户数据传输过程中的安全。 运营商网络劫持问题越来越严重，各种广告插入、强制跳App下载等手段严重影响用户体验，如果有违法内容或者用户被骗，还会牵连到考拉。 Apple要求iOS平台App在2017.1.1开始强制启用https，否则不允许上架App Store；启用https的应用如果要在各平台都正常，需应用内部webview打开的站点也全部启用https。 随着">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/27/考拉升级https经验/"/>
+
+
+
+
+
+  <title>考拉升级https经验 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/27/考拉升级https经验/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                考拉升级https经验
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T00:00:00+08:00">
+                2017-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、为什么要升级https"><a href="#一、为什么要升级https" class="headerlink" title="一、为什么要升级https"></a>一、为什么要升级https</h3><ol>
+<li>保护用户数据传输过程中的安全。</li>
+<li>运营商网络劫持问题越来越严重，各种广告插入、强制跳App下载等手段严重影响用户体验，如果有违法内容或者用户被骗，还会牵连到考拉。</li>
+<li>Apple要求iOS平台App在2017.1.1开始强制启用https，否则不允许上架App Store；启用https的应用如果要在各平台都正常，需应用内部webview打开的站点也全部启用https。</li>
+<li>随着web标准的更新，越来越多的新特性（比如Service Worker等）要求站点开启HTTPS才能使用；</li>
+</ol>
+<a id="more"></a>
+<h3 id="二、目标"><a href="#二、目标" class="headerlink" title="二、目标"></a>二、目标</h3><ul>
+<li>调整考拉前端代码，使其可同时支持https，http访问；</li>
+<li>与日常开发同步进行，不影响日常开发；</li>
+<li>稳步启用https，http双协议支持，最大限度避免https上线导致的问题；</li>
+</ul>
+<h3 id="三、前端做了哪些调整"><a href="#三、前端做了哪些调整" class="headerlink" title="三、前端做了哪些调整"></a>三、前端做了哪些调整</h3><p>升级范围为考拉前台所有站点，包括wap、web等工程，历史代码量大；主要是将原写死http协议的地方改造成相对协议，使其可同时兼容http及https服务；</p>
+<h4 id="1-页面内资源协议修改"><a href="#1-页面内资源协议修改" class="headerlink" title="1. 页面内资源协议修改"></a>1. 页面内资源协议修改</h4><p>页面资源包括几部分： 静态资源（js，css，ui图片，视频等等），动态内容修改</p>
+<ol>
+<li>静态资源</li>
+</ol>
+<ul>
+<li><strong>js:</strong> 调整js内部的http资源引用为相对协议，但是传递给外部应用的数据则根据 location.protocol 自动补全为当前页面使用的协议； 其次调整页面对js的引用，使js资源引用为相对协议；</li>
+<li><strong>css</strong>：调整mcss中图片等资源引用URL为相对协议；调整页面对css的引用为相对协议；</li>
+<li>打包调整： 调整打包工具配置，使其输出静态资源为相对协议；</li>
+<li><strong>图片</strong>： 调整js、ftl中的图片缩略函数，区别是否为考拉和nos的图片，判断是否支持https做相应缩略处理，防止外部图片不支持https而显示不出来；全工程查找并替换硬编码图片标签src属性；</li>
+<li><strong>外部库调整</strong>： 比如NEJ的一些模块或者工具，在URL改为相对协议是，认为其不是一个绝对地址，按相对协议解析会报错，会导致资源加载问题； 比如文件上传功能，在fallback 到flash方案时，flash信息都是写死为http，也做了调整；</li>
+</ul>
+<ol>
+<li>动态内容</li>
+</ol>
+<p>后端给数据，前端显示类型的内容：</p>
+<ul>
+<li><strong>图文详情</strong>： 用正则匹配图文详情里面的img，video标签，并替换http协议为相对协议；</li>
+<li><strong>页面内部插值输出</strong>： 调整js、ftl缩略图过滤器，为未使用过滤器的图片等资源增加过滤器，自动进行相对协议处理；</li>
+</ul>
+<ol>
+<li>页面跳转</li>
+</ol>
+<p>由于部分运营配置的页面，都是直接配置了http链接，用户点击页面的链接很容易跳回到http，不能长期在https下使用，于是我们在页面的a标签点击时自动根据当前页面协议，调整a标签的href属性的协议为当前协议，来支持正常跳转。</p>
+<h4 id="2-CSP规则调整"><a href="#2-CSP规则调整" class="headerlink" title="2. CSP规则调整"></a>2. CSP规则调整</h4><p>原CSP规则限制了页面内部加载的资源，协议必须一直，但是https上线初期缓和内容难以避免，所以在CSP中增加了规则，允许浏览器加载混合内容（仅限图片、视频）；</p>
+<h4 id="3-外部关联调整"><a href="#3-外部关联调整" class="headerlink" title="3. 外部关联调整"></a>3. 外部关联调整</h4><ul>
+<li><strong>微信支付</strong>： 调整微信支付后台登记的安全域名信息，增加https url，使其同时支持双协议； 但是此调整不能在业务高峰期做，否则可能影响线上支付；</li>
+</ul>
+<h3 id="四、升级过程"><a href="#四、升级过程" class="headerlink" title="四、升级过程"></a>四、升级过程</h3><p>这里仅仅列出主要的步骤，细节还比较多：</p>
+<ol>
+<li>前端修改双协议支持后的代码上线，并让cdn支持https</li>
+<li>公司内网双协议打开进行内部小范围试用</li>
+<li>线上双协议打开，但是不开启https强制跳转</li>
+<li>线上功能级别灰度启用https，让用户可以从一些页面开始使用https</li>
+<li>全部放开</li>
+</ol>
+<h3 id="五、后续其它可以做的"><a href="#五、后续其它可以做的" class="headerlink" title="五、后续其它可以做的"></a>五、后续其它可以做的</h3><ol>
+<li>上线h2, 已经在做了，很快开始内部测试</li>
+<li>域名收敛</li>
+<li>其它优化等</li>
+</ol>
+<p>by 渔樵</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/27/基于PhantomFlow的自动化UI测试/" rel="next" title="基于PhantomFlow的自动化UI测试">
+                <i class="fa fa-chevron-left"></i> 基于PhantomFlow的自动化UI测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/27/从 r-model 来看 regularjs/" rel="prev" title="从 r-model 来看 regularjs">
+                从 r-model 来看 regularjs <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、为什么要升级https"><span class="nav-number">1.</span> <span class="nav-text">一、为什么要升级https</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、目标"><span class="nav-number">2.</span> <span class="nav-text">二、目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、前端做了哪些调整"><span class="nav-number">3.</span> <span class="nav-text">三、前端做了哪些调整</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-页面内资源协议修改"><span class="nav-number">3.1.</span> <span class="nav-text">1. 页面内资源协议修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-CSP规则调整"><span class="nav-number">3.2.</span> <span class="nav-text">2. CSP规则调整</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-外部关联调整"><span class="nav-number">3.3.</span> <span class="nav-text">3. 外部关联调整</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、升级过程"><span class="nav-number">4.</span> <span class="nav-text">四、升级过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、后续其它可以做的"><span class="nav-number">5.</span> <span class="nav-text">五、后续其它可以做的</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

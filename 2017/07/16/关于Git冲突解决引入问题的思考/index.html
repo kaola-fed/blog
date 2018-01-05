@@ -1,0 +1,703 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="最近团队里连续出现几次代码合并问题，结合其他开发组的线上问题总结，代码冲突导致的问题确实是比较常见的一个原因，这个不得不让我们去思考，如何才能杜绝这类低级问题。 我们采用的是 master + develop + feature + hotfix 四类分支开发的方式，特性开发与问题修复很可能改动到相同的文件，工作中Git代码冲突比较常见；比如一个开发人员正在做购物车的一个新特性开发，同时线上发现问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Git冲突解决引入问题的思考">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/16/关于Git冲突解决引入问题的思考/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="最近团队里连续出现几次代码合并问题，结合其他开发组的线上问题总结，代码冲突导致的问题确实是比较常见的一个原因，这个不得不让我们去思考，如何才能杜绝这类低级问题。 我们采用的是 master + develop + feature + hotfix 四类分支开发的方式，特性开发与问题修复很可能改动到相同的文件，工作中Git代码冲突比较常见；比如一个开发人员正在做购物车的一个新特性开发，同时线上发现问">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于Git冲突解决引入问题的思考">
+<meta name="twitter:description" content="最近团队里连续出现几次代码合并问题，结合其他开发组的线上问题总结，代码冲突导致的问题确实是比较常见的一个原因，这个不得不让我们去思考，如何才能杜绝这类低级问题。 我们采用的是 master + develop + feature + hotfix 四类分支开发的方式，特性开发与问题修复很可能改动到相同的文件，工作中Git代码冲突比较常见；比如一个开发人员正在做购物车的一个新特性开发，同时线上发现问">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/16/关于Git冲突解决引入问题的思考/"/>
+
+
+
+
+
+  <title>关于Git冲突解决引入问题的思考 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/16/关于Git冲突解决引入问题的思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                关于Git冲突解决引入问题的思考
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-16T16:54:37+08:00">
+                2017-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近团队里连续出现几次代码合并问题，结合其他开发组的线上问题总结，代码冲突导致的问题确实是比较常见的一个原因，这个不得不让我们去思考，如何才能杜绝这类低级问题。</p>
+<p>我们采用的是 <code>master</code> + <code>develop</code> + <code>feature</code> + <code>hotfix</code> 四类分支开发的方式，特性开发与问题修复很可能改动到相同的文件，工作中Git代码冲突比较常见；比如一个开发人员正在做购物车的一个新特性开发，同时线上发现问题或者紧急需求插进来，需快速处理，这个时候就会导致一个文件在不同分支都有改动。</p>
+<p>从我们的工作流程上来说，开发+测试都是在特性分支上做，接近测试完成了才将代码合并到主干分支（develop或者master）；代码合并导致的问题，一般都发生在特性、修复分支合并到master或者develop的时候，因为这个时候开始，才是真正与其他分支汇合，不同的改动会发生冲突；而此时开发+测试都会认为功能基本没有问题了，就算测试在集成环境回归一遍，也不会像开发分支上那么仔细的测试，所以合并导致的问题也比较容易带入到线上。</p>
+<p>既然合并没法完全避免，我们只能去思考如何减少合并冲突，以及冲突解决的时候如何减少问题；</p>
+<a id="more"></a>
+<h4 id="如何减少合并冲突"><a href="#如何减少合并冲突" class="headerlink" title="如何减少合并冲突"></a>如何减少合并冲突</h4><ol>
+<li><p>更合理的分工</p>
+<p> 人员职责划分尽量清晰，减少互相之间的交叉，让每个功能点都只有一个人在负责或者只有一个人在主要负责，减少多个人同时改动同一份代码的几率；而如果负责人比较忙，功能需要调配到其他同事开发，在方案制定，code reivew，代码冲突处理方面都需要有原负责人参与。</p>
+</li>
+<li><p>单线程任务安排</p>
+<p> 故名思义，就是合理安排项目，减少同一个功能点，出现并行开发项目，而改动相同文件的情况；尤其要避免的是在多人共同开发时，某个人将代码来了一遍格式化的情况，会导致其他人的代码很难合并进来；对于无法避免的并行开发情况，需要在先完成开发的项目在合并到develop分支后，及时将develop反合并到其他特性开发分支，也就是说<strong>特性开发分支要经常从develop分支拉取最新的改动</strong>；</p>
+</li>
+</ol>
+<h4 id="如何减少冲突处理导致的问题"><a href="#如何减少冲突处理导致的问题" class="headerlink" title="如何减少冲突处理导致的问题"></a>如何减少冲突处理导致的问题</h4><ol>
+<li><p>合适的合并工具</p>
+<p> 合适的代码合并工具，能提供足够的改动参考信息；我自己经常用的是tortoisegit的内置合并工具，能够清晰的显示出冲突双方的改动情况，也能显示出合并后的文件实际情况。</p>
+</li>
+<li><p>合并后的代码检查</p>
+<p> 让代码实际运行一遍；如果有自动化测试，那么这个执行起来会比较容易，如果没有，那至少也需要将涉及冲突的解决后的代码实际运行一遍，比如前端代码可以使用打包工具打包一遍，验证是否存在打包问题；在浏览器里面使用mock数据运行一遍，看看是否存在低级的语法问题，功能、交互是否正常等；</p>
+<p> 引入eslint工具(比如<code>link-stage</code> + <code>husky</code>)，在precommit阶段，强制执行静态代码检查；</p>
+</li>
+<li><p>找到对的负责人review</p>
+<p> 如果冲突的不是自己负责的代码，那就要找到具体的负责人来参与代码合并，让其来做决策并实际运行一遍，看看合并结果是否正常，不要想当然的替他人做决定。</p>
+</li>
+<li><p>对Git操作不够熟悉时要多咨询</p>
+<p> 不懂的Git操作，一定要多google或者找其他人咨询。Git的操作还是有一定复杂度的，错误的操作影响也比较大，之前就发生过有人发现冲突不好解决，就把自己分支的内容给强行push上去了，导致develop分支部分代码丢失，事后处理时，还很难查到具体出问题的时间点，不好评估具体丢了哪些功能点。</p>
+</li>
+<li><p>公共代码改动，要通知各使用方变化点。</p>
+</li>
+<li>评估冲突代码的影响面，并通知QA注意侧重回归测试。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/13/KLTable组件开发总结/" rel="next" title="KLTable组件开发总结">
+                <i class="fa fa-chevron-left"></i> KLTable组件开发总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/26/不同加载方式的js脚本执行顺序的观察/" rel="prev" title="不同加载方式的js脚本执行顺序的观察">
+                不同加载方式的js脚本执行顺序的观察 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何减少合并冲突"><span class="nav-number">1.</span> <span class="nav-text">如何减少合并冲突</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何减少冲突处理导致的问题"><span class="nav-number">2.</span> <span class="nav-text">如何减少冲突处理导致的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

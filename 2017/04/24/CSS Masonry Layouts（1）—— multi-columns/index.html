@@ -1,0 +1,753 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="CSS Masonry Layouts（1）—— multi-columnsMasonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包含的内容列表的高度是不可控的，并且，每个内容列表呈堆栈状排列。称作瀑布流，最关键的是——各堆栈间没有多余的间距差（将整个布局看做一个大的容器，最新进来的内容元素，永远在高度最短的那一列上）。具体如下图所示：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS Masonry Layouts（1）—— multi-columns">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/24/CSS Masonry Layouts（1）—— multi-columns/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="CSS Masonry Layouts（1）—— multi-columnsMasonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包含的内容列表的高度是不可控的，并且，每个内容列表呈堆栈状排列。称作瀑布流，最关键的是——各堆栈间没有多余的间距差（将整个布局看做一个大的容器，最新进来的内容元素，永远在高度最短的那一列上）。具体如下图所示：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.int64ago.org/srwap2bn.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/r4oy5tyl.jpg">
+<meta property="og:image" content="https://cdn.int64ago.org/d26yfnkb.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/8tds2ivs.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/fimtkz9y.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/p7qw71k4.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/zkfzanl.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/vfhgqllp.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/mgd56d9.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/d8ducmx.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/db76hgs.jpeg">
+<meta property="og:image" content="https://cdn.int64ago.org/bzd833en.jpeg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.367Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS Masonry Layouts（1）—— multi-columns">
+<meta name="twitter:description" content="CSS Masonry Layouts（1）—— multi-columnsMasonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包含的内容列表的高度是不可控的，并且，每个内容列表呈堆栈状排列。称作瀑布流，最关键的是——各堆栈间没有多余的间距差（将整个布局看做一个大的容器，最新进来的内容元素，永远在高度最短的那一列上）。具体如下图所示：">
+<meta name="twitter:image" content="https://cdn.int64ago.org/srwap2bn.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/24/CSS Masonry Layouts（1）—— multi-columns/"/>
+
+
+
+
+
+  <title>CSS Masonry Layouts（1）—— multi-columns | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/24/CSS Masonry Layouts（1）—— multi-columns/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CSS Masonry Layouts（1）—— multi-columns
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T00:00:00+08:00">
+                2017-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="CSS-Masonry-Layouts（1）——-multi-columns"><a href="#CSS-Masonry-Layouts（1）——-multi-columns" class="headerlink" title="CSS Masonry Layouts（1）—— multi-columns"></a>CSS Masonry Layouts（1）—— multi-columns</h2><p>Masonry Layouts —— 瀑布流布局，核心是一个网格布局，每行包含的内容列表的高度是不可控的，并且，每个内容列表呈堆栈状排列。称作瀑布流，最关键的是——<strong>各堆栈间没有多余的间距差</strong>（将整个布局看做一个大的容器，最新进来的内容元素，永远在高度最短的那一列上）。具体如下图所示：</p>
+<p><img src="https://cdn.int64ago.org/srwap2bn.jpeg" alt=""></p>
+<a id="more"></a>
+<p>注：上图是 二次元社区GACHA 的插画频道，该瀑布流插件基于NEJ，交互要求是：<strong>每一列固定宽度，根据页面大小显示不同的列，页面宽度，重排，预加载一屏，滚动加载</strong>。设计的思路是：</p>
+<ol>
+<li><strong>计算列数</strong>：根据当前页面（容器）宽度，计算一行可以排放几个元素</li>
+<li><strong>初始堆栈</strong>：建立列堆栈数组，用于存放各个列堆栈的高度</li>
+<li><strong>最小索引</strong>：得到列堆栈数组中的最小值和其对应索引</li>
+<li><strong>元素定位</strong>：所有元素 <code>absolute</code> 定位，设置后续加入元素的 <code>top</code> 值为列堆栈数组中的最小值，同时设置它的 <code>left</code> 值为该索引对应列的 left 值</li>
+<li><strong>更新堆栈</strong>：更新列堆栈数组中该索引下元素的值( no.4 中的 <code>top</code> 值加元素本身的的高度)</li>
+</ol>
+<ul>
+<li>注：上面略去了对数据的预处理（包括图片的等比缩放以及属性的二次处理等）以及滚动加载的处理过程，对于预加载一屏，由于元素高度的不可控性，只能根据瀑布流元素的平均高度行预估计，然后推算出一屏需要元素的范围，然后请求相应数量。</li>
+</ul>
+<p>简化版应该是下面这样的：</p>
+<p><img src="https://cdn.int64ago.org/r4oy5tyl.jpg" alt=""></p>
+<p>但是，这样处理，表现层的东西依赖 <code>javaScript</code> 来处理，有点多余（当时确实是唯一的办法），能不能用样式来搞定呢？</p>
+<p>首先，会想到 <code>float</code> 或者 <code>inline-block</code> ，但是它们都没办法很好的控制列表之间的间距。最终得到的效果就像下面这样：</p>
+<p><img src="https://cdn.int64ago.org/d26yfnkb.jpeg" alt=""></p>
+<p>那，除此之外，就没有单纯用 <code>css</code> 可以搞定的方法了吗？近几年，<code>css</code> 的技术更新频繁，出现了很多新的布局方法：<code>multi-columns</code>、<code>Flexbox</code>、<code>Grid</code>。用上面提到的布局方法能否实现瀑布流呢？</p>
+<h3 id="multi-columns"><a href="#multi-columns" class="headerlink" title="multi-columns"></a>multi-columns</h3><p><code>multi-columns</code> 产生之初，是用来实现文本多列排列，类似报纸、杂志的文本排列方式。<code>multi-columns</code> 的<strong>列</strong>布局方式跟瀑布流的有些类似：</p>
+<p><a href="https://codepen.io/realign/full/ybeBMm/" target="_blank" rel="noopener">demo</a></p>
+<p>三列：</p>
+<p><img src="https://cdn.int64ago.org/8tds2ivs.jpeg" alt=""></p>
+<p>四列：</p>
+<p><img src="https://cdn.int64ago.org/fimtkz9y.jpeg" alt=""></p>
+<p><img src="https://cdn.int64ago.org/p7qw71k4.jpeg" alt=""></p>
+<p>猛一看很完美。但是，与使用 js 实现对比之下：</p>
+<ul>
+<li><code>multi-columns</code> 的元素是纵向排列的（在对元素先后次序有要求的情况下不理想）</li>
+<li>随着容器宽度变化，明显发现出现比较大的空白区域（从三列到四列）</li>
+</ul>
+<p>第一个问题，<code>multi-columns</code> 的这种布局方式，决定了只能纵向排列；对于第二个问题:</p>
+<h3 id="multi-columns-简略布局思想"><a href="#multi-columns-简略布局思想" class="headerlink" title="multi-columns 简略布局思想"></a>multi-columns 简略布局思想</h3><p>首先，只有在<strong>多列元素集含有块级元素、并且避免在元素内部断行并产生新列</strong>的时候，才会涉及到布局，上面的瀑布流例子，要是不避免在元素内部断行并产生新列，将会是这样的：</p>
+<p><img src="https://cdn.int64ago.org/zkfzanl.jpeg" alt=""></p>
+<p>只有将属性 <code>break-inside</code> 设置为 <code>avoid</code>，才会有块级元素的效果。</p>
+<p>回到上面说到的空白区域的问题，<code>multi-columns</code> 的整体布局会受到几个因素的影响：</p>
+<p><img src="https://cdn.int64ago.org/vfhgqllp.jpeg" alt=""></p>
+<p>总体而言，优先级：自身属性 &gt; 容器属性。</p>
+<p>当容器的高度小于按照 <code>column-count</code> 布局后的列的高度，会发生元素断裂、跨列的现象；当容器的高度大于按照 <code>column-count</code> 布局后的列的高度，单个列的高度会由最优布局算法生成。</p>
+<p>所谓最优布局算法，简单来说，就是自适应：</p>
+<ul>
+<li>首先取 <code>column-count</code> ，如果元素（block）个数不超过 <code>column-count</code> ，布局成一横排；</li>
+</ul>
+<p><img src="https://cdn.int64ago.org/mgd56d9.jpeg" alt=""></p>
+<ul>
+<li>若是元素（block）个数超过 <code>column-count</code> ，首先在第一列增加 block 元素，而后以第一列的高度为标准，来填充后续各列（此时会发生列填充不满的情况）；</li>
+</ul>
+<p><img src="https://cdn.int64ago.org/d8ducmx.jpeg" alt=""></p>
+<p><img src="https://cdn.int64ago.org/db76hgs.jpeg" alt=""></p>
+<ul>
+<li>若是之后元素中发现一个高度较高的<strong>X元素</strong>，对于布局的调整会以这个较高的<strong>X元素</strong>为分界线，不会将后面的低高度元素排列到<strong>X元素</strong>之前：</li>
+</ul>
+<p><img src="https://cdn.int64ago.org/bzd833en.jpeg" alt=""></p>
+<p>就会出现较大空白区域的情况。<br>所以，出现空白区域的根本原因是：<code>multi-columns</code> 布局的特点是<strong>按列布局、顺序计算、顺序排列</strong>，前面有较大空白区域，不会用后续元素去填补。</p>
+<p>想要具体了解 <code>multi-columns</code> 布局，请参考：</p>
+<ul>
+<li><a href="https://www.w3.org/TR/css-writing-modes-3/#abstract-axes" target="_blank" rel="noopener">CSS Writing Modes Level 3</a></li>
+<li><a href="http://www.cnblogs.com/fsjohnhuang/p/5412841.html" target="_blank" rel="noopener">CSS3魔法堂：说说Multi-column Layout</a></li>
+</ul>
+<hr>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p><code>multi-columns</code> 瀑布流布局，适用于：</p>
+<ol>
+<li>元素不存在优先级，或者优先级要求较低</li>
+<li>元素高度差异不明显（防止出现大片空白区域）</li>
+<li>不兼容低版本浏览器（最重要的）</li>
+</ol>
+<p>除了 <code>multi-columns</code>， <code>Flexbox</code> 以及 <code>Grid</code> 也可以运用到瀑布流布局中来。未完，待续。。。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/21/JavaScript并发模型与Event Loop/" rel="next" title="JavaScript并发模型与Event Loop">
+                <i class="fa fa-chevron-left"></i> JavaScript并发模型与Event Loop
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/25/SVG Sprite 使用简介/" rel="prev" title="SVG Sprite 使用简介">
+                SVG Sprite 使用简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Masonry-Layouts（1）——-multi-columns"><span class="nav-number">1.</span> <span class="nav-text">CSS Masonry Layouts（1）—— multi-columns</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-columns"><span class="nav-number">1.1.</span> <span class="nav-text">multi-columns</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-columns-简略布局思想"><span class="nav-number">1.2.</span> <span class="nav-text">multi-columns 简略布局思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结："><span class="nav-number">1.3.</span> <span class="nav-text">总结：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

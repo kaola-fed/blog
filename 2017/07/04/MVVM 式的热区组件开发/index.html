@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="目录 什么是热区 热区功能介绍 实现手段与结构划分 相关指令介绍 体验增强 其它总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVVM 式的热区组件开发">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/04/MVVM 式的热区组件开发/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="目录 什么是热区 热区功能介绍 实现手段与结构划分 相关指令介绍 体验增强 其它总结">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/4961878/27834666-699cea4c-610a-11e7-95a8-77488634d3a2.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/4961878/27834703-9181ed0a-610a-11e7-8315-a2c2f4ce9cec.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/4961878/27834712-98e566ee-610a-11e7-91a0-ef7bba3a0e85.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MVVM 式的热区组件开发">
+<meta name="twitter:description" content="目录 什么是热区 热区功能介绍 实现手段与结构划分 相关指令介绍 体验增强 其它总结">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/4961878/27834666-699cea4c-610a-11e7-95a8-77488634d3a2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/04/MVVM 式的热区组件开发/"/>
+
+
+
+
+
+  <title>MVVM 式的热区组件开发 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/04/MVVM 式的热区组件开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MVVM 式的热区组件开发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-04T00:00:00+08:00">
+                2017-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>什么是热区</li>
+<li>热区功能介绍</li>
+<li>实现手段与结构划分</li>
+<li>相关指令介绍</li>
+<li>体验增强</li>
+<li>其它总结</li>
+</ol>
+<a id="more"></a>
+<h2 id="1-什么是热区"><a href="#1-什么是热区" class="headerlink" title="1. 什么是热区"></a>1. 什么是热区</h2><p>热区，是指在一张图片上选取一些区域，每个区域链接到指定的地址。</p>
+<p>因此热区组件的功能，就是在图片上设置多个热区区域并配置相应的数据。</p>
+<h2 id="2-热区功能介绍"><a href="#2-热区功能介绍" class="headerlink" title="2. 热区功能介绍"></a>2. 热区功能介绍</h2><p>热区需要实现的功能为：</p>
+<ol>
+<li>创建新热区区域；</li>
+<li>热区大小可调整；</li>
+<li>热区位置可更改；</li>
+<li>热区数据可设置；</li>
+<li><p>设置数据可显示。</p>
+<ul>
+<li>试试实际效果： <a href="http://aeodu.com/regular-hotzone" target="_blank" rel="noopener"><strong>戳我</strong></a></li>
+<li>具体项目代码： <a href="https://github.com/Deol/regular-hotzone" target="_blank" rel="noopener"><strong>戳我</strong></a></li>
+</ul>
+</li>
+</ol>
+<h2 id="3-实现手段与结构划分"><a href="#3-实现手段与结构划分" class="headerlink" title="3. 实现手段与结构划分"></a>3. 实现手段与结构划分</h2><blockquote>
+<p>如果你在公司里听到有人在讨论 MVVM，那么话题一定离不开 RegularJS。</p>
+</blockquote>
+<p>所以这里以 RegularJS 为例对主题进行介绍（但若是用 Vue 在实现上区别其实也不大）：</p>
+<p>MVVM 讲究以数据驱动视图，然而热区这类场景需要需要大量的 DOM 操作。</p>
+<p>还好，AngularJS、VueJS 和 RegularJS 等框架都提供了<strong>自定义指令</strong>（directive，写法及用法上大同小异），方便开发者对纯 DOM 元素进行底层操作。</p>
+<p>也避免了在节点上大量的挂载 <code>on-</code> 开头的属性：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- not so good --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">on-keydown</span>=<span class="string">&#123;this.handleKeyDown($event)&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- better --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">r-keydown</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>由上可知，热区组件重度依赖指令，则代码结构最终设定为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">src</div><div class="line"> ├── assets</div><div class="line"> │      ├── directive</div><div class="line"> │      │     ├── addItem.js        添加热区指令</div><div class="line"> │      │     ├── changeSize.js     改变尺寸指令</div><div class="line"> │      │     ├── dragItem.js       移动位置指令</div><div class="line"> │      │     ├── resizeImg.js      图片resize处理指令</div><div class="line"> │      │     └── ...</div><div class="line"> │      ├── constant.js             通用常量</div><div class="line"> │      ├── filter.js               过滤器</div><div class="line"> │      ├── operations.js           处理逻辑封装</div><div class="line"> │      └── util.js                 工具函数</div><div class="line"> ├── components</div><div class="line"> │      ├── modal                   数据设置模态窗组件</div><div class="line"> │      └── zone                    热区区域组件</div><div class="line"> ├── mcss</div><div class="line"> │      ├── _reset.mcss             限定作用范围的样式 reset</div><div class="line"> │      └── index.mcss              基本样式</div><div class="line"> ├── index.js                       组件入口</div><div class="line"> └── view.html                      组件模板</div></pre></td></tr></table></figure>
+<h2 id="4-相关指令介绍"><a href="#4-相关指令介绍" class="headerlink" title="4. 相关指令介绍"></a>4. 相关指令介绍</h2><blockquote>
+<p>指令一般需要返回一个函数用于指令销毁工作。</p>
+<p>Question: 为什么要返回销毁函数，而不是通过监听 $destroy 事件来完成？</p>
+<p>Answer: 因为指令的销毁并不一定伴随着组件销毁，指令的生命周期更短，一些语法元素（<code>if/list/include</code>）会导致它在组件销毁之前被重复创建和销毁。</p>
+</blockquote>
+<p>由于热区组件使用了较多的事件监听，基于上述考虑，热区操作指令中都返回了用于 <strong>事件解绑</strong> 的函数。</p>
+<hr>
+<p>新增热区区域、拖拽热区位置和调整热区大小指令，都存在三个操作阶段：</p>
+<ol>
+<li>mousedown: 鼠标选中；</li>
+<li>mousemove: 移动鼠标，此时通过 js 动态改变元素的样式，但并不对真实数据做修改；</li>
+<li>mouseup: 释放鼠标，将改动保存到真实数据中。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; dom &#125; <span class="keyword">from</span> <span class="string">'regularjs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> (<span class="params">content</span>) </span>&#123;</div><div class="line"></div><div class="line">    dom.on(content, <span class="string">'mousedown'</span>, handleMouseDown);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleMouseDown</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        dom.on(<span class="built_in">window</span>, <span class="string">'mousemove'</span>, handleChange);</div><div class="line">        dom.on(<span class="built_in">window</span>, <span class="string">'mouseup'</span>, handleMouseUp);</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">function</span> <span class="title">handleChange</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">            <span class="comment">// ...</span></div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">function</span> <span class="title">handleMouseUp</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="comment">// ...</span></div><div class="line">            </div><div class="line">            dom.off(<span class="built_in">window</span>, <span class="string">'mousemove'</span>, handleChange);</div><div class="line">            dom.off(<span class="built_in">window</span>, <span class="string">'mouseup'</span>, handleMouseUp);</div><div class="line">        &#125;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        <span class="comment">// 解绑 mousedown 事件</span></div><div class="line">        dom.off(content, <span class="string">'mousedown'</span>, handleMouseDown);</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里可以做些优化：</p>
+<ol>
+<li>在 changeSize 时对可拖拽点的事件监听上，利用「事件委托」+「自定义属性」减少事件绑定，并统一处理不同方位的拖拽点：</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/4961878/27834666-699cea4c-610a-11e7-95a8-77488634d3a2.png" alt="dragpoint">如图所示，热区区域周围的八个小方块就是「拖拽点」。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">r-changeSize</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-tl"</span> <span class="attr">data-pointer</span>=<span class="string">"dealTL"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-tc"</span> <span class="attr">data-pointer</span>=<span class="string">"dealTC"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-tr"</span> <span class="attr">data-pointer</span>=<span class="string">"dealTR"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-cl"</span> <span class="attr">data-pointer</span>=<span class="string">"dealCL"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-cr"</span> <span class="attr">data-pointer</span>=<span class="string">"dealCR"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-bl"</span> <span class="attr">data-pointer</span>=<span class="string">"dealBL"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-bc"</span> <span class="attr">data-pointer</span>=<span class="string">"dealBC"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"hz-u-square hz-u-square-br"</span> <span class="attr">data-pointer</span>=<span class="string">"dealBR"</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleMouseDown</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="comment">// 获取选中节点的自定义属性值</span></div><div class="line">    <span class="keyword">let</span> pointer = e.target.dataset.pointer;</div><div class="line">    <span class="keyword">if</span>(!pointer) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    e &amp;&amp; e.stopPropagation();</div><div class="line"></div><div class="line">    dom.on(<span class="built_in">window</span>, <span class="string">'mousemove'</span>, handleChange);</div><div class="line">    dom.on(<span class="built_in">window</span>, <span class="string">'mouseup'</span>, handleMouseUp);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleChange</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">        e &amp;&amp; e.preventDefault();</div><div class="line"></div><div class="line">        <span class="comment">// 处理选中不同拖拽点时的情况</span></div><div class="line">        <span class="keyword">let</span> styleInfo = operations[pointer](itemInfo, moveX, moveY);</div><div class="line"></div><div class="line">        <span class="comment">// 边界值处理</span></div><div class="line">        itemInfo = operations.dealEdgeValue(itemInfo, styleInfo, container);</div><div class="line">        </div><div class="line">        <span class="comment">// ...</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleMouseUp</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        dom.off(<span class="built_in">window</span>, <span class="string">'mousemove'</span>, handleChange);</div><div class="line">        dom.off(<span class="built_in">window</span>, <span class="string">'mouseup'</span>, handleMouseUp);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>统一封装 operations 处理逻辑：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 改变热区大小时的边界情况处理</div><div class="line">     * @param &#123;Object&#125; itemInfo   实际使用的热区模块数据 </div><div class="line">     * @param &#123;Object&#125; styleInfo  操作中的热区模块数据</div><div class="line">     * @param &#123;Object&#125; container  图片区域的宽高数据</div><div class="line">     */</div><div class="line">    dealEdgeValue(itemInfo, styleInfo, container) &#123;&#125;,</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 处理不同的拖拽点，大写字母表示含义：T-top，L-left，C-center，R-right，B-bottom</div><div class="line">     * @param  &#123;Object&#125; itemInfo </div><div class="line">     * @param  &#123;Number&#125; moveX </div><div class="line">     * @param  &#123;Number&#125; moveY</div><div class="line">     * @return &#123;Object&#125; 对过程数据进行处理</div><div class="line">     */</div><div class="line">    dealTL(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealTC(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealTR(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealCL(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealCR(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealBL(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealBC(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;,</div><div class="line">    dealBR(itemInfo, moveX, moveY, minLimit = MIN_LIMIT) &#123;&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>在拖拽移动热区位置时，使用 translate 替代直接改变 top &amp;&amp; left 值避免重绘，实现更流畅的拖拽效果。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// bad</span></div><div class="line">dom.css(elem, &#123;</div><div class="line">    <span class="attr">top</span>: <span class="string">`<span class="subst">$&#123;moveY&#125;</span>px`</span>,</div><div class="line">    <span class="attr">left</span>: <span class="string">`<span class="subst">$&#123;moveX&#125;</span>px`</span> </div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// better</span></div><div class="line">dom.css(elem, &#123;</div><div class="line">    <span class="attr">transform</span>: <span class="string">`translate(<span class="subst">$&#123;moveX&#125;</span>px, <span class="subst">$&#123;moveY&#125;</span>px)`</span> </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<ol>
+<li><p>热区尺寸单位用 % 取代 px，不同屏幕尺寸的用户都获得更好的热区操作体验。</p>
+<p>但热区区域存在最小尺寸限制，需要利用 <a href="https://www.npmjs.com/package/element-resize-detector" target="_blank" rel="noopener">element-resize-detector</a> 对图片进行监听，在图片尺寸变化时对边界区域做兼容。</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> elementResizeDetectorMaker <span class="keyword">from</span> <span class="string">'element-resize-detector'</span>;</div><div class="line"><span class="keyword">const</span> erd = elementResizeDetectorMaker();</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">resizeImg</span>(<span class="params">elem</span>) </span>&#123;</div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    <span class="keyword">const</span> resize = _.debounce(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        <span class="comment">// ...</span></div><div class="line">    &#125;, <span class="number">500</span>);</div><div class="line"></div><div class="line">    erd.listenTo(elem, resize);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        erd.removeListener(elem, resize);</div><div class="line">    &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ol>
+<li>通过计算属性动态修改设置数据的 hover 位置，确保不超过图片范围，以确保信息的正确显示。</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">r-style</span>=<span class="string">&#123;&#123;top:</span> <span class="attr">infoTop</span>, <span class="attr">bottom:</span> <span class="attr">infoBottom</span>, <span class="attr">left:</span> <span class="attr">infoLeft</span>, <span class="attr">right:</span> <span class="attr">infoRight</span>, <span class="attr">transform:</span> <span class="attr">infoTransform</span>&#125;&#125;&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="5-体验增强"><a href="#5-体验增强" class="headerlink" title="5. 体验增强"></a>5. 体验增强</h2><ol>
+<li>使用透明小方块增强鼠标从热区区域移动到设置信息区域的体验：</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/4961878/27834703-9181ed0a-610a-11e7-8315-a2c2f4ce9cec.png" alt="hideblock">（这里用灰色标识一下小方块）</p>
+<ol>
+<li>双击热区区域弹出信息设置模态框时，利用 r-autofocus 指令自动聚焦：</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/4961878/27834712-98e566ee-610a-11e7-91a0-ef7bba3a0e85.png" alt="modal"></p>
+<p>同时绑定键盘监听事件，监听 Enter 键和 Esc 键，增强「确认」和「取消」体验。</p>
+<h2 id="6-其他总结"><a href="#6-其他总结" class="headerlink" title="6. 其他总结"></a>6. 其他总结</h2><ol>
+<li>无论 <strong>reset</strong>（容易遗漏）或基础样式，都需要限制 scope，避免命名空间污染；</li>
+<li>统一控制 Constant 全局常量，如最小热区尺寸限制。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/04/如何把一个 RegularJS 组件打成 npm 包/" rel="next" title="如何把一个 RegularJS 组件打成 npm 包">
+                <i class="fa fa-chevron-left"></i> 如何把一个 RegularJS 组件打成 npm 包
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/04/便于 Code review 的 Git 流程方案/" rel="prev" title="便于 Code review 的 Git 流程方案">
+                便于 Code review 的 Git 流程方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是热区"><span class="nav-number">2.</span> <span class="nav-text">1. 什么是热区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-热区功能介绍"><span class="nav-number">3.</span> <span class="nav-text">2. 热区功能介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-实现手段与结构划分"><span class="nav-number">4.</span> <span class="nav-text">3. 实现手段与结构划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-相关指令介绍"><span class="nav-number">5.</span> <span class="nav-text">4. 相关指令介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-体验增强"><span class="nav-number">6.</span> <span class="nav-text">5. 体验增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-其他总结"><span class="nav-number">7.</span> <span class="nav-text">6. 其他总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

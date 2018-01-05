@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="本篇基于 RegularJS 热区组件，简单分享一下组件打包发布的全流程及主要遇到的问题。 目录 项目初始化 开发环境准备，安装基础依赖 将组件打包输出成多种模式!important 进入开发 包装工作 最终发布">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何把一个 RegularJS 组件打成 npm 包">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/04/如何把一个 RegularJS 组件打成 npm 包/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="本篇基于 RegularJS 热区组件，简单分享一下组件打包发布的全流程及主要遇到的问题。 目录 项目初始化 开发环境准备，安装基础依赖 将组件打包输出成多种模式!important 进入开发 包装工作 最终发布">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/4961878/27834960-9bd1e728-610b-11e7-9de6-2e64a1c110e3.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何把一个 RegularJS 组件打成 npm 包">
+<meta name="twitter:description" content="本篇基于 RegularJS 热区组件，简单分享一下组件打包发布的全流程及主要遇到的问题。 目录 项目初始化 开发环境准备，安装基础依赖 将组件打包输出成多种模式!important 进入开发 包装工作 最终发布">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/4961878/27834960-9bd1e728-610b-11e7-9de6-2e64a1c110e3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/04/如何把一个 RegularJS 组件打成 npm 包/"/>
+
+
+
+
+
+  <title>如何把一个 RegularJS 组件打成 npm 包 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/04/如何把一个 RegularJS 组件打成 npm 包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何把一个 RegularJS 组件打成 npm 包
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-04T00:00:00+08:00">
+                2017-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇基于 RegularJS 热区组件，简单分享一下组件打包发布的全流程及主要遇到的问题。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>项目初始化</li>
+<li>开发环境准备，安装基础依赖</li>
+<li>将组件打包输出成多种模式!important</li>
+<li>进入开发</li>
+<li>包装工作</li>
+<li>最终发布</li>
+</ol>
+<a id="more"></a>
+<h2 id="1-项目初始化"><a href="#1-项目初始化" class="headerlink" title="1. 项目初始化"></a>1. 项目初始化</h2><h4 id="1-在-GitHub-上创建项目仓库，添加-README-和-License"><a href="#1-在-GitHub-上创建项目仓库，添加-README-和-License" class="headerlink" title="1. 在 GitHub 上创建项目仓库，添加 README 和 License"></a>1. 在 GitHub 上创建项目仓库，添加 README 和 License</h4><p>没什么好说的，License 一般设置成 MIT（开源万岁），详细协议介绍可查：<a href="https://choosealicense.com/" target="_blank" rel="noopener">HELP</a>。</p>
+<h4 id="2-clone-到本地，设置-git-config"><a href="#2-clone-到本地，设置-git-config" class="headerlink" title="2. clone 到本地，设置 git config"></a>2. clone 到本地，设置 git config</h4><p>本地全局的 git config 文件一般设置为公司的邮箱和用户名。为了避免泄露信息，可在初始化时提前进行项目层面的 config 设置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> git config user.name <span class="string">"GitHub 用户名"</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> git config user.email <span class="string">"GitHub 邮箱"</span></span></div></pre></td></tr></table></figure>
+<p>这样提交代码时就以该用户名及邮箱作为用户信息了，此时执行查看命令可以看到：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat .git/config</span></div><div class="line">[user]</div><div class="line">    name = GitHub 用户名</div><div class="line">    email = GitHub 邮箱</div></pre></td></tr></table></figure>
+<h4 id="3-执行-npm-init，生成-package-json"><a href="#3-执行-npm-init，生成-package-json" class="headerlink" title="3. 执行 npm init，生成 package.json"></a>3. 执行 npm init，生成 package.json</h4><p>按提示一步步来完成配置即可。</p>
+<h2 id="2-开发环境准备，安装基础依赖"><a href="#2-开发环境准备，安装基础依赖" class="headerlink" title="2. 开发环境准备，安装基础依赖"></a>2. 开发环境准备，安装基础依赖</h2><p>这里偷了个懒，直接使用了 vue-cli 的 <a href="https://github.com/vuejs-templates/webpack-simple" target="_blank" rel="noopener">webpack-simple</a> 模式生成的 webpack.config.js 和 package.json，并调整成实际需要的配置。</p>
+<p>配置比较简单，可以直接 <a href="https://github.com/Deol/regular-hotzone/blob/master/webpack.config.js" target="_blank" rel="noopener"><strong>戳我</strong></a> 看一下（具体配置解释直接查阅 <a href="https://webpack.js.org/configuration/output/#output-librarytarget" target="_blank" rel="noopener">文档</a>）。</p>
+<h2 id="3-将组件打包输出成多种模式-important"><a href="#3-将组件打包输出成多种模式-important" class="headerlink" title="3. 将组件打包输出成多种模式!important"></a>3. 将组件打包输出成多种模式!important</h2><p>既然是 RegularJS 组件，那么打包后的组件无论是直接以 <code>&lt;script&gt;</code> 标签形式引入，或者用 AMD / CommonJS 方式引入都应该可以使用。</p>
+<h3 id="第一部分，webpack-配置"><a href="#第一部分，webpack-配置" class="headerlink" title="第一部分，webpack 配置"></a>第一部分，webpack 配置</h3><p>与此相关的配置项是这三个：</p>
+<ul>
+<li>output.library &amp;&amp; output.libraryTarget</li>
+</ul>
+<p>library 属性能让打包后的整个组件被当成一个全局变量使用。考虑命名污染及冲突，可以将 <code>library</code> 属性的值起得相对复杂些，如 <code>regularHotZone</code>。</p>
+<p>另外，为了让组件在多种模式下都可运行，使用 <code>libraryTarget</code> 配置该组件的暴露方式为 <strong>umd</strong>。该模式意味着组件在 CommonJS、AMD 及 global 环境下都能运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">output: &#123;</div><div class="line">    library: &apos;regularHotZone&apos;,</div><div class="line">    libraryTarget: &apos;umd&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>externals</li>
+</ul>
+<p>这个配置是为了排除外部依赖，不将它们一起打包进去。对于 RegularJS 组件来说，并不需要把 RegularJS 也打包进去，此时就应该用 externals。</p>
+<p>而配置中是这么写的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">externals: &#123;</div><div class="line">    regularjs: &#123;</div><div class="line">        root: &apos;Regular&apos;,</div><div class="line">        commonjs: &apos;regularjs&apos;,</div><div class="line">        commonjs2: &apos;regularjs&apos;,</div><div class="line">        amd: &apos;regularjs&apos;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这是由于上述的 libraryTarget 设置为 umd，那么这里必须设置成这种形式，RegularJS 才能在 AMD 和 CommonJS 模式下通过 regularjs 被访问，但在全局变量下通过 Regular 被访问。</p>
+<h3 id="第二部分，package-配置"><a href="#第二部分，package-配置" class="headerlink" title="第二部分，package 配置"></a>第二部分，package 配置</h3><p>另一方面，我们需要在组件的 package.json 中需要将 RegularJS 设置为同伴依赖 (<code>peerDependencies</code>)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 建议：不同于一般的依赖，同伴依赖需要降低版本限制。不应该将同伴依赖锁定在特定的版本号。</div><div class="line">&quot;peerDependencies&quot;: &#123;</div><div class="line">    &quot;regularjs&quot;: &quot;^0.4.3&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为 RegularJS 组件是 RegularJS 框架的拓展，它不能脱离于框架独立存在。</p>
+<p>也就是说，如果需要以 npm 包形式引入 RegularJS 组件，那么 RegularJS 框架必须也被引入，不管是以 npm 包形式引入，还是用 <code>script</code> 标签引入并配置 externals。</p>
+<p><strong>注意</strong>：如果安装组件包时，找不到 RegularJS 或者其<strong>不符合同伴依赖的版本要求</strong>，终端将抛出警告：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">`-- UNMET PEER DEPENDENCY regularjs@^0.4.3</div><div class="line"></div><div class="line">npm WARN regular-hotzone@0.1.14 requires a peer of regularjs@^0.4.3 but none was installed.</div></pre></td></tr></table></figure>
+<p>npm 使用的版本规则「<a href="https://docs.npmjs.com/misc/semver" target="_blank" rel="noopener"><strong>在此</strong></a>」查看。</p>
+<p>可以知道，上面设定 RegularJS 版本为 <code>^0.4.3</code>，相当于 version &gt;= 0.4.3 &amp;&amp; version &lt; 0.5.0。</p>
+<h2 id="4-进入开发"><a href="#4-进入开发" class="headerlink" title="4. 进入开发"></a>4. 进入开发</h2><p>跑个 <code>npm run startdev</code>，balabalabala…</p>
+<h2 id="5-包装工作"><a href="#5-包装工作" class="headerlink" title="5. 包装工作"></a>5. 包装工作</h2><ol>
+<li><p>完成整体开发后，修改 package.json 中的 version（版本介绍「<a href="http://semver.org/lang/zh-CN/" target="_blank" rel="noopener"><strong>在此</strong></a>」，每次发布都必须修改，否则无法发布），并利用 <code>npm run build</code> 打包输出 dist 文件夹。</p>
+</li>
+<li><p>编写 Readme，可参考「<a href="https://www.zhihu.com/question/29100816/answer/68750410" target="_blank" rel="noopener">如何写好 Github 中的 readme？ - 知乎</a>」。</p>
+</li>
+</ol>
+<h2 id="6-最终发布"><a href="#6-最终发布" class="headerlink" title="6. 最终发布"></a>6. 最终发布</h2><p>最终阶段，进入 <a href="https://www.npmjs.com/" target="_blank" rel="noopener">https://www.npmjs.com/</a> 完成注册后，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm publish</div></pre></td></tr></table></figure>
+<p>完成登录后可能会发布失败，因为我们可能会将 npm 源设置为淘宝源，此时需要添加 <code>//</code> 暂时将其注释：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vi ~/.npmrc</div><div class="line"></div><div class="line">//registry=https://registry.npm.taobao.org</div></pre></td></tr></table></figure>
+<p>保存后重新执行发布操作即可。</p>
+<p>此时我们可以通过 npms.io 搜索 npm 包名，如（请忽略分数）：</p>
+<p><img src="https://user-images.githubusercontent.com/4961878/27834960-9bd1e728-610b-11e7-9de6-2e64a1c110e3.png" alt="npms"></p>
+<p>并通过其<a href="https://npms.io/about" target="_blank" rel="noopener"><strong>分析</strong></a>增强 npm 包的质量，最简单的可以有：</p>
+<ul>
+<li>完善 Readme、license、.gitignore 等；</li>
+<li>接入 <a href="https://travis-ci.org/" target="_blank" rel="noopener">Travis CI</a> 等，并确保覆盖率；</li>
+<li>去除过时依赖，减少依赖的脆弱性；</li>
+<li>增加专属站点，添加 Readme 上面的 icons；</li>
+<li>接入 ESLint，实现静态代码检查；</li>
+<li>…</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/04/前端工程-从原理到轮子之状态管理/" rel="next" title="前端工程-从原理到轮子之状态管理">
+                <i class="fa fa-chevron-left"></i> 前端工程-从原理到轮子之状态管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/04/MVVM 式的热区组件开发/" rel="prev" title="MVVM 式的热区组件开发">
+                MVVM 式的热区组件开发 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-项目初始化"><span class="nav-number">2.</span> <span class="nav-text">1. 项目初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-在-GitHub-上创建项目仓库，添加-README-和-License"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. 在 GitHub 上创建项目仓库，添加 README 和 License</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-clone-到本地，设置-git-config"><span class="nav-number">2.0.2.</span> <span class="nav-text">2. clone 到本地，设置 git config</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-执行-npm-init，生成-package-json"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. 执行 npm init，生成 package.json</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-开发环境准备，安装基础依赖"><span class="nav-number">3.</span> <span class="nav-text">2. 开发环境准备，安装基础依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-将组件打包输出成多种模式-important"><span class="nav-number">4.</span> <span class="nav-text">3. 将组件打包输出成多种模式!important</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一部分，webpack-配置"><span class="nav-number">4.1.</span> <span class="nav-text">第一部分，webpack 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二部分，package-配置"><span class="nav-number">4.2.</span> <span class="nav-text">第二部分，package 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-进入开发"><span class="nav-number">5.</span> <span class="nav-text">4. 进入开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-包装工作"><span class="nav-number">6.</span> <span class="nav-text">5. 包装工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-最终发布"><span class="nav-number">7.</span> <span class="nav-text">6. 最终发布</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

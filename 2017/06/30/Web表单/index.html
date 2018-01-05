@@ -1,0 +1,707 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Web表单Web表单是前端开发领域十分重要的一块内容。本文将针对Web表单相关的各方面内容进行介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web表单">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/30/Web表单/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="Web表单Web表单是前端开发领域十分重要的一块内容。本文将针对Web表单相关的各方面内容进行介绍。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.374Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Web表单">
+<meta name="twitter:description" content="Web表单Web表单是前端开发领域十分重要的一块内容。本文将针对Web表单相关的各方面内容进行介绍。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/30/Web表单/"/>
+
+
+
+
+
+  <title>Web表单 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/30/Web表单/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Web表单
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T00:00:00+08:00">
+                2017-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如：by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+<h2 id="Web表单"><a href="#Web表单" class="headerlink" title="Web表单"></a>Web表单</h2><p>Web表单是前端开发领域十分重要的一块内容。本文将针对Web表单相关的各方面内容进行介绍。</p>
+<a id="more"></a>
+<h3 id="表单验证"><a href="#表单验证" class="headerlink" title="表单验证"></a>表单验证</h3><p>使用web应用或浏览页面时，经常会遇到的场景，比如用户注册，填写点评反馈等，需要用户按照一定的要求来填写数据信息。典型的会伴随如下提醒：</p>
+<ul>
+<li>请填写合法的邮箱地址或手机号码</li>
+<li>设置的密码必要包含一个大写字母、数字和特殊符号</li>
+</ul>
+<p>这些就是所谓的 <strong>表单验证</strong> - 即对用户输入的数据信息进行一定规则的验证。最终输入的信息符合正确的规则，才会被允许提交到服务器端。</p>
+<p>表单验证一定程度上会导致页面交互变得复杂，但又是必不可少的一个环节，主要有以下考虑：</p>
+<ul>
+<li><p>按照预期的格式获取预期的数据</p>
+<p>对于web应用，不可能考虑到所有场景，所以通常来说，开发人员总是会对数据的格式有一定的要求；</p>
+</li>
+<li><p>保证用户数据的安全</p>
+<p>典型的对于用户过于简单的密码设置，甚至不设置密码，这样很容易导致用户的账户信息泄露；</p>
+</li>
+<li><p>保证web应用的安全</p>
+<p>可能会有居心不良者，通过非法的表单数据对web应用进行攻击破坏；</p>
+</li>
+</ul>
+<p>考虑到上述表单验证的必要性，开发人员能做的就是尽量使得表单验证变得简单，从而减少用户的流失。</p>
+<p>一般来讲，表单验证既可以在客户端表单提交前进行，也可以在服务器端表单提交后进行，现实开发时通常是客户端和服务器端同时对表单进行验证。本部分内容主要针对前端页面的表单验证。</p>
+<p>对于现代浏览器的表单，HTML5针对表单数据验证提供了便利的特性。基于这些特性，我们能很方便地完成表单的验证。</p>
+<p>HTML5对应表单验证的部分主要基于表单元素的<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5/Constraint_validation" target="_blank" rel="noopener">validation属性</a>，这些属性指定了相应表单元素的验证规则。主要包括：</p>
+<table><br>  <thead><br>    <tr><br>      <td>属性名</td><br>      <td>支持该属性的表单元素</td><br>      <td>可能的值</td><br>      <td>描述</td><br>      <td>不满足规则的提示</td><br>    </tr><br>  <thead><br>  <tbody><br>    <tr><br>      <td>pattern</td><br>      <td>text, search, url, tel, email, password</td><br>      <td>JavaScript正则表达式</td><br>      <td>元素的值必须匹配该值的模式</td><br>      <td><b>Parttern mismatch</b> constraint violation</td><br>    </tr><br>    <tr><br>      <td rowspan="3">min</td><br>      <td>range, number</td><br>      <td>合法的数字</td><br>      <td rowspan="3">元素的值必须小于等于该值</td><br>      <td rowspan="3"><b>Underflow</b> constraint violation</td><br>    </tr><br>    <tr><br>      <td>date, month, week</td><br>      <td>合法的日期</td><br>    </tr><br>    <tr><br>      <td>datetime, datetime-local, time</td><br>      <td>合法的日期和时间</td><br>    </tr><br>    <tr><br>      <td rowspan="3">max</td><br>      <td>range, number</td><br>      <td>合法的数字</td><br>      <td rowspan="3">元素的值必须大于等于该值</td><br>      <td rowspan="3"><b>Overflow</b> constraint violation</td><br>    </tr><br>    <tr><br>      <td>date, month, week</td><br>      <td>合法的日期</td><br>    </tr><br>    <tr><br>      <td>datetime, datetime-local, time</td><br>      <td>合法的日期和时间</td><br>    </tr><br>    <tr><br>      <td>required </td><br>      <td>text, search, url, tel, email, password, date, datetime, datetime-local, month, week, time, number, checkbox, radio, file; also on the <select> and </select><textarea> elements</textarea></td><br>      <td>值存在表示true, 不存在代表false</td><br>      <td>元素必须设置值</td><br>      <td><b>Missing</b> constraint violation</td><br>    </tr><br>    <tr><br>      <td rowspan="5">max</td><br>      <td>date</td><br>      <td>整型的天数</td><br>      <td rowspan="5">元素的值必须是min + 该值的整数倍</td><br>      <td rowspan="5"><b>Step mimatch</b> constraint violation</td><br>    </tr><br>    <tr><br>      <td>month</td><br>      <td>整型的月数</td><br>    </tr><br>    <tr><br>      <td>week</td><br>      <td>整型的周数</td><br>    </tr><br>    <tr><br>      <td>datetime, datetime-local, time</td><br>      <td>整型的秒数</td><br>    </tr><br>    <tr><br>      <td>range, number</td><br>      <td>整数</td><br>    </tr><br>    <tr><br>      <td>maxlength</td><br>      <td>text, search, url, tel, email, password; also on the <textarea> element</textarea></td><br>      <td>整数指定的长度</td><br>      <td>元素中字符(code points)的个数不能超过该值</td><br>      <td><b>Too long</b> constraint violation</td><br>    </tr><br>  </tbody><br></thead></thead></table>
+
+<p>如果表单元素满足所有指定的属性规则，则代表该表单元素验证合法，同时该元素会匹配 <strong>:valid</strong> 的伪类，此时默认浏览器会允许进行表单提交；否则代表该表单元素未通过验证，为非法状态，会匹配<br> <strong>:invalid</strong> 的伪类，浏览器默认不允许表单提交。</p>
+<h4 id="借助HTML5表单验证的实例"><a href="#借助HTML5表单验证的实例" class="headerlink" title="借助HTML5表单验证的实例"></a><a href="https://codepen.io/llwanghong/pen/bRvpbo" target="_blank" rel="noopener">借助HTML5表单验证的实例</a></h4>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/30/自定义浏览器返回逻辑/" rel="next" title="自定义浏览器返回逻辑">
+                <i class="fa fa-chevron-left"></i> 自定义浏览器返回逻辑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/30/请谨慎使用nej框架提供的工具函数_$format/" rel="prev" title="请谨慎使用nej框架提供的工具函数_$format">
+                请谨慎使用nej框架提供的工具函数_$format <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web表单"><span class="nav-number">1.</span> <span class="nav-text">Web表单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#表单验证"><span class="nav-number">1.1.</span> <span class="nav-text">表单验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#借助HTML5表单验证的实例"><span class="nav-number">1.1.1.</span> <span class="nav-text">借助HTML5表单验证的实例</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

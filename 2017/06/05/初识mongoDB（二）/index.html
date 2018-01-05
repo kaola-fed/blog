@@ -1,0 +1,752 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="常见的基本操作 列出所有/当前的数据库   1show dbs      Q:为什么连接了test数据库，在显示所有数据库的时候竟没有test呢？  A:这是因为连接test时，并没有向其中写数据，所以并没有真正的建立、只是在使用当前的数据库。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识mongoDB（二）">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/05/初识mongoDB（二）/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="常见的基本操作 列出所有/当前的数据库   1show dbs      Q:为什么连接了test数据库，在显示所有数据库的时候竟没有test呢？  A:这是因为连接test时，并没有向其中写数据，所以并没有真正的建立、只是在使用当前的数据库。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/49cc04e3-b972-40e2-a900-679e171712d8.png">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/86b9ad20gy1fftfzknzqtj20qi0fy405.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/6c4db96f-28db-4aee-9215-548b2d7dec8e.png">
+<meta property="og:image" content="https://haitao.nos.netease.com/1cf05c05-a129-4343-9f88-590e9c1d0937.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.388Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识mongoDB（二）">
+<meta name="twitter:description" content="常见的基本操作 列出所有/当前的数据库   1show dbs      Q:为什么连接了test数据库，在显示所有数据库的时候竟没有test呢？  A:这是因为连接test时，并没有向其中写数据，所以并没有真正的建立、只是在使用当前的数据库。">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/49cc04e3-b972-40e2-a900-679e171712d8.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/05/初识mongoDB（二）/"/>
+
+
+
+
+
+  <title>初识mongoDB（二） | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/05/初识mongoDB（二）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                初识mongoDB（二）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-05T00:00:00+08:00">
+                2017-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="常见的基本操作"><a href="#常见的基本操作" class="headerlink" title="常见的基本操作"></a>常见的基本操作</h2><ul>
+<li><p><strong>列出所有/当前的数据库</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show dbs</div></pre></td></tr></table></figure>
+<p>  <img src="https://haitao.nos.netease.com/49cc04e3-b972-40e2-a900-679e171712d8.png" alt="image"></p>
+<p>  <strong>Q:为什么连接了test数据库，在显示所有数据库的时候竟没有test呢？</strong></p>
+<blockquote>
+<p>A:这是因为连接test时，并没有向其中写数据，所以并没有真正的建立、只是在使用当前的数据库。</p>
+</blockquote>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p><strong>删除当前的数据库</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.dropDatabase()</div></pre></td></tr></table></figure>
+<p>  <img src="https://ww1.sinaimg.cn/large/86b9ad20gy1fftfzknzqtj20qi0fy405.jpg" alt="image"></p>
+</li>
+</ul>
+<h2 id="集合的操作"><a href="#集合的操作" class="headerlink" title="集合的操作"></a>集合的操作</h2><ul>
+<li><p><strong>创建集合</strong></p>
+<p>  方法一：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.createCollection(COLLECTION_NAME, options)</div></pre></td></tr></table></figure>
+<p>   <img src="https://haitao.nos.netease.com/6c4db96f-28db-4aee-9215-548b2d7dec8e.png" alt="image"></p>
+<p>  方法二：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.COLLECTION_NAME.insert(&#123;&#125;)</div></pre></td></tr></table></figure>
+<p>   <img src="https://haitao.nos.netease.com/1cf05c05-a129-4343-9f88-590e9c1d0937.png" alt="image"></p>
+<blockquote>
+<p>COLLECTION_NAME：集合名称</p>
+</blockquote>
+</li>
+<li><p><strong>查看当前数据库中创建的集合</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">    show collections</div><div class="line">    ```  </div><div class="line">   </div><div class="line">- **删除当前数据库中的某些集合**</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.drop()</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">    ![image](https://haitao.nos.netease.com/1f12f416-0893-4fa2-9d04-842e33c11402.png)</div><div class="line">    </div><div class="line">- **访问集合**</div><div class="line">    方法一：</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">![image](https://haitao.nos.netease.com/67238d74-9545-490a-b6ba-f52f5f61d4ee.png)</div><div class="line"> 方法二：</div></pre></td></tr></table></figure>
+<p>  db.getCollection(COLLECTION_NAME)</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    ![image](https://haitao.nos.netease.com/9203aa3f-5fbf-44e6-81bc-a6b13ffceae0.png)    </div><div class="line">    </div><div class="line">    注意：COLLECTION_NAME 要加引号哦</div><div class="line">    </div><div class="line">- **列出当前文档中所有的集合**</div></pre></td></tr></table></figure>
+<p>  show tables</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftcdqodpoj20qi06gwf7.jpg)</div><div class="line"></div><div class="line"></div><div class="line">## 操作集合的几个基本命令</div><div class="line"></div><div class="line">- **在集合中插入一条数据**</div><div class="line">    方法一：</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.insert({})<br>  db.COLLECTION_NAME.insert([{}, {}]) //插入多条数据</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">如果我们不指定_id参数，mongodb会自动分配一个独特的ObjectId。（个人理解：_id就是一个uuid通用唯一识别码）</div><div class="line"></div><div class="line">![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftbpbnho0j20qm01qq36.jpg)</div><div class="line">![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftbo3pv2wj20qk0dy0ud.jpg)</div><div class="line"></div><div class="line">方法二：</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.save({})</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    区别：</div><div class="line">    &gt; 一、使用save函数里，如果原来的对象不存在，那他们都可以向collection里插入数据，如果已经存在，save会调用update更新里面的记录，而insert则会忽略操作 </div><div class="line">    &gt;</div><div class="line">    &gt; 二、insert可以一次性插入一个列表，而不用遍历，效率高， save则需要遍历列表，一个个插入。 </div><div class="line">    &gt;</div><div class="line">    &gt; https://my.oschina.net/u/1590519/blog/342765</div><div class="line">    </div><div class="line">    举个简单的例子:</div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftbxq69hoj20qg0hu76j.jpg)</div><div class="line">    </div><div class="line">- **删除集合中的数据**</div><div class="line">    方法一：</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.remove()</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">方法二：</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.drop()</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line">    区别：</div><div class="line">    缺点：drop()不能指定任何限定条件。整个集合都被删除了，所有元数据也都不见了。</div><div class="line">    优点：drop()的速度快很多</div><div class="line">    </div><div class="line">- **查找集合中的数据**</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.find():</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">默认返回所有数据</div><div class="line"></div><div class="line">![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftio9o1pyj20qi0nqgs6.jpg)</div><div class="line"></div><div class="line">&gt; 返回包含x: 1的数据</div><div class="line"></div><div class="line">Q: 返回的数据中不希望包含_id字段怎么办?</div><div class="line"></div><div class="line">A: 将不想的设置为0</div></pre></td></tr></table></figure>
+<p>  db.COLLECTION_NAME.find({}, {_id: 0}):</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftiqxslspj20qg0kumyz.jpg)</div><div class="line">    </div><div class="line">- **对查找后的结果进行操作**</div><div class="line"></div><div class="line">    - **计数**</div></pre></td></tr></table></figure>
+<pre><code>db.COLLECTION_NAME.find().count()
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftigzv529j20qg0mmjxi.jpg)</div><div class="line">    </div><div class="line">- **跳过n条数据**</div></pre></td></tr></table></figure>
+
+db.COLLECTION_NAME.find().skip(n)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftihmtq11j20qm022mxg.jpg)</div><div class="line">    </div><div class="line">- **限制返回的数据条数**</div></pre></td></tr></table></figure>
+
+db.COLLECTION_NAME.find().limit(n)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftii70kx9j20qi05mta5.jpg)</div><div class="line"></div><div class="line">- **使用x排序：1升序，-1降序**</div></pre></td></tr></table></figure>
+
+db.COLLECTION_NAME.find().sort({x: 1})
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">        </div><div class="line">        ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftii70kx9j20qi05mta5.jpg)</div><div class="line">        </div><div class="line">- **返回特定条件的内容**</div><div class="line">   &quot;$lt&quot;、&quot;$lte&quot;、&quot;$gt&quot;、&quot;$gte&quot;、&quot;$ne&quot;就是全部的比较操作符</div><div class="line">        </div><div class="line"></div><div class="line">- **更新集合中的数据**</div></pre></td></tr></table></figure>
+</code></pre><p>  db.COLLECTION_NAME.update(SELECTIOIN_CRITERIA, UPDATED_DATA)</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line">    SELECTIOIN_CRITERIA：用来定位到需要选择的文档</div><div class="line">    UPDATED_DATA：修改后的数据</div><div class="line">    </div><div class="line">    **注：** 会更新匹配到的第一个文档(如下图所示)</div><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftgruznp1j20qe0hyq62.jpg)</div><div class="line">    </div><div class="line">    &gt; $set: 部分更新操作符</div><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftgu83fqrj20qk07i0uc.jpg)</div><div class="line">    </div><div class="line">    上图中&#123;x: 1, y: 1&#125;被整个更新掉了；解决办法是使用 **$set** 操作符如下：</div><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1fftgwvig8pj20qe07omys.jpg)</div><div class="line">    </div><div class="line">    **$unset** 删除某个不需要的键</div><div class="line"></div><div class="line">    ***Q：更新的时候如果匹配不到相应的文档，怎么自动创建一条呢？***</div><div class="line">    </div><div class="line">    ***A：*** update() 可以传入第三个参数，true, 如果匹配不到相应的文档那么就创建一条文档出来。</div><div class="line">    </div><div class="line">    ![image](https://ww1.sinaimg.cn/large/86b9ad20gy1ffth2nhmnwj20qe0c840s.jpg)</div><div class="line">    ## mongoDB索引</div><div class="line"></div><div class="line">索引的好处：</div><div class="line">    加快索引相关的查询</div><div class="line">    </div><div class="line">索引的不好处：</div><div class="line">    增加磁盘空间消耗，降低写入性能</div><div class="line"></div><div class="line">## 基本语法</div><div class="line">ensureIndex() 方法</div><div class="line"></div><div class="line">&gt; db.COLLECTION_NAME.ensureIndex(&#123;KEY:1&#125;)  </div><div class="line"></div><div class="line">Key 值为你要创建的索引字段，1为指定按升序创建索引，-1降序；</div><div class="line"></div><div class="line">可选字段如下：</div><div class="line"></div><div class="line">Parameter | Type | Description  </div><div class="line">---|---|---</div><div class="line">background | Boolean |  建索引过程会阻塞其它数据库操作，background可指定以后台方式创建索引，即增加 &quot;background&quot; 可选参数。 &quot;background&quot; 默认值为false。</div><div class="line">unique | Boolean |  建立的索引是否唯一。指定为true创建唯一索引。默认值为false.</div><div class="line">name  | string |    索引的名称。如果未指定，MongoDB的通过连接索引的字段名和排序顺序生成一个索引名称。</div><div class="line">dropDups  |     Boolean  | 在建立唯一索引时是否删除重复记录,指定 true 创建唯一索引。默认值为 false.</div><div class="line">sparse |    Boolean   | 对文档中不存在的字段数据不启用索引；这个参数需要特别注意，如果设置为true的话，在索引字段中不会查询出不包含对应字段的文档.。默认值为 false.</div><div class="line">expireAfterSeconds |    integer  |指定一个以秒为单位的数值，完成 TTL设定，设定集合的生存时间。</div><div class="line">v  |    index version  |    索引的版本号。默认的索引版本取决于mongod创建索引时运行的版本。</div><div class="line">weights  |  document  |     索引权重值，数值在 1 到 99,999 之间，表示该索引相对于其他索引字段的得分权重。</div><div class="line">default_language |  string  |   对于文本索引，该参数决定了停用词及词干和词器的规则的列表。 默认为英语</div><div class="line">language_override |     string |    对于文本索引，该参数指定了包含在文档中的字段名，语言覆盖默认的language，默认值为 language.</div><div class="line"></div><div class="line">---</div><div class="line"></div><div class="line">### _id索引</div><div class="line"></div><div class="line">![image](https://haitao.nos.netease.com/c9a721ad-f9a7-45a8-b68a-5aaa6ff57aac.png)</div><div class="line"></div><div class="line">默认就创建了_id索引</div><div class="line"></div><div class="line">---</div><div class="line"></div><div class="line">### 单键索引</div><div class="line"></div><div class="line">![image](https://haitao.nos.netease.com/4493eeb7-a523-4ea9-ab7d-77c60571b3f3.png)</div><div class="line"></div><div class="line">### 多键索引</div><div class="line">值具有多个记录</div><div class="line"></div><div class="line">![image](https://ww1.sinaimg.cn/large/86b9ad20gy1ffxfysarjgj213g020wes.jpg)</div><div class="line"></div><div class="line">### 复合索引</div><div class="line"></div><div class="line">查询条件不只有一条时</div><div class="line"></div><div class="line">![image](https://ww1.sinaimg.cn/large/86b9ad20gy1ffxg6chxskj20jy06l0tu.jpg)</div><div class="line"></div><div class="line">### 过期索引</div><div class="line"></div><div class="line">一段时间后索引会过期，比如日志信息等</div><div class="line"></div><div class="line">&gt; db.foo.ensureIndex(&#123;&quot;time&quot; : 1&#125;, &#123;&quot;expireAfterSecs&quot; : 30&#125;)</div><div class="line"></div><div class="line">expireAfterSecs指定的值以秒为单位 </div><div class="line"></div><div class="line">过期索引不能是复合索引</div><div class="line"></div><div class="line">### 全文索引</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>db.stores.insert(<br>   [<br>     { _id: 1, name: “Java Hut”, title: “Coffee and cakes” },<br>     { _id: 2, name: “Burger Buns”, title: “Gourmet hamburgers” },<br>     { _id: 3, name: “Coffee Shop”, title: “Just coffee” },<br>     { _id: 4, name: “Clothes Clothes Clothes”, title: “Discount clothing” },<br>     { _id: 5, name: “Java Shopping”, title: “Indonesian goods” }<br>   ]<br>)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">建立文本索引的方法：</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>db.COLLECTION_NAME.ensureIndex({key: “text”})<br>db.COLLECTION_NAME.ensureIndex({key_1: “text”, key_2: “text”})<br>db.COLLECTION_NAME.ensureIndex({“$**”: “text”})<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">查询全文索引的方法：</div></pre></td></tr></table></figure></p>
+<p>db.COLLECTION_NAME.find({$text:{$search: “”}})<br>db.COLLECTION_NAME.find({$text:{$search: “key1 key2”}})    //key1或者key2<br>db.COLLECTION_NAME.find({$text:{$search: “key1 -key2”}})   //不好含key2<br>db.COLLECTION_NAME.find({$text:{$search: “\”key1\” \”key2\””}})<br>```</p>
+</blockquote>
+<p>相似度：<br> {score: {$meta: “textScore”}}</p>
+<blockquote>
+<p>db.COLLECTION_NAME.find({$text:{$search: “”}}, {score: {$meta: “textScore”}}).sort({score: {$meta: “textScore”}})</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/05/初识mongoDB（一）/" rel="next" title="初识mongoDB（一）">
+                <i class="fa fa-chevron-left"></i> 初识mongoDB（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/06/websocket homework之聊天室优化/" rel="prev" title="websocket homework之聊天室优化">
+                websocket homework之聊天室优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的基本操作"><span class="nav-number">1.</span> <span class="nav-text">常见的基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合的操作"><span class="nav-number">2.</span> <span class="nav-text">集合的操作</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="目前，一个典型的前端项目技术框架的选型主要包括以下三个方面：  JS模块化框架。(Require/Sea/ES6 Module/NEJ) 前端模板框架。(React/Vue/Regular) 状态管理框架。(Flux/Redux)系列文章将从上面三个方面来介绍相关原理，并且尝试自己造一个简单的轮子。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端工程-从原理到轮子之JS模块化">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/29/前端工程-从原理到轮子之JS模块化/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="目前，一个典型的前端项目技术框架的选型主要包括以下三个方面：  JS模块化框架。(Require/Sea/ES6 Module/NEJ) 前端模板框架。(React/Vue/Regular) 状态管理框架。(Flux/Redux)系列文章将从上面三个方面来介绍相关原理，并且尝试自己造一个简单的轮子。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.389Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端工程-从原理到轮子之JS模块化">
+<meta name="twitter:description" content="目前，一个典型的前端项目技术框架的选型主要包括以下三个方面：  JS模块化框架。(Require/Sea/ES6 Module/NEJ) 前端模板框架。(React/Vue/Regular) 状态管理框架。(Flux/Redux)系列文章将从上面三个方面来介绍相关原理，并且尝试自己造一个简单的轮子。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/29/前端工程-从原理到轮子之JS模块化/"/>
+
+
+
+
+
+  <title>前端工程-从原理到轮子之JS模块化 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/29/前端工程-从原理到轮子之JS模块化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                前端工程-从原理到轮子之JS模块化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-29T00:00:00+08:00">
+                2017-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>目前，一个典型的前端项目技术框架的选型主要包括以下三个方面：</p>
+<ol>
+<li>JS模块化框架。(Require/Sea/ES6 Module/NEJ)</li>
+<li>前端模板框架。(React/Vue/Regular)</li>
+<li>状态管理框架。(Flux/Redux)<br>系列文章将从上面三个方面来介绍相关原理，并且尝试自己造一个简单的轮子。</li>
+</ol>
+</blockquote>
+<a id="more"></a>
+<p>本篇介绍的是<strong>JS模块化</strong>。<br>JS模块化是随着前端技术的发展，前端代码爆炸式增长后，工程化所采取的必然措施。目前模块化的思想分为CommonJS、AMD和CMD。有关三者的区别，大家基本都多少有所了解，而且资料很多，这里就不再赘述。</p>
+<p>模块化的核心思想：</p>
+<ol>
+<li><strong>拆分</strong>。将js代码按功能逻辑拆分成多个可复用的js代码文件（模块）。</li>
+<li><strong>加载</strong>。如何将模块进行加载执行和输出。</li>
+<li><strong>注入</strong>。能够将一个js模块的输出注入到另一个js模块中。</li>
+<li><strong>依赖管理</strong>。前端工程模块数量众多，需要来管理模块之间的依赖关系。</li>
+</ol>
+<p>根据上面的核心思想，可以看出要设计一个模块化工具框架的关键问题有两个：一个是如何将一个模块执行并可以将结果输出注入到另一个模块中；另一个是，在大型项目中模块之间的依赖关系很复杂，如何使模块按正确的依赖顺序进行注入，这就是依赖管理。</p>
+<p>下面以具体的例子来实现一个简单的<strong>基于浏览器端</strong>的<strong>AMD</strong>模块化框架（类似NEJ）,对外暴露一个define函数，在回调函数中注入依赖，并返回模块输出。要实现的如下面代码所示。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">define([</div><div class="line">    <span class="string">'/lib/util.js'</span>, <span class="comment">//绝对路径</span></div><div class="line">    <span class="string">'./modal/modal.js'</span>, <span class="comment">//相对路径</span></div><div class="line">    <span class="string">'./modal/modal.html'</span>,<span class="comment">//文本文件</span></div><div class="line">], <span class="function"><span class="keyword">function</span>(<span class="params">Util, Modal, tpl</span>) </span>&#123;</div><div class="line">	<span class="comment">/*</span></div><div class="line">	* 模块逻辑</div><div class="line">	*/</div><div class="line">	<span class="keyword">return</span> Module;</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<h4 id="1-模块如何加载和执行"><a href="#1-模块如何加载和执行" class="headerlink" title="1.  模块如何加载和执行"></a>1.  模块如何加载和执行</h4><p>先不考虑一个模块的依赖如何处理。假设一个模块的依赖已经注入，那么如何加载和执行该模块，并输出呢？<br>在浏览器端，我们可以借助浏览器的<strong>script</strong>标签来实现<strong>JS模块文件</strong>的引入和执行，对于<strong>文本模块文件</strong>则可以直接利用<strong>ajax</strong>请求实现。<br>具体步骤如下：</p>
+<ul>
+<li>第一步，获取<strong>模块文件的绝对路径</strong>。<br>要在浏览器内加载文件，首先要获得对应模块文件的完整网络绝对地址。由于<strong>a标签</strong>的href属性总是会返回绝对路径，也就是说它具有把相对路径转成绝对路径的能力，所以这里可以利用该特性来获取模块的绝对网络路径。需要指出的是，对于使用相对路径的依赖模块文件，还需要递归先获取当前模块的网络绝对地址，然后和相对路径拼接成完整的绝对地址。代码如下：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>);</div><div class="line">a.id = <span class="string">'_defineAbsoluteUrl_'</span>;</div><div class="line">a.style.display = <span class="string">'none'</span>;</div><div class="line"><span class="built_in">document</span>.body.appendChild(a);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getModuleAbsoluteUrl</span>(<span class="params">path</span>) </span>&#123;</div><div class="line">    a.href = path;</div><div class="line">    <span class="keyword">return</span> a.href;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">parseAbsoluteUrl</span>(<span class="params">url, parentDir</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> relativePrefix = <span class="string">'.'</span>,</div><div class="line">        parentPrefix = <span class="string">'..'</span>,</div><div class="line">        result;</div><div class="line">    <span class="keyword">if</span> (parentDir &amp;&amp; url.indexOf(relativePrefix) === <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// 以'./'开头的相对路径</span></div><div class="line">        <span class="keyword">return</span> getModuleAbsoluteUrl(parentDir.replace(<span class="regexp">/[^\/]*$/</span>, <span class="string">''</span>) + url);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (parentDir &amp;&amp; url.indexOf(parentPrefix) === <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// 以'../'开头的相对路径</span></div><div class="line">        <span class="keyword">return</span> getModuleAbsoluteUrl(parentDir.replace(<span class="regexp">/[\/]*$/</span>, <span class="string">''</span>).replace(<span class="regexp">/[\/]$/</span>, <span class="string">''</span>).replace(<span class="regexp">/[^\/]*$/</span>, <span class="string">''</span>) + url);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> getModuleAbsoluteUrl(url);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>第二步，<strong>加载和执行模块文件</strong>。</li>
+</ul>
+<p>对于JS文件，利用<strong>script</strong>标签实现。代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> head = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>] || <span class="built_in">document</span>.body;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadJsModule</span>(<span class="params">url</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</div><div class="line">    script.charset = <span class="string">'utf-8'</span>;</div><div class="line">    script.type = <span class="string">'text/javascript'</span>;</div><div class="line">    script.onload = script.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.readyState || <span class="keyword">this</span>.readyState === <span class="string">'loaded'</span> || <span class="keyword">this</span>.readyState === <span class="string">'complete'</span>) &#123;</div><div class="line">            <span class="comment">/*</span></div><div class="line">             * 加载逻辑, callback为define的回调函数, args为所有依赖模块的数组</div><div class="line">             * callback.apply(window, args);</div><div class="line">             */</div><div class="line">            script.onload = script.onreadystatechange = <span class="literal">null</span>;</div><div class="line">        &#125;  </div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   对于文本文件，直接用<strong>ajax</strong>实现。代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> xhr = <span class="built_in">window</span>.XMLHttpRequest ? <span class="keyword">new</span> XMLHttpRequest() : <span class="keyword">new</span> ActiveXObject(<span class="string">'Microsoft.XMLHTTP'</span>),</div><div class="line">      textContent = <span class="string">''</span>;</div><div class="line">	  </div><div class="line">xhr.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> DONE = <span class="number">4</span>, OK = <span class="number">200</span>;</div><div class="line">    <span class="keyword">if</span>(xhr.readyState === DONE)&#123;</div><div class="line">        <span class="keyword">if</span>(xhr.status === OK)&#123;</div><div class="line">             textContent = xhr.responseText; <span class="comment">// 返回的文本文件</span></div><div class="line">        &#125; <span class="keyword">else</span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="string">"Error: "</span>+ xhr.status); <span class="comment">// 加载失败</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">xhr.open(<span class="string">'GET'</span>, url, <span class="literal">true</span>);<span class="comment">// url为文本文件的绝对路径</span></div><div class="line">xhr.send(<span class="literal">null</span>);</div><div class="line"><span class="string">``</span><span class="string">`	</span></div><div class="line"></div><div class="line">#### 2.  模块依赖管理</div><div class="line">一个模块的加载过程如下图所示。</div><div class="line">![](https://haitao.nos.netease.com/e9bc3b86-2069-4e53-a04f-c7275bbf6ad8.jpg)</div><div class="line">- 状态管理</div><div class="line">从上面可以看出，一个模块的加载可能存在以下几种可能的状态。</div><div class="line">1. 加载(load)状态，包括未加载(preload)状态、加载(loading)状态和加载完毕(loaded)状态。</div><div class="line">2. 正在加载依赖(pending)状态。</div><div class="line">3. 模块回调完成(finished)状态。</div><div class="line">因此，需要为每个加载的模块加上状态标志(status)，来识别目前模块的状态。</div><div class="line"></div><div class="line">- 依赖分析</div><div class="line">在模块加载后，我们需要解析出每个模块的绝对路径(path)、依赖模块(deps)和回调函数(callback)，然后也放在模块信息中。模块对象管理逻辑的数据模型如下所示。</div><div class="line">`<span class="string">``</span>javascript</div><div class="line">&#123;</div><div class="line">	<span class="attr">path</span>: <span class="string">'http://asdas/asda/a.js'</span>,</div><div class="line">	<span class="attr">deps</span>: [&#123;&#125;, &#123;&#125;, &#123;&#125;],</div><div class="line">	<span class="attr">callback</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; &#125;,</div><div class="line">	<span class="attr">status</span>: <span class="string">'pending'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>依赖循环<br>模块很可能出现循环依赖的情况。也就是a模块和b模块相互依赖。依赖分为<strong>强依赖</strong>和<strong>弱依赖</strong>。<strong>强依赖</strong>是指，在模块回调执行时就会使用到的依赖；反之，就是<strong>弱依赖</strong>。对于<strong>强依赖</strong>，会造成死锁，这种情况是无法解决的。但<strong>弱依赖</strong>可以通过现将一个空的模块引用注入让一个模块先执行，等依赖模块执行完后，再替换掉就可以了。<strong>强依赖</strong>和<strong>弱依赖</strong>的例子如下：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//强依赖的例子</span></div><div class="line"><span class="comment">//A模块</span></div><div class="line">define([<span class="string">'b.js'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">B</span>) </span>&#123;</div><div class="line">  <span class="comment">// 回调执行时需要直接用到依赖模块</span></div><div class="line">   B.demo = <span class="number">1</span>;</div><div class="line">   <span class="comment">// 其他逻辑</span></div><div class="line">&#125;);</div><div class="line"><span class="comment">//B模块</span></div><div class="line">define([<span class="string">'a.js'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">A</span>) </span>&#123;</div><div class="line">   <span class="comment">// 回调执行时需要直接用到依赖模块</span></div><div class="line">   A.demo = <span class="number">1</span>;</div><div class="line">   <span class="comment">// 其他逻辑</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 弱依赖的例子</span></div><div class="line"><span class="comment">// A模块</span></div><div class="line">define([<span class="string">'b.js'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">B</span>) </span>&#123;</div><div class="line">    <span class="comment">// 回调执行时不会直接执行依赖模块</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        B.demo = <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">testFunc</span>: test&#125;</div><div class="line">&#125;);</div><div class="line"><span class="comment">//B模块</span></div><div class="line">define([<span class="string">'a.js'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">A</span>) </span>&#123;</div><div class="line">    <span class="comment">// 回调执行时不会直接执行依赖模块</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        A.demo = <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">testFunc</span>: test&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="3-对外暴露define方法"><a href="#3-对外暴露define方法" class="headerlink" title="3. 对外暴露define方法"></a>3. 对外暴露<strong>define</strong>方法</h4><p>对于define函数，需要遍历所有的未处理js脚本(包括<strong>内联</strong>和<strong>外联</strong>)，然后执行模块的加载。这里对于<strong>内联</strong>和<strong>外联</strong>脚本中的define，要做分别处理。主要原因有两点：</p>
+<ol>
+<li>内敛脚本不需要加载操作。</li>
+<li>内敛脚本中define的模块的回调输出是不能作为其他模块的依赖的。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> handledScriptList = [];</div><div class="line"><span class="built_in">window</span>.define = <span class="function"><span class="keyword">function</span>(<span class="params">deps, callback</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> scripts = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>),</div><div class="line">        defineReg = <span class="regexp">/s*define\s*\(\[.*\]\s*\,\s*function\s*\(.*\)\s*\&#123;/</span>,</div><div class="line">        script;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = scripts.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">        script = list[i];</div><div class="line">        <span class="keyword">if</span> (handledScriptList.indexOf(script.src) &lt; <span class="number">0</span>) &#123;</div><div class="line">            handledScriptList.push(script.src);</div><div class="line">            <span class="keyword">if</span> (script.innerHTML.search(defineReg) &gt;= <span class="number">0</span>) &#123;</div><div class="line">                <span class="comment">// 内敛脚本直接进行模块依赖检查。</span></div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 外联脚本的首先要监听脚本加载</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>上面就是对实现一个模块化工具所涉及核心问题的描述。完整的代码<a href="https://github.com/ccfe/modules_load" title="点我" target="_blank" rel="noopener">点我</a>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/27/从 r-model 来看 regularjs/" rel="next" title="从 r-model 来看 regularjs">
+                <i class="fa fa-chevron-left"></i> 从 r-model 来看 regularjs
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/30/SVG动画基础篇/" rel="prev" title="SVG动画基础篇">
+                SVG动画基础篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-模块如何加载和执行"><span class="nav-number">1.</span> <span class="nav-text">1.  模块如何加载和执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-对外暴露define方法"><span class="nav-number">2.</span> <span class="nav-text">3. 对外暴露define方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

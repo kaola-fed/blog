@@ -1,0 +1,714 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="art-template是一个性能卓越的javascript模板引擎。除了高性能之外，Ta的语法简洁易懂、支持基础的js语法、能满足绝大多数的使用场景，而且其出色的调试功能，编写模板再无后顾之忧，能在模板中定位语法错误。在前后端分离方案中，几经对比，最后选用了art-template这个前后端通用的轻量的模板。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="art-template学习笔记">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/06/12/art-template学习笔记/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="art-template是一个性能卓越的javascript模板引擎。除了高性能之外，Ta的语法简洁易懂、支持基础的js语法、能满足绝大多数的使用场景，而且其出色的调试功能，编写模板再无后顾之忧，能在模板中定位语法错误。在前后端分离方案中，几经对比，最后选用了art-template这个前后端通用的轻量的模板。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="art-template学习笔记">
+<meta name="twitter:description" content="art-template是一个性能卓越的javascript模板引擎。除了高性能之外，Ta的语法简洁易懂、支持基础的js语法、能满足绝大多数的使用场景，而且其出色的调试功能，编写模板再无后顾之忧，能在模板中定位语法错误。在前后端分离方案中，几经对比，最后选用了art-template这个前后端通用的轻量的模板。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/06/12/art-template学习笔记/"/>
+
+
+
+
+
+  <title>art-template学习笔记 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/06/12/art-template学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                art-template学习笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-12T00:00:00+08:00">
+                2017-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p><code>art-template</code>是一个性能卓越的javascript模板引擎。除了高性能之外，Ta的语法简洁易懂、支持基础的js语法、能满足绝大多数的使用场景，而且其出色的调试功能，编写模板再无后顾之忧，能在模板中定位语法错误。在前后端分离方案中，几经对比，最后选用了<a href="https://github.com/aui/art-template" target="_blank" rel="noopener">art-template</a>这个前后端通用的轻量的模板。</p>
+</blockquote>
+<!-- more ->
+
+
+### 选用模板的几大原则
+
+- 性能；毕竟是要用在实际项目中的，性能差的，必弃之；
+- 语法功能方面：
+    - 基本的条件表达式、循环遍历等功能，是必备的；
+    - 模板嵌套，include子模板等功能，即模板重用功能也是必备的；
+    - 支持模板语法与js语句混写，算数运算、逻辑运算、比较运算等在做模板中能做常规处理也很重要；
+    - 支持功能函数；在变量输出前，需要做些特定的处理，如日期format等，这种使用场景不在少数，作为一个功能完善的模板，也是必不可少的。
+    - 语法简洁、可读性强；
+- 模板调试，加分项；
+- 支持主流的node框架以及打包工具等；
+- 模板引擎活跃度高、持续维护、有完整的文档等；
+
+
+当然，`art-template`都满足以上条件，使用之后也证实这是一个开发体验很棒的模板。下面来介绍下Ta。
+
+---
+
+### 语法
+
+*art-template 同时支持两种模板语法。标准语法可以让模板更容易读写；原始语法具有强大的逻辑处理能力。下文均为标准语法。*
+
+#### 内容输出
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;value&#125;&#125;</div><div class="line">&#123;&#123;data.key&#125;&#125;</div><div class="line">&#123;&#123;data[&apos;key&apos;]&#125;&#125;</div><div class="line">&#123;&#123;a ? b : c&#125;&#125;</div><div class="line">&#123;&#123;a || b&#125;&#125;</div><div class="line">&#123;&#123;a + b&#125;&#125;</div></pre></td></tr></table></figure>
+<p>支持三元运算符、逻辑运算符等；</p>
+<h4 id="不转义输出"><a href="#不转义输出" class="headerlink" title="不转义输出"></a>不转义输出</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;@value&#125;&#125;</div></pre></td></tr></table></figure>
+<p>不进行转义的输出，存在xxs风险，要谨慎使用；</p>
+<h4 id="设置变量"><a href="#设置变量" class="headerlink" title="设置变量"></a>设置变量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;set tlt = data.content.title&#125;&#125;</div></pre></td></tr></table></figure>
+<p>类freemarker中的<code>assign</code>进行变量设置，在多次取层级较深的对象属性时，设置变量来使用还是比较清晰的。</p>
+<h4 id="条件输出"><a href="#条件输出" class="headerlink" title="条件输出"></a>条件输出</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;if code &gt;= 0&#125;&#125; ... &#123;&#123;/if&#125;&#125;</div><div class="line"></div><div class="line">&#123;&#123;if topic.processState == 0&#125;&#125; </div><div class="line">... </div><div class="line">&#123;&#123;else if topic.processState==1&#125;&#125; </div><div class="line">...</div><div class="line">&#123;&#123;else&#125;&#125;</div><div class="line">... </div><div class="line">&#123;&#123;/if&#125;&#125;</div></pre></td></tr></table></figure>
+<h4 id="遍历输出"><a href="#遍历输出" class="headerlink" title="遍历输出"></a>遍历输出</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;each hotDiscussionList as list&#125;&#125;</div><div class="line">    &lt;span class=&quot;userName&quot;&gt;&#123;&#123;list.nickName&#125;&#125;&lt;/span&gt;</div><div class="line">&#123;&#123;/each&#125;&#125;</div></pre></td></tr></table></figure>
+<h4 id="子模板"><a href="#子模板" class="headerlink" title="子模板"></a>子模板</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;include &apos;./header.html&apos;&#125;&#125;</div><div class="line">&#123;&#123;include &apos;./header.html&apos; data&#125;&#125;</div></pre></td></tr></table></figure>
+<p>在父模板中，引入子模板，同时可以给子模板传入参数，如上；<br>在实际项目中，页头、页脚、公用模板就都可以提取出来作为子模板，在各个页面中引入进来，实现模板的公用；</p>
+<h4 id="模板继承"><a href="#模板继承" class="headerlink" title="模板继承"></a>模板继承</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;extend &apos;./layout.html&apos;&#125;&#125;</div><div class="line">&#123;&#123;block &apos;head&apos;&#125;&#125; ... &#123;&#123;/block&#125;&#125;</div></pre></td></tr></table></figure>
+<p>模板继承可以用来构建页面结构相似的基本模板“骨架”，快速构建多个相似页面，各自页面中实现差异部分。<br>实例：<br>layout.html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &#123;&#123;include &apos;../partials/meta.html&apos;&#125;&#125;</div><div class="line">    &#123;&#123;block &apos;title&apos;&#125;&#125;&lt;title&gt;网易考拉海购&lt;/title&gt;&#123;&#123;/block&#125;&#125;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body id=&quot;kaola-&#123;&#123;pageName&#125;&#125;&quot;&gt;</div><div class="line">    &#123;&#123;block &apos;content&apos;&#125;&#125;&#123;&#123;/block&#125;&#125;</div><div class="line">    &#123;&#123;block &apos;footerWidget&apos;&#125;&#125;</div><div class="line">       	&#123;&#123;include &apos;../partials/footer.html&apos;&#125;&#125;</div><div class="line">    &#123;&#123;/block&#125;&#125;</div><div class="line">    &#123;&#123;block &apos;others&apos;&#125;&#125;&#123;&#123;/block&#125;&#125;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>home.html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;extend &apos;../../layouts/page.html&apos;&#125;&#125;</div><div class="line"></div><div class="line">&#123;&#123;block &apos;title&apos;&#125;&#125;</div><div class="line">    &#123;&#123;title&#125;&#125;</div><div class="line">&#123;&#123;/block&#125;&#125;</div><div class="line"></div><div class="line">&#123;&#123;block &apos;head&apos;&#125;&#125;</div><div class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;custom.css&quot;&gt;</div><div class="line">&#123;&#123;/block&#125;&#125;</div><div class="line"></div><div class="line">&#123;&#123;block &apos;content&apos;&#125;&#125;</div><div class="line">    &lt;p&gt;This is just an awesome page.&lt;/p&gt;</div><div class="line">&#123;&#123;/block&#125;&#125;</div></pre></td></tr></table></figure>
+<h4 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h4><p>注册过滤器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var template = require(&apos;art-template&apos;);</div><div class="line">template.defaults.imports.dateFormat = function(date, format)&#123;/*...*/&#125;;</div></pre></td></tr></table></figure>
+<p>使用过滤器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;date | timestamp | dateFormat &apos;yyyy-MM-dd hh:mm:ss&apos;&#125;&#125;</div></pre></td></tr></table></figure></p>
+<p>过滤器语法类似管道操作符，可以多个过滤器叠加；</p>
+<h3 id="模板变量"><a href="#模板变量" class="headerlink" title="模板变量"></a>模板变量</h3><p>通过<code>template.defaults.imports</code>给模板中导入变量，通过 $imports ，可以访问到模板外部的全局变量与导入的变量。</p>
+<p>模板中内置的变量有：</p>
+<ul>
+<li>$data 传入模板的数据</li>
+<li>$imports 外部导入的变量以及全局变量</li>
+<li>print 字符串输出函数</li>
+<li>include 子模板载入函数</li>
+<li>extend 模板继承模板导入函数</li>
+<li>block 模板块声明函数</li>
+</ul>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>支持html注释，模板注释如下，不会在html中输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;%# 当前页面名称 %&gt;</div><div class="line">window.__pageName = &quot;&#123;&#123;pageName&#125;&#125;&quot;;</div></pre></td></tr></table></figure>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>对于art-template高效的秘密，可以查阅作者的解释：<a href="http://cdc.tencent.com/2012/06/15/%E9%AB%98%E6%80%A7%E8%83%BDjavascript%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">高性能JavaScript模板引擎原理解析</a></p>
+<hr>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><ul>
+<li><a href="https://github.com/aui/art-template">https://github.com/aui/art-template</a></li>
+<li><a href="https://aui.github.io/art-template/docs/">https://aui.github.io/art-template/docs/</a></li>
+</ul>
+-->
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/08/生命中最简单又最困难的事/" rel="next" title="生命中最简单又最困难的事">
+                <i class="fa fa-chevron-left"></i> 生命中最简单又最困难的事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/16/vue-cli是如何工作的/" rel="prev" title="vue-cli是如何工作的">
+                vue-cli是如何工作的 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

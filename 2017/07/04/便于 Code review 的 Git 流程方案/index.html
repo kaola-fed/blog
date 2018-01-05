@@ -1,0 +1,763 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="设定读者已经了解基本的 Git 操作和 Git 分支管理策略。  为了强化代码记录的可读性并协助 Code review 的执行，通过参考已有流程方案，设定一种适合的 Git 流程方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="便于 Code review 的 Git 流程方案">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/04/便于 Code review 的 Git 流程方案/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="设定读者已经了解基本的 Git 操作和 Git 分支管理策略。  为了强化代码记录的可读性并协助 Code review 的执行，通过参考已有流程方案，设定一种适合的 Git 流程方案。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="便于 Code review 的 Git 流程方案">
+<meta name="twitter:description" content="设定读者已经了解基本的 Git 操作和 Git 分支管理策略。  为了强化代码记录的可读性并协助 Code review 的执行，通过参考已有流程方案，设定一种适合的 Git 流程方案。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/04/便于 Code review 的 Git 流程方案/"/>
+
+
+
+
+
+  <title>便于 Code review 的 Git 流程方案 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/04/便于 Code review 的 Git 流程方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                便于 Code review 的 Git 流程方案
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-04T00:00:00+08:00">
+                2017-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>设定读者已经了解基本的 Git 操作和 Git 分支管理策略。</p>
+</blockquote>
+<p>为了强化代码记录的可读性并协助 Code review 的执行，通过参考已有流程方案，设定一种适合的 Git 流程方案。</p>
+<a id="more"></a>
+<h2 id="流程步骤"><a href="#流程步骤" class="headerlink" title="流程步骤"></a>流程步骤</h2><ol>
+<li>新建分支</li>
+<li>提交 commit 记录</li>
+<li>合并 commit 记录</li>
+<li>推送到对应的远程仓库</li>
+<li>提交 Merge Request 申请</li>
+</ol>
+<ul>
+<li>附：该流程的另一个好处：git cherry-pick</li>
+<li>附：使用 git pull –rebase 去掉多余的 Merge Request</li>
+</ul>
+<h2 id="第一步：新建分支"><a href="#第一步：新建分支" class="headerlink" title="第一步：新建分支"></a>第一步：新建分支</h2><p>每次开发新功能，都应该从当前主开发分支新建一个功能分支。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 从当前分支新建功能分支，分支代号按照 JIRA 号设定</div><div class="line">$ git checkout -b feature-KJDS-00000</div></pre></td></tr></table></figure>
+<h2 id="第二步：提交-commit-记录"><a href="#第二步：提交-commit-记录" class="headerlink" title="第二步：提交 commit 记录"></a>第二步：提交 commit 记录</h2><p>添加功能后进行 commit，commit 时需要携带足够的修改信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 添加到暂存区并完成提交</div><div class="line">$ git add -A</div><div class="line">$ git commit -m &quot;header: some message&quot;</div></pre></td></tr></table></figure>
+<p>这里设定：</p>
+<ul>
+<li>杂项的提交使用 <code>misc:</code> 开头：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git commit -m &quot;misc: some awesome modification&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>bugfix 或合并后的 commit 记录使用 <code>jira-No:</code> 开头：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git commit -m &quot;jira-00001: fix a specific bug&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>拓展：可以配合「<a href="https://gitmoji.carloscuesta.me/" target="_blank" rel="noopener">gitmoji</a>」强化信息可读性。</p>
+</blockquote>
+<h2 id="第三步：合并-commit-记录"><a href="#第三步：合并-commit-记录" class="headerlink" title="第三步：合并 commit 记录"></a>第三步：合并 commit 记录</h2><p>假设在 feature 功能分支上新增了 4 条开发记录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">commit 34d364d9d51dc94b264e99f7a92add50dd2c3987</div><div class="line">Author: Aeo &lt;A_doz@126.com&gt;</div><div class="line">Date:   Sun Jun 25 12:27:02 2016 +0800</div><div class="line"></div><div class="line">    misc: forth commit</div><div class="line"></div><div class="line">commit 27322cb4b3f99226ffa98240460b90d92ed55a17</div><div class="line">Author: Aeo &lt;A_doz@126.com&gt;</div><div class="line">Date:   Sun Jun 25 12:26:42 2016 +0800</div><div class="line"></div><div class="line">    misc: third commit</div><div class="line"></div><div class="line">commit 405b957a96a7dbe352cf7da9a422312a735f6081</div><div class="line">Author: Aeo &lt;A_doz@126.com&gt;</div><div class="line">Date:   Sun Jun 25 12:26:16 2016 +0800</div><div class="line"></div><div class="line">    misc: second commit</div><div class="line"></div><div class="line">commit cc12fc86a7738ee2f9a8a48c31a9435232c2b08f</div><div class="line">Author: Aeo &lt;A_doz@126.com&gt;</div><div class="line">Date:   Sun Jun 25 12:25:53 2016 +0800</div><div class="line"></div><div class="line">    misc: first commit</div></pre></td></tr></table></figure>
+<p>现在我们已经完成了 feature 分支的开发和联调，需要把代码合并到当前主开发分支。</p>
+<p>此时可以合并一些不必要的 commit 使主开发分支保持干净，优先推荐 <strong>git rebase</strong> 进行合并操作。</p>
+<h3 id="rebase：一般翻译为「衍合」或「变基」"><a href="#rebase：一般翻译为「衍合」或「变基」" class="headerlink" title="rebase：一般翻译为「衍合」或「变基」"></a>rebase：一般翻译为「衍合」或「变基」</h3><p>如果你想要合并最后 4 个 commit，你可以运行下列命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># -i 参数表示互动 (interactive)</div><div class="line">$ git rebase -i HEAD~4</div></pre></td></tr></table></figure>
+<p>这时 git 会打开一个互动界面，方便用户对历史提交进行修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">pick cc12fc8 misc: first commit</div><div class="line">pick 405b957 misc: second commit</div><div class="line">pick 27322cb misc: third commit</div><div class="line">pick 34d364d misc: forth commit</div><div class="line"></div><div class="line"># Rebase 2763481..34d364d onto 2763481 (4 command(s))</div><div class="line">#</div><div class="line"># Commands:</div><div class="line"># p, pick = 使用该提交</div><div class="line"># r, reword = 使用该提交，但需要编辑提交信息</div><div class="line"># e, edit = 使用该提交，但此处暂停并提供修改机会</div><div class="line"># s, squash = 使用该提交，但合并到上一个提交记录中</div><div class="line"># f, fixup = 类似 squash，但丢弃当前提交记录的提交信息</div><div class="line"># x, exec = 执行 shell 命令</div><div class="line"># d, drop = 移除当前提交</div></pre></td></tr></table></figure>
+<p>我们需要的是利用 <strong><code>squash</code></strong> 或者 <strong><code>fixup</code></strong> 进行分支合并：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pick cc12fc8 misc: first commit</div><div class="line">squash 405b957 misc: second commit</div><div class="line">squash 27322cb misc: third commit</div><div class="line">squash 34d364d misc: forth commit</div></pre></td></tr></table></figure>
+<p>若使用 <code>fixup</code> 的话，则直接丢弃其它记录，省去下一步操作。但使用 <code>squash</code> 时，则需要在下一步中对这 4 条 commit 信息进行修改和保存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># This is a combinatin of 4 commits.</div><div class="line"># This is the 1st commit message:</div><div class="line"></div><div class="line">misc: first commit</div><div class="line"></div><div class="line"># This is the commit message #2:</div><div class="line"></div><div class="line">misc: second commit</div><div class="line"></div><div class="line"># This is the commit message #3:</div><div class="line"></div><div class="line">misc: third commit</div><div class="line"></div><div class="line"># This is the commit message #4:</div><div class="line"></div><div class="line">misc: forth commit</div></pre></td></tr></table></figure>
+<p>编辑并保存后，通过 <code>git log</code> 可以看到仅剩一条 commit 记录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 此时的 commit SHA 与之前的并不相同</div><div class="line">commit da473276aa981f6e29577aa09a525109971547f2</div><div class="line">Author: Aeo &lt;A_doz@126.com&gt;</div><div class="line">Date:   Sun Jun 25 12:50:53 2016 +0800</div><div class="line"></div><div class="line">    misc: first commit</div></pre></td></tr></table></figure>
+<h3 id="rebase-的风险："><a href="#rebase-的风险：" class="headerlink" title="rebase 的风险："></a>rebase 的风险：</h3><p>使用 rebase 需要遵循一条准则：</p>
+<p><strong>一旦分支中的提交对象发布到公共仓库，就千万不要对该分支进行衍合操作。</strong></p>
+<p>简单来说，当待合并 commit 记录中杂糅着他人的 commit 记录，此时就不可以再对这部分 commit 记录做合并操作。</p>
+<p>但只要新开分支且保持分支独立开发，杂糅的情况就不存在。</p>
+<h2 id="第四步：推送到对应的远程仓库"><a href="#第四步：推送到对应的远程仓库" class="headerlink" title="第四步：推送到对应的远程仓库"></a>第四步：推送到对应的远程仓库</h2><p>完成 commit 记录的合并后，此时可以反合目标分支的最新代码，避免后续提交 Merge Request 时存在冲突。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git push origin feature-KJDS-00000</div></pre></td></tr></table></figure>
+<h2 id="第五步：提交-Merge-Request-申请"><a href="#第五步：提交-Merge-Request-申请" class="headerlink" title="第五步：提交 Merge Request 申请"></a>第五步：提交 Merge Request 申请</h2><p>当完成功能后提交到远程后，需要经过下述流程：</p>
+<ol>
+<li><p>提交 Merge Request：</p>
+<p>通过「＋Create Merge Request」按钮创建一个 Merge Request；</p>
+</li>
+<li><p><strong>必须</strong>指定「Assignee」：</p>
+<p>指定需要 review 你代码的同学，禁止指定自己；</p>
+</li>
+<li><p>更改「Target branch」：</p>
+<p>改变为需要合并进去的目标分支；</p>
+</li>
+<li><p>设置合并后删除被合并分支的选项：</p>
+<p>勾选「Remove source branch when merge request is accepted.」选项，在合并完成后删除源分支，控制分支总数量；</p>
+</li>
+<li><p>使用「Submit Merge Request」提交合并请求。</p>
+</li>
+</ol>
+<p>完成上述设置后，相关同学将会收到邮件通知，此时可进入 GitLab 进行 code review。</p>
+<p>如果发现问题则对问题代码进行点评并拒绝关闭申请，反之则通过合并申请。</p>
+<p>合并申请通过后留下的 Merge Request 记录，也就记录了 code reviewer 。</p>
+<h2 id="附：该流程的另一个好处：git-cherry-pick"><a href="#附：该流程的另一个好处：git-cherry-pick" class="headerlink" title="附：该流程的另一个好处：git cherry-pick"></a>附：该流程的另一个好处：git cherry-pick</h2><p>通过该流程提交的代码，每个功能对应着唯一的提交记录。</p>
+<p>此时如果单独提前上线部分功能，则可以在待上线分支中直接使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git cherry-pick commit-SHA</div></pre></td></tr></table></figure>
+<p>这里的 commit-SHA 可以是其它分支上的提交记录，此时可以直接将其抓到待上线分支上，避免从杂糅代码中扣取功能的时耗和风险。</p>
+<h3 id="附：使用-git-pull-–rebase-替代-git-pull，去除多余的-Merge-Request"><a href="#附：使用-git-pull-–rebase-替代-git-pull，去除多余的-Merge-Request" class="headerlink" title="附：使用 git pull –rebase 替代 git pull，去除多余的 Merge Request"></a>附：使用 git pull –rebase 替代 git pull，去除多余的 Merge Request</h3><p>在项目初始搭建阶段，可能需要多人同时在一个分支上进行开发，并有大量的并发操作，此时上述流程方案便不太适用。</p>
+<p>但此时我们仍然可以利用 git pull –rebase 尽可能保持提交记录清晰。</p>
+<p>如果自己在本地 commit 了代码，然后执行 <code>git pull</code>，这时候极有可能出现这样的合并记录：</p>
+<pre><code>Merge branch &apos;feature&apos; of ssh://domain/some-system into feature
+</code></pre><p>但其实大部分情况下这里是不会有冲突的。所以拉取远程代码时，使用 <code>git pull --rebase</code> 就可以保持提交历史记录的整洁。</p>
+<blockquote>
+<p>原理：把本地当前分支的未推送 commit 临时保存为补丁 (patch)（这些补丁放到 <code>.git/rebase</code> 目录中），然后将远程分支的代码拉取到本地，最后把保存的这些补丁再应用到本地当前分支上。</p>
+</blockquote>
+<p>若要把 rebase 当做 <code>git pull</code> 的预设值，可以修改 <code>~/.gitconfig</code> 让所有 tracked branches 自动使用该设定：</p>
+<pre><code>[branch]  
+  autosetuprebase = always
+</code></pre><h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><ol>
+<li><a href="https://git-scm.com/book/zh/v1/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88" target="_blank" rel="noopener">Git 分支的衍合</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/08/git-use-process.html" target="_blank" rel="noopener">Git 使用规范流程 - 阮一峰</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/04/MVVM 式的热区组件开发/" rel="next" title="MVVM 式的热区组件开发">
+                <i class="fa fa-chevron-left"></i> MVVM 式的热区组件开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/07/解读 Project Guidelines/" rel="prev" title="解读 Project Guidelines">
+                解读 Project Guidelines <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#流程步骤"><span class="nav-number">1.</span> <span class="nav-text">流程步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步：新建分支"><span class="nav-number">2.</span> <span class="nav-text">第一步：新建分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步：提交-commit-记录"><span class="nav-number">3.</span> <span class="nav-text">第二步：提交 commit 记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步：合并-commit-记录"><span class="nav-number">4.</span> <span class="nav-text">第三步：合并 commit 记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rebase：一般翻译为「衍合」或「变基」"><span class="nav-number">4.1.</span> <span class="nav-text">rebase：一般翻译为「衍合」或「变基」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rebase-的风险："><span class="nav-number">4.2.</span> <span class="nav-text">rebase 的风险：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四步：推送到对应的远程仓库"><span class="nav-number">5.</span> <span class="nav-text">第四步：推送到对应的远程仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五步：提交-Merge-Request-申请"><span class="nav-number">6.</span> <span class="nav-text">第五步：提交 Merge Request 申请</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附：该流程的另一个好处：git-cherry-pick"><span class="nav-number">7.</span> <span class="nav-text">附：该流程的另一个好处：git cherry-pick</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#附：使用-git-pull-–rebase-替代-git-pull，去除多余的-Merge-Request"><span class="nav-number">7.1.</span> <span class="nav-text">附：使用 git pull –rebase 替代 git pull，去除多余的 Merge Request</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">8.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

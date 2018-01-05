@@ -1,0 +1,725 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="浅谈HTML5 Web Worker前言总所周知，Javascript是运行在单线程环境中，也就是说无法同时运行多个脚本。假设用户点击一个按钮，触发了一段用于计算的Javascript代码，那么在这段代码执行完毕之前，页面是无法响应用户操作的。但是，如果将这段代码交给Web Worker去运行的话，那么情况就不一样了：浏览器会在后台启动一个独立的worker线程来专门负责这段代码的运行，因此，页面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈HTML5 Web Worker">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/23/浅谈HTML5 Web Worker/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="浅谈HTML5 Web Worker前言总所周知，Javascript是运行在单线程环境中，也就是说无法同时运行多个脚本。假设用户点击一个按钮，触发了一段用于计算的Javascript代码，那么在这段代码执行完毕之前，页面是无法响应用户操作的。但是，如果将这段代码交给Web Worker去运行的话，那么情况就不一样了：浏览器会在后台启动一个独立的worker线程来专门负责这段代码的运行，因此，页面">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.395Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈HTML5 Web Worker">
+<meta name="twitter:description" content="浅谈HTML5 Web Worker前言总所周知，Javascript是运行在单线程环境中，也就是说无法同时运行多个脚本。假设用户点击一个按钮，触发了一段用于计算的Javascript代码，那么在这段代码执行完毕之前，页面是无法响应用户操作的。但是，如果将这段代码交给Web Worker去运行的话，那么情况就不一样了：浏览器会在后台启动一个独立的worker线程来专门负责这段代码的运行，因此，页面">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/23/浅谈HTML5 Web Worker/"/>
+
+
+
+
+
+  <title>浅谈HTML5 Web Worker | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/23/浅谈HTML5 Web Worker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                浅谈HTML5 Web Worker
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-23T00:00:00+08:00">
+                2017-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="浅谈HTML5-Web-Worker"><a href="#浅谈HTML5-Web-Worker" class="headerlink" title="浅谈HTML5 Web Worker"></a>浅谈HTML5 Web Worker</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总所周知，Javascript是运行在单线程环境中，也就是说无法同时运行多个脚本。假设用户点击一个按钮，触发了一段用于计算的Javascript代码，那么在这段代码执行完毕之前，页面是无法响应用户操作的。但是，如果将这段代码交给Web Worker去运行的话，那么情况就不一样了：浏览器会在后台启动一个独立的worker线程来专门负责这段代码的运行，因此，页面在这段Javascript代码运行期间依然可以响应用户的其他操作。</p>
+<a id="more"></a>
+<h3 id="Web-Worker是什么鬼？"><a href="#Web-Worker是什么鬼？" class="headerlink" title="Web Worker是什么鬼？"></a>Web Worker是什么鬼？</h3><p>Web Worker 是HTML5标准的一部分，这一规范定义了一套 API，它允许一段JavaScript程序运行在主线程之外的另外一个线程中。</p>
+<p>Web Worker 规范中定义了两类工作线程，分别是专用线程Dedicated Worker和共享线程 Shared Worker，其中，Dedicated Worker只能为一个页面所使用，而Shared Worker则可以被多个页面所共享，下文会重点介绍Dedicated Worker。</p>
+<h2 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h2><h3 id="创建worker"><a href="#创建worker" class="headerlink" title="创建worker"></a>创建worker</h3><p>只需调用Worker() 构造函数并传入一个要在 worker 线程内运行的脚本的URI，即可创建一个新的worker。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> myWorker = <span class="keyword">new</span> Worker(<span class="string">"my_task.js"</span>);</div><div class="line"></div><div class="line"><span class="comment">// my_task.js中的代码 </span></div><div class="line"><span class="keyword">var</span> i = <span class="number">0</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedCount</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    i = i+<span class="number">1</span>;</div><div class="line">    postMessage(i);</div><div class="line">    setTimeout(timedCount, <span class="number">1000</span>);</div><div class="line">&#125;</div><div class="line">timedCount();</div></pre></td></tr></table></figure>
+<p>另外，通过URL.createObjectURL()创建URL对象，可以实现创建内嵌的worker</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> myTask = <span class="string">`</span></div><div class="line">    var i = 0;</div><div class="line">    function timedCount()&#123;</div><div class="line">        i = i+1;</div><div class="line">        postMessage(i);</div><div class="line">        setTimeout(timedCount, 1000);</div><div class="line">    &#125;</div><div class="line">    timedCount();</div><div class="line">`;</div><div class="line"></div><div class="line"><span class="keyword">var</span> blob = <span class="keyword">new</span> Blob([myTask]);</div><div class="line"><span class="keyword">var</span> myWorker = <span class="keyword">new</span> Worker(<span class="built_in">window</span>.URL.createObjectURL(blob));</div></pre></td></tr></table></figure>
+<p>这样，就可以结合NEJ、Webpack进行模块化管理、打包了。</p>
+<blockquote>
+<p>注意：传入 Worker 构造函数的参数 URI 必须遵循同源策略。</p>
+<p>提示：本文所有的示例代码均可直接拷贝到chrome控制台中运行。</p>
+</blockquote>
+<h3 id="传递数据-onmessage-、postMessage-data"><a href="#传递数据-onmessage-、postMessage-data" class="headerlink" title="传递数据 onmessage 、postMessage(data)"></a>传递数据 onmessage 、postMessage(data)</h3><p>Worker 与其主页面之间的通信是通过 onmessage 事件和 postMessage() 方法实现的。</p>
+<p>在主页面与 Worker 之间传递的数据是通过拷贝，而不是共享来完成的。传递给 Worker 的对象需要经过序列化，接下来在另一端还需要反序列化。页面与 Worker 不会共享同一个实例，最终的结果就是在每次通信结束时生成了数据的一个副本。</p>
+<p>也就是说，Worker 与其主页面之间只能单纯的传递数据，不能传递复杂的引用类型：如通过构造函数创建的对象等。并且，传递的数据也是经过拷贝生成的一个副本，在一端对数据进行修改不会影响另一端。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> myTask = <span class="string">`</span></div><div class="line">    onmessage = function (e) &#123;</div><div class="line">        var data = e.data;</div><div class="line">        data.push('hello');</div><div class="line">        console.log('worker:', data); // worker: [1, 2, 3, "hello"]</div><div class="line">        postMessage(data);</div><div class="line">    &#125;;</div><div class="line">`;</div><div class="line"></div><div class="line"><span class="keyword">var</span> blob = <span class="keyword">new</span> Blob([myTask]);</div><div class="line"><span class="keyword">var</span> myWorker = <span class="keyword">new</span> Worker(<span class="built_in">window</span>.URL.createObjectURL(blob));</div><div class="line"></div><div class="line">myWorker.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = e.data;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'page:'</span>, data); <span class="comment">// page: [1, 2, 3, "hello"]</span></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'arr:'</span>, arr); <span class="comment">// arr: [1, 2, 3]</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line">myWorker.postMessage(arr);</div></pre></td></tr></table></figure>
+<h3 id="通过可转让对象来传递数据"><a href="#通过可转让对象来传递数据" class="headerlink" title="通过可转让对象来传递数据"></a>通过可转让对象来传递数据</h3><p>前面介绍了简单数据的传递，其实还有一种性能更高的方法来传递数据，就是通过可转让对象将数据在主页面和Worker之间进行来回穿梭。可转让对象从一个上下文转移到另一个上下文而不会经过任何拷贝操作。这意味着当传递大数据时会获得极大的性能提升。和按照引用传递不同，一旦对象转让，那么它在原来上下文的那个版本将不复存在。该对象的所有权被转让到新的上下文内。例如，当你将一个 ArrayBuffer 对象从主应用转让到 Worker 中，原始的 ArrayBuffer 被清除并且无法使用。它包含的内容会(完整无差的)传递给 Worker 上下文。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> uInt8Array = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(<span class="number">1024</span>*<span class="number">1024</span>*<span class="number">32</span>); <span class="comment">// 32MB</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; uInt8Array .length; ++i) &#123;</div><div class="line">  uInt8Array[i] = i;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(uInt8Array.length); <span class="comment">// 传递前长度:33554432</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> myTask = <span class="string">`</span></div><div class="line">    onmessage = function (e) &#123;</div><div class="line">        var data = e.data;</div><div class="line">        console.log('worker:', data);</div><div class="line">    &#125;;</div><div class="line">`;</div><div class="line"></div><div class="line"><span class="keyword">var</span> blob = <span class="keyword">new</span> Blob([myTask]);</div><div class="line"><span class="keyword">var</span> myWorker = <span class="keyword">new</span> Worker(<span class="built_in">window</span>.URL.createObjectURL(blob));</div><div class="line">myWorker.postMessage(uInt8Array.buffer, [uInt8Array.buffer]);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(uInt8Array.length); <span class="comment">// 传递后长度:0</span></div></pre></td></tr></table></figure>
+<h3 id="Worker上下文"><a href="#Worker上下文" class="headerlink" title="Worker上下文"></a>Worker上下文</h3><p>Worker执行的上下文，与主页面执行时的上下文并不相同，最顶层的对象并不是window，而是个一个叫做WorkerGlobalScope的东东，所以无法访问window、以及与window相关的DOM API，但是可以与setTimeout、setInterval等协作。</p>
+<p>WorkerGlobalScope作用域下的常用属性、方法如下：</p>
+<p>1、self</p>
+<p>我们可以使用 WorkerGlobalScope 的 self 属性来或者这个对象本身的引用</p>
+<p>2、location</p>
+<p>　　location 属性返回当线程被创建出来的时候与之关联的 WorkerLocation 对象，它表示用于初始化这个工作线程的脚步资源的绝对 URL，即使页面被多次重定向后，这个 URL 资源位置也不会改变。</p>
+<p>3、close</p>
+<p>　　关闭当前线程</p>
+<p>4、importScripts</p>
+<p>　　我们可以通过importScripts()方法通过url在worker中加载库函数</p>
+<p>5、XMLHttpRequest</p>
+<p>　　有了它，才能发出Ajax请求</p>
+<p>6、setTimeout/setInterval以及addEventListener/postMessage</p>
+<h3 id="终止-terminate"><a href="#终止-terminate" class="headerlink" title="终止 terminate()"></a>终止 terminate()</h3><p>在主页面上调用terminate()方法，可以立即杀死 worker 线程，不会留下任何机会让它完成自己的操作或清理工作。另外，Worker也可以调用自己的 close() 方法来关闭自己</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// 主页面调用</span></div><div class="line">myWorker.terminate();</div><div class="line"></div><div class="line"><span class="comment">// Worker 线程调用</span></div><div class="line">self.close();</div></pre></td></tr></table></figure>
+<h3 id="处理错误"><a href="#处理错误" class="headerlink" title="处理错误"></a>处理错误</h3><p>当 worker 出现运行时错误时，它的 onerror 事件处理函数会被调用。它会收到一个实现了 ErrorEvent 接口名为 error的事件。该事件不会冒泡，并且可以被取消；为了防止触发默认动作，worker 可以调用错误事件的 preventDefault() 方法。</p>
+<p>错误事件有三个实用的属性：filename - 发生错误的脚本文件名；lineno - 出现错误的行号；以及 message - 可读性良好的错误消息。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> myTask = <span class="string">`</span></div><div class="line">    onmessage = function (e) &#123;</div><div class="line">        var data = e.data;</div><div class="line">        console.log('worker:', data);</div><div class="line">    &#125;;</div><div class="line">    </div><div class="line">    // 使用未声明的变量</div><div class="line">    arr.push('error');</div><div class="line">`;</div><div class="line"></div><div class="line"><span class="keyword">var</span> blob = <span class="keyword">new</span> Blob([myTask]);</div><div class="line"><span class="keyword">var</span> myWorker = <span class="keyword">new</span> Worker(<span class="built_in">window</span>.URL.createObjectURL(blob));</div><div class="line">myWorker.onerror = <span class="function"><span class="keyword">function</span> <span class="title">onError</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="comment">// ERROR: Line 8 in blob:http://www.cnblogs.com/490a7c32-7386-4d6e-a82b-1ca0b1bf2469: Uncaught ReferenceError: arr is not defined</span></div><div class="line">    <span class="built_in">console</span>.log([<span class="string">'ERROR: Line '</span>, e.lineno, <span class="string">' in '</span>, e.filename, <span class="string">': '</span>, e.message].join(<span class="string">''</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最后总结下Web Worker为javascript带来了什么，以及典型的应用场景。</p>
+<h3 id="强大的计算能力"><a href="#强大的计算能力" class="headerlink" title="强大的计算能力"></a>强大的计算能力</h3><p>可以加载一个JS进行大量的复杂计算而不挂起主进程，并通过postMessage，onmessage进行通信，解决了大量计算对UI渲染的阻塞问题。</p>
+<h3 id="典型应用场景"><a href="#典型应用场景" class="headerlink" title="典型应用场景"></a>典型应用场景</h3><p>1、数学运算</p>
+<p>Web Worker最简单的应用就是用来做后台计算，对CPU密集型的场景再适合不过了。</p>
+<p>2、图像处理</p>
+<p>通过使用从<canvas>中获取的数据，可以把图像分割成几个不同的区域并且把它们推送给并行的不同Workers来做计算，对图像进行像素级的处理，再把处理完成的图像数据返回给主页面。</canvas></p>
+<p>3、大数据的处理</p>
+<p>目前mvvm框架越来越普及，基于数据驱动的开发模式也越愈发流行，未来大数据的处理也可能转向到前台，这时，将大数据的处理交给在Web Worker也是上上之策了吧。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers</a></li>
+<li><a href="https://www.html5rocks.com/zh/tutorials/workers/basics/" target="_blank" rel="noopener">https://www.html5rocks.com/zh/tutorials/workers/basics/</a></li>
+<li><a href="http://blog.jobbole.com/30592/" target="_blank" rel="noopener">http://blog.jobbole.com/30592/</a></li>
+<li><a href="http://blog.csdn.net/dojotoolkit/article/details/25030289" target="_blank" rel="noopener">http://blog.csdn.net/dojotoolkit/article/details/25030289</a></li>
+<li><a href="http://www.alloyteam.com/2015/11/deep-in-web-worker/" target="_blank" rel="noopener">http://www.alloyteam.com/2015/11/deep-in-web-worker/</a></li>
+<li><a href="http://www.cnblogs.com/zichi/p/4954328.html" target="_blank" rel="noopener">http://www.cnblogs.com/zichi/p/4954328.html</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/23/一道面试题目引发的思考/" rel="next" title="一道面试题目引发的思考">
+                <i class="fa fa-chevron-left"></i> 一道面试题目引发的思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/23/Clean Code 阅读总结/" rel="prev" title="Clean Code 阅读总结">
+                Clean Code 阅读总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#浅谈HTML5-Web-Worker"><span class="nav-number">1.</span> <span class="nav-text">浅谈HTML5 Web Worker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-Worker是什么鬼？"><span class="nav-number">1.1.1.</span> <span class="nav-text">Web Worker是什么鬼？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速上手"><span class="nav-number">1.2.</span> <span class="nav-text">快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建worker"><span class="nav-number">1.2.1.</span> <span class="nav-text">创建worker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传递数据-onmessage-、postMessage-data"><span class="nav-number">1.2.2.</span> <span class="nav-text">传递数据 onmessage 、postMessage(data)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过可转让对象来传递数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">通过可转让对象来传递数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker上下文"><span class="nav-number">1.2.4.</span> <span class="nav-text">Worker上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#终止-terminate"><span class="nav-number">1.2.5.</span> <span class="nav-text">终止 terminate()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理错误"><span class="nav-number">1.2.6.</span> <span class="nav-text">处理错误</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#强大的计算能力"><span class="nav-number">1.3.1.</span> <span class="nav-text">强大的计算能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#典型应用场景"><span class="nav-number">1.3.2.</span> <span class="nav-text">典型应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">1.4.</span> <span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

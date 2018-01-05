@@ -1,0 +1,812 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="相信前后端分离这个词，早已流传甚广，大家一些自己的理解，但可能有些人的观点有稍许偏差：我们要搞 SPA，全AJAX，那才是前后端分离了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实践中的前后端分离">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/11/实践中的前后端分离/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="相信前后端分离这个词，早已流传甚广，大家一些自己的理解，但可能有些人的观点有稍许偏差：我们要搞 SPA，全AJAX，那才是前后端分离了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/genify/ita1024/raw/master/res/pic-1.png">
+<meta property="og:image" content="https://github.com/genify/ita1024/raw/master/res/pic-7s.gif">
+<meta property="og:image" content="https://github.com/genify/ita1024/raw/master/res/pic-as.gif">
+<meta property="og:image" content="https://github.com/genify/ita1024/raw/master/res/pic-8s.gif">
+<meta property="og:image" content="https://github.com/genify/ita1024/raw/master/res/pic-9s.gif">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.392Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实践中的前后端分离">
+<meta name="twitter:description" content="相信前后端分离这个词，早已流传甚广，大家一些自己的理解，但可能有些人的观点有稍许偏差：我们要搞 SPA，全AJAX，那才是前后端分离了。">
+<meta name="twitter:image" content="https://github.com/genify/ita1024/raw/master/res/pic-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/11/实践中的前后端分离/"/>
+
+
+
+
+
+  <title>实践中的前后端分离 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/11/实践中的前后端分离/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                实践中的前后端分离
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-11T23:07:48+08:00">
+                2017-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>相信前后端分离这个词，早已流传甚广，大家一些自己的理解，但可能有些人的观点有稍许偏差：我们要搞 SPA，全AJAX，那才是前后端分离了。</p>
+<a id="more"></a>
+<h1 id="什么是前后端分离"><a href="#什么是前后端分离" class="headerlink" title="什么是前后端分离"></a>什么是前后端分离</h1><p>我们来聊聊什么是前后端分离。</p>
+<p>先来看一张WEB系统前后端架构模型图。</p>
+<p><img src="https://github.com/genify/ita1024/raw/master/res/pic-1.png" alt="WEB系统前后端架构模型"></p>
+<p>从图中可以清晰的看到，前后端的界限是按照浏览器和服务器的划分。那么我们经常会发现一些问题：</p>
+<ol>
+<li>模板层归属前端还是后端？</li>
+<li>模板强依赖于后端渲染，前端开发需要等待后端开发吗？</li>
+</ol>
+<p>通常情况，模板层归属于前端，因为让后端人员来接触他们不擅长的样式和 js 交互是很蛋疼的事情。</p>
+<p>那么，作为前端开发的我们在实际的开发场景中又会遇到以下问题：</p>
+<ol>
+<li>环境：进行本地开发，需要起后端环境，如 Tomcat、PHP，影响开发效率</li>
+<li>流程：前端开发先开发 html，再将 html 改写成指定的模板语法（俗称套模板），影响开发效率</li>
+<li>接口：<ul>
+<li>接口定义一般使用 word 文档，前端开发时不好理解接口字段，影响开发效率</li>
+<li>接口变更需要重新编写文档，并重新发送，影响开发效率</li>
+<li>文档散落，影响接口维护</li>
+</ul>
+</li>
+<li>联调：<ul>
+<li>联调过程变得很复杂，尤其是没有做热部署的Java工程，改视图还需要重启Tomcat，影响前端联调效率 </li>
+</ul>
+</li>
+<li>效益：<ul>
+<li>前端开发更关注用户体验，而后端只希望关注数据可靠，为实现如响应式、ssr之类的一些交互，前端需要掌控一定的请求响应能力</li>
+<li>如果前后端对接的方式转变成为纯粹的 JSON 交换，对于提升开发效率、更清晰的职责与接口复用都是有好处的</li>
+</ul>
+</li>
+</ol>
+<p>出现影响开发效率的事情，就说明现有的模式存在问题，显然问题的解题思路需要我们重新思考“前后端”的定义。此时，前后端分离的概念便应运而生，目的是将前后端开发人员的合作方式调节到大家都尽可能舒适的姿势。</p>
+<h1 id="有哪些实现方案"><a href="#有哪些实现方案" class="headerlink" title="有哪些实现方案"></a>有哪些实现方案</h1><h2 id="SPA"><a href="#SPA" class="headerlink" title="SPA"></a>SPA</h2><p><img src="https://github.com/genify/ita1024/raw/master/res/pic-7s.gif" alt="SPA"><br>全称 Single Page Application，使用前端路由的方式代替后端的 controller，并使用前端模板代替后端的模板引擎渲染，使用 restful api 实现与后端的数据交互。</p>
+<p>在这个方案中，前后端的交互被转换成了纯粹的 http 方式的 JSON 串交互。</p>
+<h3 id="SPA-的优势："><a href="#SPA-的优势：" class="headerlink" title="SPA 的优势："></a>SPA 的优势：</h3><ol>
+<li>环境：前端开发者不需要本地起后端环境</li>
+<li>流程：独立的前端开发方式，由于后端返回纯 JSON ，前端想要模拟请求响应的话，只需启动一个纯静态的服务器，响应 JSON 格式的 html 即可</li>
+<li>联调：清晰的对接方式，JSON 对于前后端来说都是比较纯粹的</li>
+<li>效益：对于用户来说，用户体验的提升</li>
+</ol>
+<h3 id="SPA-的劣势"><a href="#SPA-的劣势" class="headerlink" title="SPA 的劣势"></a>SPA 的劣势</h3><ol>
+<li>SEO 弱</li>
+<li>首屏加载慢，等所有 js 加载完才能出首屏</li>
+<li>前端需要处理一些本不需要在这一层处理的事情，如权限控制交给前端控制</li>
+</ol>
+<p>综上，SPA 是一个可以解决前后端分离的有效方案，对于无 SEO 要求的项目大可以尝试。</p>
+<h2 id="开发阶段的分离-–-Mock-amp-amp-Proxy"><a href="#开发阶段的分离-–-Mock-amp-amp-Proxy" class="headerlink" title="开发阶段的分离 – Mock &amp;&amp; Proxy"></a>开发阶段的分离 – Mock &amp;&amp; Proxy</h2><p>顾名思义，开发阶段的前后端分离，需要依赖工具实现，通常把这个工具叫做 Mock Server（如笔者所开发的一款 Mock Server – <a href="https://github.com/kaola-fed/foxman" target="_blank" rel="noopener">Foxman</a>）。</p>
+<h3 id="Mock-Server-提供功能"><a href="#Mock-Server-提供功能" class="headerlink" title="Mock Server 提供功能"></a>Mock Server 提供功能</h3><h4 id="基础功能"><a href="#基础功能" class="headerlink" title="基础功能"></a>基础功能</h4><ul>
+<li>拦截同步请求，取 JSON 格式的 Mock 数据，结合本地 Template，通过模板渲染引擎渲染，得出响应的页面</li>
+<li>拦截异步请求，取 JSON 格式的 Mock 数据响应</li>
+</ul>
+<p>这里我们需要抽象以上操作为两个函数，利于理解：</p>
+<ol>
+<li>SyncView = TemplateEngine(Template, MockData)</li>
+<li>AsyncView = MockDataTransform(MockData)</li>
+</ol>
+<h4 id="优化功能"><a href="#优化功能" class="headerlink" title="优化功能"></a>优化功能</h4><ul>
+<li>Living Reload – 监听本地文件，发生修改则通知（一般使用 websocket）浏览器更新资源</li>
+<li>修改响应头 – Mock 阶段，可以做到 js 修改响应情况</li>
+<li>代理 – 前面提到了两个函数，代理的指责是将原本取自本地的 MockData，改成了从服务端以 http 的方式取得的数据</li>
+</ul>
+<h3 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h3><p>我们将一个项目开发划分为三个阶段：接口定义，开发，联调。正好可以和我们 “Mock”、 “Proxy” 两个工具契合。<br>让我们通过实际的场景来表述这种前后端的合作方式。</p>
+<h4 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h4><p>我们接到一个需求，实现某个功能。在我们理清楚具体的功能之后，应该与后端定义接口及返回，包括：</p>
+<ol>
+<li>有哪些页面，页面的请求路径，模板位置，以及后端返回给我们的 Model 内容</li>
+<li>有哪些 Ajax 接口，Ajax接口 的请求路径，以及后端返回的 JSON 内容</li>
+</ol>
+<p>在制定完接口后，我们需要按照 Mock Server 的要求，创建 Mock 文件，并往里面填入与后端约定好的 JSON 数据，并与后端确认。</p>
+<p>显然我们的开发中，接口定义变成了一件很具体的事情，而开发阶段可以使用这份 Mock 数据，并做到 Mock 数据即接口文档</p>
+<h4 id="开发阶段"><a href="#开发阶段" class="headerlink" title="开发阶段"></a>开发阶段</h4><p>在我们完成接口定义后，我们期望的是无打扰、自治的一个开发体验。</p>
+<p><img src="https://github.com/genify/ita1024/raw/master/res/pic-as.gif" alt=""></p>
+<p>正如上图所示，开发阶段前端开发可以完全与后端开发人员隔绝，也不需要本地启动后端环境，我们要做的，只是按照先前指定的接口及本地的 Mock 文件进行需求的开发。</p>
+<p>而在开发过程中，遵循 html -&gt; css -&gt; js 的开发顺序，Foxman 拥有一个很人性化的 live reload（更改css 之会 reload css），总之接口定义合理的话，这一步会很顺畅。</p>
+<h4 id="联调阶段"><a href="#联调阶段" class="headerlink" title="联调阶段"></a>联调阶段</h4><p>在我们开发完页面后，我们期望的是与后端进行联合调试，已验证功能开发是否存在缺陷，即联调阶段。</p>
+<p><img src="https://github.com/genify/ita1024/raw/master/res/pic-8s.gif" alt=""></p>
+<p>在这步骤中，我们只需要更换 <code>SyncView = TemplateEngine(Template, MockData)</code> 的 MockData，将原本响应自 Mock 文件的请求，转发到真实的目标服务器（在联调阶段会是 开发主机 或者 测试机）。</p>
+<p>此处代理和转发，笔者已抽象成了的另外一个库 <a href="https://github.com/imhype/koa-api-forward" target="_blank" rel="noopener">koa-api-forward</a>，欢迎交流和使用。</p>
+<h3 id="Mock-amp-amp-Proxy-优势"><a href="#Mock-amp-amp-Proxy-优势" class="headerlink" title="Mock &amp;&amp; Proxy 优势"></a>Mock &amp;&amp; Proxy 优势</h3><ol>
+<li>环境：<ul>
+<li>前端开发者不需要本地起后端环境</li>
+</ul>
+</li>
+<li>流程：<ul>
+<li>独立的前端开发方式，Mock 与 Proxy 结合，流程清晰</li>
+<li>前端可以在本地调试 view 层，大幅度提升前端的联调效率</li>
+</ul>
+</li>
+<li>联调：<ul>
+<li>清晰的对接方式，JSON 实现前后端来说都是比较纯粹的</li>
+</ul>
+</li>
+<li>效益：<ul>
+<li>方便开发的同时，保持线上系统的无侵入</li>
+</ul>
+</li>
+</ol>
+<h3 id="Mock-amp-amp-Proxy-劣势"><a href="#Mock-amp-amp-Proxy-劣势" class="headerlink" title="Mock &amp;&amp; Proxy 劣势"></a>Mock &amp;&amp; Proxy 劣势</h3><ol>
+<li>未真正掌握线上的接口响应，实现一些前端交互需求（响应式）时仍依赖后端，或无法进行（如 ssr）</li>
+</ol>
+<h2 id="Node-js-中间层"><a href="#Node-js-中间层" class="headerlink" title="Node.js 中间层"></a>Node.js 中间层</h2><p><img src="https://github.com/genify/ita1024/raw/master/res/pic-9s.gif" alt="https://github.com/genify/ita1024/raw/master/res/pic-9s.gif"></p>
+<p>这个模式自然时结合了前面的 Proxy。大家都知道 Node.js Server 里面强调一个 中间件的 概念，对应到设计模式的职责链模式。即只处理自己能处理的情况，否则，继续往后传递，直到被处理。</p>
+<p>这个方案中，Proxy 作为了中间件体系中的最后一层，用以转发请求，而在这之前依次是中间件的错误处理、静态资源的响应、路由拦截（routers） 等等。  </p>
+<p>Node.js 拥有一定的接口控制能力，如处理 PC/Mobile 的响应式渲染，或是 Server-Side-Render 等等。</p>
+<h3 id="Node-js-中间层优势"><a href="#Node-js-中间层优势" class="headerlink" title="Node.js 中间层优势"></a>Node.js 中间层优势</h3><ol>
+<li>环境：<ul>
+<li>前端开发者不需要本地起后端环境</li>
+</ul>
+</li>
+<li>联调：<ul>
+<li>清晰的对接方式，JSON 实现前后端来说都是比较纯粹的</li>
+</ul>
+</li>
+<li>效益：<ul>
+<li>可渐进式，前期可以将请求全部转发后端服务器，而后可以逐步将 Node.js 层作为用户的直接数据交换层</li>
+<li>职责分明，后端服务化，Node.js 层处理接口用户相关的页面响应 及 数据交换</li>
+<li>可组合性，后端服务化，Node.js 负责组合拼装，实现接口可复用率</li>
+</ul>
+</li>
+</ol>
+<h3 id="Node-js-中间层劣势"><a href="#Node-js-中间层劣势" class="headerlink" title="Node.js 中间层劣势"></a>Node.js 中间层劣势</h3><ul>
+<li>开发阶段仍需要 Mock 支持，如果将 Mock 方式整合进 Node.js 中间层，则造成 Node.js 中间层职责不纯粹</li>
+<li>对现有系统的渐进式改造是个较为漫长的过程</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>还是那句话，所有的前后端分离方案，都是为了前后端开发人员的合作方式调节到大家都尽可能舒适的姿势。</p>
+<p>那么一个不错的实践是，我们可以将 (Mock &amp;&amp; Proxy) 与 Node.js 中间层 两个方案结合：</p>
+<ol>
+<li>Mock &amp;&amp; Proxy 只依靠抽象出来的工具，在前端开发阶段，继续使用，避免造成 Node.js 中间层职责不纯粹</li>
+<li>Node.js 中间层的存在可以解决(Mock &amp;&amp; Proxy)方案的劣势</li>
+</ol>
+<p>未完待续。。。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><a href="https://github.com/genify/ita1024/blob/master/%E7%BD%91%E6%98%93%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E5%AE%9E%E8%B7%B5.md" target="_blank" rel="noopener">网易前后端分离实践.md</a></li>
+<li><a href="https://www.zhihu.com/question/28207685" target="_blank" rel="noopener">Web 前后端分离的意义大吗？</a></li>
+</ul>
+<p align="right">by <a href="https://imhype.github.io" target="_blank" rel="noopener">君羽</a></p>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/02/如何编写Hexo主题/" rel="next" title="如何编写Hexo主题">
+                <i class="fa fa-chevron-left"></i> 如何编写Hexo主题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/15/API与NEI定义规范/" rel="prev" title="API与NEI定义规范">
+                API与NEI定义规范 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是前后端分离"><span class="nav-number">1.</span> <span class="nav-text">什么是前后端分离</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#有哪些实现方案"><span class="nav-number">2.</span> <span class="nav-text">有哪些实现方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SPA"><span class="nav-number">2.1.</span> <span class="nav-text">SPA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SPA-的优势："><span class="nav-number">2.1.1.</span> <span class="nav-text">SPA 的优势：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPA-的劣势"><span class="nav-number">2.1.2.</span> <span class="nav-text">SPA 的劣势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发阶段的分离-–-Mock-amp-amp-Proxy"><span class="nav-number">2.2.</span> <span class="nav-text">开发阶段的分离 – Mock &amp;&amp; Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mock-Server-提供功能"><span class="nav-number">2.2.1.</span> <span class="nav-text">Mock Server 提供功能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础功能"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">基础功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化功能"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">优化功能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发流程"><span class="nav-number">2.2.2.</span> <span class="nav-text">开发流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#接口定义"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">接口定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发阶段"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">开发阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#联调阶段"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">联调阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mock-amp-amp-Proxy-优势"><span class="nav-number">2.2.3.</span> <span class="nav-text">Mock &amp;&amp; Proxy 优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mock-amp-amp-Proxy-劣势"><span class="nav-number">2.2.4.</span> <span class="nav-text">Mock &amp;&amp; Proxy 劣势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node-js-中间层"><span class="nav-number">2.3.</span> <span class="nav-text">Node.js 中间层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-js-中间层优势"><span class="nav-number">2.3.1.</span> <span class="nav-text">Node.js 中间层优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-js-中间层劣势"><span class="nav-number">2.3.2.</span> <span class="nav-text">Node.js 中间层劣势</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

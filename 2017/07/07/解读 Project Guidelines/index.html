@@ -1,0 +1,777 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="解读Project Guidelines 今天早晨在刷Github Trending的时候发现All language的第一名是个名为project-huidelines的JavaScript项目，看项目名字和描述可以知道是一个JavaScript项目最佳实践的文章，    内容比较精炼，值得一读。这里不会全部翻译一遍，会有所删减，有兴趣的可以看原repo。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解读 Project Guidelines">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/07/解读 Project Guidelines/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="解读Project Guidelines 今天早晨在刷Github Trending的时候发现All language的第一名是个名为project-huidelines的JavaScript项目，看项目名字和描述可以知道是一个JavaScript项目最佳实践的文章，    内容比较精炼，值得一读。这里不会全部翻译一遍，会有所删减，有兴趣的可以看原repo。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.399Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解读 Project Guidelines">
+<meta name="twitter:description" content="解读Project Guidelines 今天早晨在刷Github Trending的时候发现All language的第一名是个名为project-huidelines的JavaScript项目，看项目名字和描述可以知道是一个JavaScript项目最佳实践的文章，    内容比较精炼，值得一读。这里不会全部翻译一遍，会有所删减，有兴趣的可以看原repo。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/07/解读 Project Guidelines/"/>
+
+
+
+
+
+  <title>解读 Project Guidelines | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/07/解读 Project Guidelines/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                解读 Project Guidelines
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-07T00:00:00+08:00">
+                2017-07-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>解读Project Guidelines</p>
+<p>今天早晨在刷Github Trending的时候发现All language的第一名是个名为<code>project-huidelines</code>的JavaScript项目，看项目名字和描述可以知道是一个JavaScript项目最佳实践的文章，    内容比较精炼，值得一读。这里不会全部翻译一遍，会有所删减，有兴趣的可以看<a href="https://github.com/wearehive/project-guidelines" target="_blank" rel="noopener">原repo</a>。</p>
+<a id="more"></a>
+<h2 id="1-Git"><a href="#1-Git" class="headerlink" title="1. Git"></a>1. Git</h2><h4 id="1-1-Git-Workflow"><a href="#1-1-Git-Workflow" class="headerlink" title="1.1 Git Workflow"></a>1.1 Git Workflow</h4><p>一些git的操作，不做介绍，是平时用的一些常规操作。</p>
+<h4 id="1-2-Some-Git-Rules"><a href="#1-2-Some-Git-Rules" class="headerlink" title="1.2 Some Git Rules"></a>1.2 Some Git Rules</h4><p>列举了一些应遵守的git规范：</p>
+<ul>
+<li>在feature分支进行开发工作</li>
+<li>向<code>develop</code>分支提交pull request</li>
+<li>永远不要向<code>develop</code>和<code>master</code>推代码</li>
+<li>在推feature代码之前更新<code>develop</code>分支并进行rebase</li>
+<li>在rebase时解决潜在冲突</li>
+<li>merge后删除本地和远程的feature分支</li>
+<li>在创建PR前，确保代码测试通过(test &amp; code style check)</li>
+<li>使用合适的.gitignore文件</li>
+<li>保护<code>master</code>和<code>develop</code>分支</li>
+</ul>
+<p>这些规则和我参与的数据营销项目的做法基本一致，<code>master</code>和<code>develop</code>分支是被保护的，新的开发任务从<code>develop</code>checkout出feature分支，线上bug从<code>master</code>checkout出hotfix分支，feature，hotfix分支均在merge到develop和master上后删除。code style通过eslint保证，不过在合并代码时没有使用<code>rebase</code>，在看commit history时会有一些麻烦。</p>
+<h4 id="1-3-Writing-good-commit-messages"><a href="#1-3-Writing-good-commit-messages" class="headerlink" title="1.3 Writing good commit messages"></a>1.3 Writing good commit messages</h4><p>主要是如何写好commit message的几条建议：</p>
+<ul>
+<li>将摘要和主体用一个空行隔开</li>
+<li>将摘要控制在50字符内</li>
+<li>摘要行用大写</li>
+<li>摘要结尾不要加句号</li>
+<li>摘要中使用适当的动词</li>
+<li>主体部分每行72字符</li>
+<li>主体部分用来阐述www(what, why, how)</li>
+</ul>
+<p>这是引用<a href="https://chris.beams.io/posts/git-commit/#end" target="_blank" rel="noopener">How to Write a Git Commit Message
+</a>的内容，事实上做到写好commit message是一件不容易的事情（词穷是硬伤）。规范的commit message是很重要的，写commit message是我们每天都在做的事情，所以要养成写好commit message的习惯，永久受益。</p>
+<h2 id="2-文档"><a href="#2-文档" class="headerlink" title="2. 文档"></a>2. 文档</h2><ul>
+<li>提供了一个<a href="https://github.com/wearehive/project-guidelines/blob/master/README.sample.md" target="_blank" rel="noopener">README 模板</a></li>
+<li>当一个项目由多个repo组成时，在README中注明链接</li>
+<li>保持README不断更新</li>
+<li>为代码添加注释，使每个主要模块更易懂</li>
+<li>为你认为不易理解的小代码块添加注释</li>
+<li>注释要随着代码的更新而更新</li>
+</ul>
+<p>总结一下就是写好<code>README</code>和注释，这两点对于项目交接或新成员参与很有帮助。读到这里时我检查了一下数据营销项目的<code>README.md</code>，发现有些部分已经过时，比如初始化项目时eslint使用的是<code>recommend standard</code>，现在已经重新接入<code>eslint-config-kaola</code>规范了。而且<code>npm scripts</code>部分新增的功能，如bundle analyze没有在<code>README</code>中标注。没有及时更新的<code>README</code>可能导致合作者被旧的内容误导，或是对新feature毫不知情，无论哪种都可能要通过增加额外的沟通成本才能解决。</p>
+<h2 id="3-环境"><a href="#3-环境" class="headerlink" title="3. 环境"></a>3. 环境</h2><ul>
+<li>根据项目大小，分别定义<code>development</code>, <code>test</code>和<code>production</code>环境</li>
+<li>通过环境变量加载部署时的特定配置，永远不要将它们作为常量写在业务代码中</li>
+<li>配置项需要从应用代码中分离出来，因为你的程序随时可能会开源。使用<code>.env</code>存储一些变量并将这个文件添加到<code>.gitignore</code>中</li>
+<li>建议在启动应用前检查环境变量</li>
+</ul>
+<p>这里主要是说明了环境的重要性，可以让程序针对不同环境加载不同的插件。在<code>development</code>环境下启用devServer，<code>production</code>环境进行资源压缩等。</p>
+<h4 id="3-1-一致的开发环境"><a href="#3-1-一致的开发环境" class="headerlink" title="3.1 一致的开发环境"></a>3.1 一致的开发环境</h4><ul>
+<li>在<code>package.json</code>中设置<code>engines</code>指定你的项目运行的node版本</li>
+<li>另外，使用<code>nmv</code>，并在项目下创建<code>.nvmrc</code></li>
+<li>也可以用<code>preinstall</code>脚本检查node和npm版本</li>
+<li>或者在不会让事情变复杂的前提下使用docker镜像</li>
+<li>使用本地模块而非全局模块</li>
+</ul>
+<p>一致的开发环境可以很好地解决”你重启下试试呗”，”我这是好的啊”此类问题。</p>
+<h2 id="4-依赖"><a href="#4-依赖" class="headerlink" title="4. 依赖"></a>4. 依赖</h2><p>依赖部分简单说是以下几点：</p>
+<ul>
+<li>使用靠谱的包，可以通过维护者，更新频率，版本号等来判断</li>
+<li>保持依赖一致性，使用<code>package-lock.json</code>，<code>npm-shrinkwrap.json</code>或<code>yarn</code>，也能解决”我这里是好的”一类问题。</li>
+</ul>
+<h2 id="5-测试"><a href="#5-测试" class="headerlink" title="5. 测试"></a>5. 测试</h2><ul>
+<li>如果有必要的话，增加测试模式</li>
+<li>将模块测试文件紧跟被测试模块后，用<code>*.test.js</code>或<code>*.spec.js</code></li>
+<li>其余的测试文件单独放在test文件夹下</li>
+<li>书写可测试的代码，避免副作用，写纯函数</li>
+<li>不要写过多判断类型的测试代码，使用静态类型检查完成这部分工作</li>
+<li>在提交任何PR前执行测试</li>
+<li>记录测试，并附上说明</li>
+</ul>
+<h2 id="6-项目结构和命名"><a href="#6-项目结构和命名" class="headerlink" title="6. 项目结构和命名"></a>6. 项目结构和命名</h2><p>围绕产品 功能/页面/组件 组织文件，而不是角色</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// BAD</div><div class="line">.</div><div class="line">├── controllers</div><div class="line">|   ├── product.js</div><div class="line">|   └── user.js</div><div class="line">├── models</div><div class="line">|   ├── product.js</div><div class="line">|   └── user.js</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">├── product</div><div class="line">|   ├── index.js</div><div class="line">|   ├── product.js</div><div class="line">|   └── product.test.js</div><div class="line">├── user</div><div class="line">|   ├── index.js</div><div class="line">|   ├── user.js</div><div class="line">|   └── user.test.js</div></pre></td></tr></table></figure>
+<ul>
+<li>测试代码和实现代码放在一起（应该是指可复用模块</li>
+<li>其他测试文件单独放在test文件夹避免困惑</li>
+<li>使用<code>./config</code>目录，配置文件被使用的值通过环境变量决定</li>
+<li>将脚本放在<code>./scripts</code>目录下，包括用于同步数据库，构建或其他的bash，node脚本</li>
+<li>使用<code>camelCase</code>命名文件和目录名，只有组件使用<code>PascalCase</code></li>
+<li><code>CheckBox/index.js</code>应该包含<code>CheckBox</code>组件，或写作<code>CheckBox.js</code>但<strong>不应该</strong>是<code>CheckBox/CheckBox.js</code>或<code>checkbox/CheckBox.js</code>，太多余了。</li>
+<li>理想情况下，目录名和<code>index.js</code>的默认导出一致</li>
+</ul>
+<p>这部分主要是目录结构的规范，不一定适用于所有情况。</p>
+<h2 id="7-Code-style"><a href="#7-Code-style" class="headerlink" title="7. Code style"></a>7. Code style</h2><ul>
+<li>构建过程中引入代码检查</li>
+<li>使用eslint强制统一code style</li>
+<li>使用Airbnb代码规范</li>
+<li>使用flow进行类型检查</li>
+<li>使用<code>.eslintignore</code>忽略不需要检查的文件/目录</li>
+<li>在提交PR前移除所有禁止eslint的注释</li>
+<li>使用<code>//todo:</code>标记未完成的任务</li>
+<li>禁止<code>alert</code></li>
+<li>e…</li>
+</ul>
+<p>Code style就不多说了，组内形成统一规范更重要。</p>
+<h2 id="8-Logging"><a href="#8-Logging" class="headerlink" title="8. Logging"></a>8. Logging</h2><ul>
+<li>生产环境避免控制台打log</li>
+<li>最好使用log库生成可读性好的log</li>
+</ul>
+<h2 id="9-API-设计"><a href="#9-API-设计" class="headerlink" title="9. API 设计"></a>9. API 设计</h2><p>遵循基于资源的设计，分为资源，集合，URL三部分</p>
+<ul>
+<li>资源包括数据，和其它资源的关系，以及对其进行操作的方法</li>
+<li>一组资源成为一个集合</li>
+<li>URL标识资源的线上地址</li>
+</ul>
+<p>另外操作资源应该使用正确的方法，GET获取，PUT修改，POST新增，DELETE删除。另外使用API version管理接口，一般开放平台接口都会这么做。</p>
+<h2 id="10-Licensing"><a href="#10-Licensing" class="headerlink" title="10. Licensing"></a>10. Licensing</h2><p>确保自己有项目中每个模块的使用权，否则可能有法律问题。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个repo大概就这些内容，从开发流程，分支管理，代码质量，可扩展性，安全性都有所涉及。对比一下自己负责的项目，基于vue-cli创建，所以在各种环境分离，eslint，构建脚本等方面已经帮我们做的很好了，git flow也比较合理，开发起来还是很流畅的，需要改进的地方主要有<code>README</code>同步更新，commit message，锁死版本，测试等方面。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/04/便于 Code review 的 Git 流程方案/" rel="next" title="便于 Code review 的 Git 流程方案">
+                <i class="fa fa-chevron-left"></i> 便于 Code review 的 Git 流程方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/09/js事件捕获、冒泡一些容易忽略的方面/" rel="prev" title="js事件捕获、冒泡一些容易忽略的方面">
+                js事件捕获、冒泡一些容易忽略的方面 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Git"><span class="nav-number">1.</span> <span class="nav-text">1. Git</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-Git-Workflow"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.1 Git Workflow</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Some-Git-Rules"><span class="nav-number">1.0.2.</span> <span class="nav-text">1.2 Some Git Rules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-Writing-good-commit-messages"><span class="nav-number">1.0.3.</span> <span class="nav-text">1.3 Writing good commit messages</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-文档"><span class="nav-number">2.</span> <span class="nav-text">2. 文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-环境"><span class="nav-number">3.</span> <span class="nav-text">3. 环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-一致的开发环境"><span class="nav-number">3.0.1.</span> <span class="nav-text">3.1 一致的开发环境</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-依赖"><span class="nav-number">4.</span> <span class="nav-text">4. 依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-测试"><span class="nav-number">5.</span> <span class="nav-text">5. 测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-项目结构和命名"><span class="nav-number">6.</span> <span class="nav-text">6. 项目结构和命名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Code-style"><span class="nav-number">7.</span> <span class="nav-text">7. Code style</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Logging"><span class="nav-number">8.</span> <span class="nav-text">8. Logging</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-API-设计"><span class="nav-number">9.</span> <span class="nav-text">9. API 设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-Licensing"><span class="nav-number">10.</span> <span class="nav-text">10. Licensing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

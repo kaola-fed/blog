@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="作为已经成为标准规范的Promise对象，如何使用想必大家都很了解能够正确的应用，本文从分析Promise对象和then方法源码入手来探索Promise到底是如何实现，文章篇幅有限，如有不对的地方欢迎指正。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Promise对象剖析">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/01/Promise对象剖析/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="作为已经成为标准规范的Promise对象，如何使用想必大家都很了解能够正确的应用，本文从分析Promise对象和then方法源码入手来探索Promise到底是如何实现，文章篇幅有限，如有不对的地方欢迎指正。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Promise对象剖析">
+<meta name="twitter:description" content="作为已经成为标准规范的Promise对象，如何使用想必大家都很了解能够正确的应用，本文从分析Promise对象和then方法源码入手来探索Promise到底是如何实现，文章篇幅有限，如有不对的地方欢迎指正。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/01/Promise对象剖析/"/>
+
+
+
+
+
+  <title>Promise对象剖析 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/01/Promise对象剖析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Promise对象剖析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T00:00:00+08:00">
+                2017-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>作为已经成为标准规范的Promise对象，如何使用想必大家都很了解能够正确的应用，本文从分析Promise对象和then方法源码入手来探索Promise到底是如何实现，文章篇幅有限，如有不对的地方欢迎指正。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="Promise对象和then方法"><a href="#Promise对象和then方法" class="headerlink" title="Promise对象和then方法"></a>Promise对象和then方法</h3><h4 id="根据ES2016标准实现的简单promise对象"><a href="#根据ES2016标准实现的简单promise对象" class="headerlink" title="根据ES2016标准实现的简单promise对象"></a>根据ES2016标准实现的简单promise对象</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">var PENDING = 0;</div><div class="line">var FULFILLED = 1;</div><div class="line">var REJECTED = 2;</div><div class="line">function Promise(fn) &#123;</div><div class="line">    var self = this;</div><div class="line">    self.state = PENDING;</div><div class="line">    self.value = null;</div><div class="line">    self.handlers = [];</div><div class="line"></div><div class="line">    function fulfill(result) &#123;</div><div class="line">       if(self.state === PENDING) &#123;</div><div class="line">            self.state = FULFILLED;</div><div class="line">            self.value = result;</div><div class="line">            for(var i = 0; i&lt;self.handlers.length; i++) &#123;</div><div class="line">                self.handlers[i](result);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    function reject(err) &#123;</div><div class="line">        if(self.state === PENDING) &#123;</div><div class="line">            self.state = REJECTED;</div><div class="line">            self.value = err;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    fn &amp;&amp; fn(fulfill,reject);</div><div class="line">&#125;</div><div class="line"></div><div class="line">Promise.prototype.then = function(onResolved, onRejected) &#123;</div><div class="line">    var self = this;</div><div class="line">    return new Promise(function(resolve, reject) &#123;</div><div class="line">        var onResolvedFade = function(val) &#123;</div><div class="line">            var ret = onResolved ? onResolved(val) : val;</div><div class="line">                resolve(ret);</div><div class="line">        &#125;;</div><div class="line">        var onRejectedFade = function(val) &#123;</div><div class="line">            var ret = onRejected ? onRejected(val) : val;</div><div class="line">                reject(ret);</div><div class="line">        &#125;;</div><div class="line">        self.handlers.push(onResolvedFade);</div><div class="line">        if(self.state === FULFILLED) &#123;</div><div class="line">            onResolvedFade(self.value);</div><div class="line">        &#125;</div><div class="line">        if(self.state === REJECTED) &#123;</div><div class="line">            onRejectedFade(self.value);</div><div class="line">        &#125;</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Promise对象"><a href="#Promise对象" class="headerlink" title="Promise对象"></a>Promise对象</h3><ul>
+<li>三个私有属性<ul>
+<li>state：用来保存当前执行的状态</li>
+<li>value：保存异步操作返回的值</li>
+<li>handles：用来存异步回调的容器，在状态改变为fulfill或reject的时候遍历handles中的值（函数）来执行相应的方法</li>
+</ul>
+</li>
+<li>两个内置方法fulfill和reject<ul>
+<li>变化状态，并执行对应的逻辑</li>
+</ul>
+</li>
+<li>一个参数<ul>
+<li>接受一个回调函数，用内置的方法fulfill和reject作为该回调函数的参数</li>
+</ul>
+</li>
+</ul>
+<h3 id="then方法"><a href="#then方法" class="headerlink" title="then方法"></a>then方法</h3><p>then方法接受两个参数，返回一个新的Promise对象，主要实现点在传入到Promise对象中的回调函数。</p>
+<ul>
+<li>该回调函数内部封装了两个函数，即成功和失败时要执行的函数。然后将成功的回调存到then方法上下文作用域的Promise对象中的handlers容器中（该实现方法只用成功回调作例子）</li>
+<li>onResolvedFade和onRejectedFade<ul>
+<li>onResolvedFade封装了传入到then方法的第一个参数，运行该函数，调用resolve，并将返回值作为then返回新的Promise对象内置函数fulfill的参数，作为下一次回调的初始值。</li>
+<li>onRejectedFade和onResolvedFade同理</li>
+</ul>
+</li>
+</ul>
+<h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">function async(value)&#123;</div><div class="line">    var pms = new Promise(function(resolve, reject)&#123;</div><div class="line">        setTimeout(function()&#123;</div><div class="line">            resolve(value);</div><div class="line">        &#125;, 1000);</div><div class="line">    &#125;);</div><div class="line">    return pms;</div><div class="line">&#125;</div><div class="line"></div><div class="line">async(1).then(function(result)&#123;</div><div class="line">    console.log(&apos;the result is &apos;,result);//the result is 1</div><div class="line">    return result;</div><div class="line">&#125;).then(function(result)&#123;</div><div class="line">    console.log(++result);//2</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>async函数返回一个Promise对象，传入该Promise的参数模拟异步操作，1s后执行resole方法。定义了两个then方法，分别传入了成功时的回调函数。根据刚才的promise函数和then方法分析，第一个then方法的第一个参数会被存到当前then上下文作用域的Promise对象的handlers中，第二个then方法的第一个参数会被存到当前then上下文作用域的promise对象(也就是第一个then返回的新的Promise对象)，等待1s后，执行async返回的promise对象中的fulfill方法，然后依次执行then定义的回调函数。</p>
+<h3 id="所以Promise的原理到底是什么"><a href="#所以Promise的原理到底是什么" class="headerlink" title="所以Promise的原理到底是什么"></a>所以Promise的原理到底是什么</h3><ul>
+<li>通过定义then方法中的成功和异步回调，存到当前then方法上下文作用域的promise对象的handlers容器中，当异步返回结果时，调用该promise的fulfill方法，改变状态，链式调用定义好的回调函数，达到将异步当同步写的目的。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><p>要搞懂Promise，最主要的是搞懂Promise构造器的写法，和then函数的封装。</p>
+</li>
+<li><p>要用好Promise，最主要的是封装好要传入Promise中的匿名函数或者函数表达式。</p>
+</li>
+<li><p>有几个调用就有几个Promise对象，每个then方法传入的<strong>函数</strong>都是前一个Promise成功或者失败的异步回调。保存到每一个promise中的handlers中的函数都是<strong>闭包</strong></p>
+</li>
+<li><p>第一个调用返回的值是后一个调用then方法传入函数的参数</p>
+</li>
+<li><p>定义promise与then的时候就像按次序放置的多米诺骨牌，当我们推动第一张骨牌的时候，也就是异步结果返回成功时，定义在then方法中的函数会开始链式调用。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/01/FormData介绍与使用/" rel="next" title="FormData介绍与使用">
+                <i class="fa fa-chevron-left"></i> FormData介绍与使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/04/SVG动画实践篇-音量变化效果/" rel="prev" title="SVG动画实践篇-音量变化效果">
+                SVG动画实践篇-音量变化效果 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Promise对象和then方法"><span class="nav-number">1.</span> <span class="nav-text">Promise对象和then方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#根据ES2016标准实现的简单promise对象"><span class="nav-number">1.1.</span> <span class="nav-text">根据ES2016标准实现的简单promise对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Promise对象"><span class="nav-number">2.</span> <span class="nav-text">Promise对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#then方法"><span class="nav-number">3.</span> <span class="nav-text">then方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个例子"><span class="nav-number">4.</span> <span class="nav-text">一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#所以Promise的原理到底是什么"><span class="nav-number">5.</span> <span class="nav-text">所以Promise的原理到底是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

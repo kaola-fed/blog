@@ -1,0 +1,698 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前后端分离目前算是一种共识了，特别是前端 MV* 框架的兴起，前端更倾向于按照框架写代码，之后打包再交由后端 render。因此，如果传统的根据路由打包为多个入口会比较蛋疼，单一入口的路由管理算是 SPA 的一个关键部分了，而这里离不开 history。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 history 到 SPA">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/31/从 history 到 SPA/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="前后端分离目前算是一种共识了，特别是前端 MV* 框架的兴起，前端更倾向于按照框架写代码，之后打包再交由后端 render。因此，如果传统的根据路由打包为多个入口会比较蛋疼，单一入口的路由管理算是 SPA 的一个关键部分了，而这里离不开 history。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从 history 到 SPA">
+<meta name="twitter:description" content="前后端分离目前算是一种共识了，特别是前端 MV* 框架的兴起，前端更倾向于按照框架写代码，之后打包再交由后端 render。因此，如果传统的根据路由打包为多个入口会比较蛋疼，单一入口的路由管理算是 SPA 的一个关键部分了，而这里离不开 history。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/31/从 history 到 SPA/"/>
+
+
+
+
+
+  <title>从 history 到 SPA | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/31/从 history 到 SPA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                从 history 到 SPA
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-31T00:00:00+08:00">
+                2017-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前后端分离目前算是一种共识了，特别是前端 MV* 框架的兴起，前端更倾向于按照框架写代码，之后打包再交由后端 render。因此，如果传统的根据路由打包为多个入口会比较蛋疼，单一入口的路由管理算是 <a href="https://en.wikipedia.org/wiki/Single-page_application" target="_blank" rel="noopener">SPA</a> 的一个关键部分了，而这里离不开 <a href="https://en.wikipedia.org/wiki/History_of_the_web_browser" target="_blank" rel="noopener">history</a>。</p>
+<a id="more"></a>
+<hr>
+<h3 id="history"><a href="#history" class="headerlink" title="history"></a>history</h3><p>比较有意思的是，互联网根基不应该是光纤或者电脑之类，应该是 URL，任何互联网资源都有唯一的 URL（说的不严谨，请不要深究，下同），所以可以说 URL 是互联网资源的身份证。在资源跳转的时候可以轻松地前进后退，因为浏览器里有个 history 结构管理着这一切。history 的实现有点类似于栈，点击链接是 push，后退是 pop，但是也不是栈，因为你也可以前进，或者直接手输 URL 进行 replace。</p>
+<p>但是，不管是如何转换（push/pop/replace/…）说白了都是<strong>对资源的一种替换</strong>（这里资源我们暂时当作 HTML 页面吧）以及资源依赖的一些其它资源（可以理解为 js/css/images 等），每次页面的切换（URL变动）都是资源的加载过程。这逻辑上当然没有什么问题，但是如果切换的两个页面有 90% 的内容和资源都一样呢，在没有正确缓存的情况下，全局刷新是对资源的一种极大的浪费。</p>
+<p>从浏览器角度来说，它是没有优雅的方式去判断两个页面之间的差异然后只加载新内容的，因为页面的差异情景太多，这锅不应该让浏览器背。但是，换种思路呢，如果 history 的切换变得<strong>可编程</strong>，这一切就都不是事了，因为写代码的人肯定很清楚差异是什么。</p>
+<h3 id="三种-history"><a href="#三种-history" class="headerlink" title="三种 history"></a>三种 history</h3><p>为了更好的对 history 进行编程，著名的 <a href="https://github.com/mjackson/history" target="_blank" rel="noopener">history</a> 对此做了个封装，其提供了三种形式的 history，对外暴露出相同的基础操作，底层实现是不同的，适用场景也不一样：</p>
+<ul>
+<li><code>browserHistory</code> 是基于原生 <a href="http://diveintohtml5.info/history.html" target="_blank" rel="noopener">HTML5 history API</a> 的封装，这更接近我们大多数时候看得 URL，用 path 来区分，这更利于 SEO，并且在使用（如分享，收藏等）的时候坑更少。虽然对浏览器版本有点<a href="http://caniuse.com/#search=history" target="_blank" rel="noopener">要求</a>，但是仍然是首选</li>
+<li><code>hashHistory</code> 可以兼容性更高，这个更像我们平时说的单页，因为它的 path 不变，用的是 <code>#</code> 号去区分资源，如：<code>example.com/#/some/path</code></li>
+<li><code>memoryHistory</code> 并不是为浏览器准备的，因为它的 url 并不是从地址栏读取的，其实根本没有地址栏的概念，自身在内存里模拟一个 history 环境，主要用于 <a href="https://facebook.github.io/react-native/" target="_blank" rel="noopener">React-Native</a> 里</li>
+</ul>
+<h3 id="SPA-里的路由"><a href="#SPA-里的路由" class="headerlink" title="SPA 里的路由"></a>SPA 里的路由</h3><p>说完 history 了，可以说 SPA 了，使用上 SPA 体验并不会是单页的感觉，大多也是很多页，甚至很多你根本感知不出是否是单页，因为 SPA 更多的是指<strong>实现方式的一个入口，而不是表现上的</strong>。引入 MV<em> 思想后，这里页会被当作<em>*模块</em></em>，所以如果可以控制在不同的 URL 时展示不同的模块，就可以实现一个单页系统。</p>
+<p>所以，一个 SPA 可以简单到：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return `&#123;#if path = &apos;/home&apos;&#125;&lt;Home /&gt;&#123;#else&#125;&lt;Error /&gt;&#123;/if&#125;`</div></pre></td></tr></table></figure></p>
+<p>表现上就是访问 <code>/home</code> 就显示首页，访问其它页面就显示错误页面，这不就是我们过去几十年用浏览器的方式吗？所以我说 SPA 并不是表现上的单入口。</p>
+<p>由于 <code>hashHistory</code> 放弃了用 path 去定位资源，所以其有着天然 SPA 的基因，使用上并不会有太多疑问。<code>browserHistory</code> 应用于单页系统的时候需要配置下服务端，可以对任何 path 都返回同一个页面。接下来的过程可以想象下，主要三种场景：</p>
+<ul>
+<li>手动改变地址栏：这种没什么特别过程，就是一个全新加载过程，资源加载完后应用根据 URL 渲染出合适组件（页面）</li>
+<li>通过导航前进后退：这会抛出 <code>popstate</code> 等事件，应用根据事件更新 history 栈（不精确）信息（地址栏 URL 也会被改变），最后渲染出正确组件</li>
+<li>页面链接过去：在单页应用里，应用内链接并不会真的写 <code>&lt;a href=&quot;&quot;&gt;</code> 链接，会把点击事件转为设置 history 操作，同样 URL 跟随改变，最后渲染出目标页面</li>
+</ul>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><ul>
+<li>SPA 在使用上并不会单页</li>
+<li>优先使用 <code>browserHistory</code>，除非你无服务端的控制权（如把静态页面放在 CDN 上）</li>
+<li>浏览器如果暴露更多可编程接口，会极大丰富开发模式</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/30/repaint与reflow/" rel="next" title="repaint与reflow">
+                <i class="fa fa-chevron-left"></i> repaint与reflow
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/31/chrome插件开发简介（二）——如何添“加浏览器扩展白名单”/" rel="prev" title="chrome插件开发简介（二）——如何添“加浏览器扩展白名单”">
+                chrome插件开发简介（二）——如何添“加浏览器扩展白名单” <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-number">1.</span> <span class="nav-text">history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三种-history"><span class="nav-number">2.</span> <span class="nav-text">三种 history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPA-里的路由"><span class="nav-number">3.</span> <span class="nav-text">SPA 里的路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结论"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

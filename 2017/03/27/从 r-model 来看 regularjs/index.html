@@ -1,0 +1,709 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="从 r-model 来分析 regularjs大家都知道 r-model 是一个指令，关于指令的语法可以看源码中关于 r-model 的部分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 r-model 来看 regularjs">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/27/从 r-model 来看 regularjs/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="从 r-model 来分析 regularjs大家都知道 r-model 是一个指令，关于指令的语法可以看源码中关于 r-model 的部分">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从 r-model 来看 regularjs">
+<meta name="twitter:description" content="从 r-model 来分析 regularjs大家都知道 r-model 是一个指令，关于指令的语法可以看源码中关于 r-model 的部分">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/27/从 r-model 来看 regularjs/"/>
+
+
+
+
+
+  <title>从 r-model 来看 regularjs | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/27/从 r-model 来看 regularjs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                从 r-model 来看 regularjs
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T00:00:00+08:00">
+                2017-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="从-r-model-来分析-regularjs"><a href="#从-r-model-来分析-regularjs" class="headerlink" title="从 r-model 来分析 regularjs"></a>从 r-model 来分析 regularjs</h3><p>大家都知道 r-model 是一个指令，关于指令的<a href="http://regularjs.github.io/guide/zh/basic/directive.html" target="_blank" rel="noopener">语法</a>可以看源码中关于 r-model 的部分</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Regular.directive(&quot;r-model&quot;, &#123;</div><div class="line">  param: [&apos;throttle&apos;, &apos;lazy&apos;],</div><div class="line">  link: function( elem, value, name, extra )&#123;</div><div class="line">    var tag = elem.tagName.toLowerCase();                                                  // 标签名</div><div class="line">    var sign = tag;                                                                 </div><div class="line">    if(sign === &quot;input&quot;) sign = elem.type || &quot;text&quot;;                                       // </div><div class="line">    else if(sign === &quot;textarea&quot;) sign = &quot;text&quot;;</div><div class="line">    if(typeof value === &quot;string&quot;) value = this.$expression(value);</div><div class="line"></div><div class="line">    if( modelHandlers[sign] ) return modelHandlers[sign].call(this, elem, value, extra);</div><div class="line">    else if(tag === &quot;input&quot;)&#123;</div><div class="line">      return modelHandlers.text.call(this, elem, value, extra);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>关键的是 link 函数，elem 是绑定这个指令的 dom 节点， value 是指令后面的值，如果这个值是字符串那么 value 也是字符串，如果这个值是插值，那个这个 value 就是一个 expression 对象，这个对象是在 parse 过程中产生的， regular 在 parse 的时候每次解析到一个插值就会生成一个 expression 对象。<br>expression 对象长这样，包含一个 get 方法和 set 方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">expression &#123;</div><div class="line">	&quot;type&quot;: &quot;expression&quot;,</div><div class="line">	&quot;touched&quot;: &quot;true&quot;,</div><div class="line">	&quot;once&quot;: &quot;false&quot;,</div><div class="line">	&quot;get&quot;: function anonymous(c, e) &#123;</div><div class="line">		var d = c.data;e = e||&apos;&apos;;return (c._sg_(&apos;testWatch&apos;, d, e))</div><div class="line">	&#125;,</div><div class="line">	&quot;set&quot;: function (ctx, value, ext) &#123;</div><div class="line">		expr.set = new Function(_.ctxName, _.setName, _.extName, _.prefix + setbody)</div><div class="line">		return expr.set(ctx, value, ext);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>分析 r-model 源码，主要是获取绑定 r-model 的 dom 节点，然后匹配到对应的方法上，这个 map 长这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var modelHandlers = &#123;</div><div class="line">  &quot;text&quot;: initText,</div><div class="line">  &quot;select&quot;: initSelect,</div><div class="line">  &quot;checkbox&quot;: initCheckBox,</div><div class="line">  &quot;radio&quot;: initRadio</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果这个 value 的值是一个字符串，r-model 指令还会主动将字符串转换成 expression 对象，所以 r-model={test} 和 r-model=”test” 是一样的。关于每种节点的类型需要处理的方法其实大同小异，找一个分析一下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">function initSelect( elem, parsed, extra)&#123;</div><div class="line">  var self = this;</div><div class="line">  var wc = this.$watch(parsed, function(newValue)&#123;</div><div class="line">    var children = elem.getElementsByTagName(&apos;option&apos;);</div><div class="line">    for(var i =0, len = children.length ; i &lt; len; i++)&#123;</div><div class="line">      if(children[i].value == newValue)&#123;</div><div class="line">        elem.selectedIndex = i;</div><div class="line">        break;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;, STABLE);</div><div class="line"></div><div class="line">  function handler()&#123;</div><div class="line">    parsed.set(self, this.value);</div><div class="line">    wc.last = this.value;</div><div class="line">    self.$update();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  dom.on( elem, &quot;change&quot;, handler );</div><div class="line">  </div><div class="line">  if(parsed.get(self) === undefined &amp;&amp; elem.value)&#123;</div><div class="line">    parsed.set(self, elem.value);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return function destroy()&#123;</div><div class="line">    dom.off(elem, &quot;change&quot;, handler);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个就是 r-model 对于 select 节点的处理方法。比如现在有一个<code>&lt;select r-model={selectModel}&gt; ... &lt;/select&gt;</code>，执行 initSelect 方法。<br>首先实现 model =&gt; view 的绑定，主要方法就是上面 $watch 的部分，watch 插值，一旦插值的值变化就执行方法遍历 select 的 option ，找到 option 的 value 等于插值的值的那个 index 然后将其设置成选中状态，如果是 input 就更简单，直接将 input 的 value 设置成插值的值。然后实现 view =&gt; model 的绑定，这部分主要是通过原生 dom 方法 onchange 来实现的，给绑定了 r-model 指令的 dom 节点绑定 onchange 事件，那么这个节点改变的时候就会触发方法，将 dom 的 value 赋值给对应的插值。<br>就这样实现了双向的绑定，view =&gt; model 这部分实现比较简单。就不过多讲解。后面主要看看 model =&gt; view 中的 $watch 部分到底是怎么实现的  </p>
+<p>首先来看看 $watch 这个函数长什么样子，有点长<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">$watch: function(expr, fn, options)&#123;</div><div class="line">    var get, once, test, rlen, extra = this.__ext__; //records length</div><div class="line">    if(!this._watchers) this._watchers = [];</div><div class="line">    if(!this._watchersForStable) this._watchersForStable = [];</div><div class="line"></div><div class="line">    options = options || &#123;&#125;;</div><div class="line">    if(options === true)&#123;</div><div class="line">       options = &#123; deep: true &#125;</div><div class="line">    &#125;</div><div class="line">    var uid = _.uid(&apos;w_&apos;);</div><div class="line">    if(Array.isArray(expr))&#123;</div><div class="line">      var tests = [];</div><div class="line">      for(var i = 0,len = expr.length; i &lt; len; i++)&#123;</div><div class="line">          tests.push(this.$expression(expr[i]).get)</div><div class="line">      &#125;</div><div class="line">      var prev = [];</div><div class="line">      test = function(context)&#123;</div><div class="line">        var equal = true;</div><div class="line">        for(var i =0, len = tests.length; i &lt; len; i++)&#123;</div><div class="line">          var splice = tests[i](context, extra);</div><div class="line">          if(!_.equals(splice, prev[i]))&#123;</div><div class="line">             equal = false;</div><div class="line">             prev[i] = _.clone(splice);</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">        return equal? false: prev;</div><div class="line">      &#125;</div><div class="line">    &#125;else&#123;</div><div class="line">      if(typeof expr === &apos;function&apos;)&#123;</div><div class="line">        get = expr.bind(this);      </div><div class="line">      &#125;else&#123;</div><div class="line">        expr = this._touchExpr( parseExpression(expr) );</div><div class="line">        get = expr.get;</div><div class="line">        once = expr.once;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    var watcher = &#123;</div><div class="line">      id: uid, </div><div class="line">      get: get, </div><div class="line">      fn: fn, </div><div class="line">      once: once, </div><div class="line">      force: options.force,</div><div class="line">      // don&apos;t use ld to resolve array diff</div><div class="line">      diff: options.diff,</div><div class="line">      test: test,</div><div class="line">      deep: options.deep,</div><div class="line">      last: options.sync? get(this): options.last</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    this[options.stable? &apos;_watchersForStable&apos;: &apos;_watchers&apos;].push(watcher);</div><div class="line">    </div><div class="line">    rlen = this._records &amp;&amp; this._records.length;</div><div class="line">    if(rlen) this._records[rlen-1].push(watcher)</div><div class="line">    // init state.</div><div class="line">    if(options.init === true)&#123;</div><div class="line">      var prephase = this.$phase;</div><div class="line">      this.$phase = &apos;digest&apos;;</div><div class="line">      this._checkSingleWatch( watcher);</div><div class="line">      this.$phase = prephase;</div><div class="line">    &#125;</div><div class="line">    return watcher;</div><div class="line">  &#125;,</div></pre></td></tr></table></figure></p>
+<p>首先这个函数接收三个参数，在最上面 r-model 的方法里面也可以看到，第一个参数是 watch 的插值，类型是 expression 对象，第二个参数是 watch 的值发生改变之后要执行的函数，第三个参数是一些 option ，可以看到在 initSelect 方法里面这个参数传递的是一个对象 <code>{ stable: true }</code> ，看函数体，首先创建了一些变量，然后初始化了两个数组 ‘_watchersForStable’, ‘_watchers’，经过一些判断， 第一个参数是否是数组，是否是函数，最后生成一个 watcher ，watcher 长这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var watcher = &#123;</div><div class="line">  id: uid, </div><div class="line">  get: get, </div><div class="line">  fn: fn, </div><div class="line">  once: once, </div><div class="line">  force: options.force,</div><div class="line">  // don&apos;t use ld to resolve array diff</div><div class="line">  diff: options.diff,</div><div class="line">  test: test,</div><div class="line">  deep: options.deep,</div><div class="line">  last: options.sync? get(this): options.last</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">注意 watcher 里面有维护一个 last 字段，这个字段表示这个 watcher 上一次的值。还有一个 fn 字段，这个字段就是改变之后要执行的函数。</div><div class="line">然后判断 option 里面的 stable 是否是 true ，如果是就 push 进 _watchersForStable，不是就 push 进 _watchers，猜测，前面那个数组是保存 r-model 的 watcher 对象，后面那个是保存用户自己写的 watcher 对象。然后 return 这个 watcher 对象，到此函数结束。  </div><div class="line">$watch 主要做的事情就是把需要 watch 的 expression 对象 push 到 &apos;_watchersForStable&apos; 或者 &apos;_watchers&apos; 数组中。  </div><div class="line">很明显这个 $watch 函数并不能检测到值的变化。真正检测到这个变化的是脏值检测的过程。  </div><div class="line">触发脏值检测过程的函数是 $update ，函数长这样</div></pre></td></tr></table></figure></p>
+<p>$update: function(){<br>    var rootParent = this;<br>    do{<br>      if(rootParent.data.isolate || !rootParent.$parent) break;<br>      rootParent = rootParent.$parent;<br>    } while(rootParent)</p>
+<pre><code>var prephase =rootParent.$phase;
+rootParent.$phase = &apos;digest&apos;
+
+this.$set.apply(this, arguments);
+
+rootParent.$phase = prephase
+
+rootParent.$digest();
+return this;
+</code></pre><p>},<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">这个函数的主要作用就是找到根节点 rootParent ,然后 rootParent.$digest()  </div><div class="line">脏值检测的主要过程在 $digest 函数中，这个函数长这样</div></pre></td></tr></table></figure></p>
+<p>$digest: function(){<br>    if(this.$phase === ‘digest’ || this._mute) return;<br>    this.$phase = ‘digest’;<br>    var dirty = false, n =0;<br>    while(dirty = this._digest()){</p>
+<pre><code>  if((++n) &gt; 20){ // max loop
+    throw Error(&apos;there may a circular dependencies reaches&apos;)
+  }
+}
+// stable watch is dirty
+var stableDirty =  this._digest(true);
+
+if( (n &gt; 0 || stableDirty) &amp;&amp; this.$emit) {
+  this.$emit(&quot;$update&quot;);
+  if (this.devtools) {
+    this.devtools.emit(&quot;flush&quot;, this)
+  }
+}
+this.$phase = null;
+</code></pre><p>},<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">这个函数首先将 $phase 字段置为 digest 代表在脏值检测的阶段，然后执行 _digest() 方法，来看看 _digest 方法</div></pre></td></tr></table></figure></p>
+<p>_digest: function(stable){<br>  var watchers = !stable? this._watchers: this._watchersForStable;<br>  var dirty = false, children, watcher, watcherDirty;<br>  var len = watchers &amp;&amp; watchers.length;<br>  if(len){<br>    var mark = 0, needRemoved=0;<br>    for(var i =0; i &lt; len; i++ ){<br>      watcher = watchers[i];<br>      var shouldRemove = !watcher ||  watcher.removed;<br>      if( shouldRemove ){<br>        needRemoved += 1;<br>      }else{<br>        watcherDirty = this._checkSingleWatch(watcher);<br>        if(watcherDirty) dirty = true;<br>      }<br>      // remove when encounter first unmoved item or touch the end<br>      if( !shouldRemove || i === len-1 ){<br>        if( needRemoved ){<br>          watchers.splice(mark, needRemoved );<br>          len -= needRemoved;<br>          i -= needRemoved;<br>          needRemoved = 0;<br>        }<br>        mark = i+1;<br>      }<br>    }<br>  }<br>  // check children’s dirty.<br>  children = this._children;<br>  if(children &amp;&amp; children.length){<br>    for(var m = 0, mlen = children.length; m &lt; mlen; m++){<br>      var child = children[m];<br>      if(child &amp;&amp; child._digest(stable)) dirty = true;<br>    }<br>  }<br>  return dirty;<br>},<br>```<br>这个函数首先判断是否传入一个 stable 来决定是用 _watchers 还是 _watcherForStable ，然后遍历数组里面的每一个 watcher 来看这个 watcher 是否是脏的，是否是脏的是用 _checkSingleWatch 这个函数来判断的，这个函数有点长不方便贴，主要是一个 diff 功能，根据 watcher 里面的 last 字段用来获取上次的值和 watcher.get() 方法用来获取当前的值，做 diff 之后如果是脏的就将 now 赋值给 last 然后执行 watcher 的回调函数 fn ，最后 return 一个 true。<br>遍历完整个数组之后再遍历这个 rootParent 的 children 继续执行这个方法，将这整个 rootParent 遍历完之后，过程中如果有一个 watcher 是脏的，那么整个脏值检测的过程会返回脏，如果整个过程返回脏就会再来执行一遍脏值检测的过程直到整个过程返回不脏为止，如果20次之后还是返回脏就抛出异常，循环依赖。<br>脏值检测的整个过程就是这样的。<br>那么剩下最后一个问题了，$update 到底是在什么时候触发的。除了我们手动去执行 $update 以外，平常的一些操作，比如给按钮绑定一个 on-click 事件，在事件里面去改变 data 的值，比如 this.data.testWatch = ‘xxx’，比如在 ajax 请求的回调里面去改变 data 的值，比如在 setTimeout 里面去改变 data 的值，在这些个过程中我们并没有手动去 $update 但是 regular 会自动的进入 $update ，那么问题来了，regular 到底是在什么时候进入的，他怎么知道我们改变了 data 的值呢？<br>regular 在自定义事件，比如 on-xxx 的回调函数触发之前和之后都执行了一遍 $update 然后 regular 包装了一个 timeout 方法，就是把 setTimeout 之后加了一个 $update ，但是异步操作还是不会自动的去 $update 所以我们平时的工程里面都封装了一个 $request 这个函数除了封装了标准的 ajax 以外还触发了一遍 $update。思路就是 regular 接管了大部分可能改变 data 的入口，并主动的去触发 $update 。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/27/考拉升级https经验/" rel="next" title="考拉升级https经验">
+                <i class="fa fa-chevron-left"></i> 考拉升级https经验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/29/前端工程-从原理到轮子之JS模块化/" rel="prev" title="前端工程-从原理到轮子之JS模块化">
+                前端工程-从原理到轮子之JS模块化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#从-r-model-来分析-regularjs"><span class="nav-number">1.</span> <span class="nav-text">从 r-model 来分析 regularjs</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

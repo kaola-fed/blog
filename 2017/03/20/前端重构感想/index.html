@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="考拉PC前端重构之路@(重构)[组件化|拆分]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端重构感想">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/03/20/前端重构感想/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="考拉PC前端重构之路@(重构)[组件化|拆分]">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/1a83c8ce-9c35-4e2f-8de0-7171c436b0c1.jpg">
+<meta property="og:image" content="https://haitao.nos.netease.com/38036660-6e61-4ea0-81aa-58a05d12ffd2.jpg">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.389Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端重构感想">
+<meta name="twitter:description" content="考拉PC前端重构之路@(重构)[组件化|拆分]">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/1a83c8ce-9c35-4e2f-8de0-7171c436b0c1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/03/20/前端重构感想/"/>
+
+
+
+
+
+  <title>前端重构感想 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/03/20/前端重构感想/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                前端重构感想
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-20T00:00:00+08:00">
+                2017-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="考拉PC前端重构之路"><a href="#考拉PC前端重构之路" class="headerlink" title="考拉PC前端重构之路"></a>考拉PC前端重构之路</h3><p>@(重构)[组件化|拆分]</p>
+<a id="more"></a>
+<p><strong>代码重构</strong>是一个产品不断的功能迭代过程中，不可避免的一项工作。所谓<code>重构</code>，是在不改变程序的输入输出即保证现有功能的情况下，对内部实现进行优化和调整。 每个开发人员从业生涯中，或多或少的做过重构工作。小到重写一个功能函数、业务组件，大到重构一个复杂功能模块或整站重构。</p>
+<p>重构是需要花费一定成本和精力的，尤其是一个有各种历史遗留问题（用的老旧框架或工具）、又糅杂了各种业务逻辑（有些功能逻辑连需求方都未必清楚）、且可读性及维护性都很差的重要功能模块，比如考拉的下单页，不动，每次功能迭代的时候都有想撞墙的心，大动，又是不小的工作量，且有一定的风险。当然长痛不如短痛，长远来看，重构势在必行。</p>
+<h4 id="why-重构"><a href="#why-重构" class="headerlink" title="why 重构"></a>why 重构</h4><ul>
+<li><strong>设计不合理or全无设计</strong> ：原来的实现方式不合理，或者全无模块拆分、组件提取意识的开发模式，纯粹的业务逻辑堆叠式开发，会导致功能无法重用，代码冗余，不利于维护。</li>
+<li><strong>页面结构与功能实现耦合 </strong> ：脚本文件中夹杂着各种html结构，表现和行为不分离，导致代码可读性和维护性大大下降。（我不会告诉你旧版考拉下单页的入口脚本有2000多行，cry~）。</li>
+<li><strong>代码难以理解</strong> ：页面没有清晰的入口函数，函数调用关系混乱，无论改bug还是迭代新功能，面对难以理解的代码，开发效率低下。</li>
+<li><strong>代码引起性能问题</strong>：不合理的实现方式或者大量无用冗余的代码，引起了明显性能问题的，需要即时重构优化。</li>
+<li><strong>框架or类库更新</strong>：前端的技术框架日新月异，在选择或者淘汰不合适项目的第三方库的时候，也涉及到重构工作。</li>
+</ul>
+<h4 id="when-重构"><a href="#when-重构" class="headerlink" title="when 重构"></a>when 重构</h4><p>重构工作其实是随时都可进行的。当你觉得代码可读性变差、重用性及可维护性降低时，都应该有意识的去做重构。在大部分的项目中，以下将是重构的合理时间点：</p>
+<ul>
+<li>功能迭代时：当添加一个功能时，发现原有的设计无法满足新需求，可以考虑重构；在设计功能组件的时候，可以为未来可能的需求预留接口；</li>
+<li>修复bug的时候：bug产生之后，需要思考是否是不合理的编码导致的问题而不单单是以解决bug算完事（当然线上重大bug自然以即时修复为第一要务），可以借助修复bug的契机，把业务逻辑整理清晰，必要时可以找后端配合改接口；</li>
+<li>code Review阶段：此阶段距离提测时间往往较近，但如果是明显不合理的实现思路，宁愿delay也要重新设计实现；如果前期思考充分，一般不会出现此类情况，大部分是在给其他人review的时候，发现不可理解、可读性差，这也是需要进一步修改重写的。</li>
+</ul>
+<p>当然在需求紧急的时候，是不适合做重构的。</p>
+<hr>
+<h3 id="do重构"><a href="#do重构" class="headerlink" title="do重构"></a>do重构</h3><p>以考拉下单页重构为例。</p>
+<blockquote>
+<p>但凡重构，必须要对已有业务逻辑有较充分的了解，评估重构的影响面及可能的风险， 列出基本功能点（也可作为QA的测试回归点），保证重构后不要有功能遗漏，不改变现有功能。</p>
+</blockquote>
+<p>如何了解已有业务逻辑？</p>
+<ul>
+<li>跑线上流程；（有些特殊逻辑，模拟困难）</li>
+<li>对照现有的交互稿；（不断的功能迭代，可能找不到完整的交互稿）</li>
+<li>读懂已有代码；（全面了解业务逻辑最好的方法，但是耗时）</li>
+<li>询问之前的开发者；（如已离职，查找是否有交接文档之类）</li>
+</ul>
+<h4 id="功能模块拆分"><a href="#功能模块拆分" class="headerlink" title="功能模块拆分"></a>功能模块拆分</h4><p>在对业务逻辑有充分了解之后，可以进行功能拆分，把可重用的、功能独立的业务逻辑作为组件或公用模板提取，同时需要考虑组件之间的相互影响。拆分之后，可以多人并行开发，约定好外部调用组件的接口即可。<br>以下是下单页的功能模块拆分：</p>
+<p><img src="https://haitao.nos.netease.com/1a83c8ce-9c35-4e2f-8de0-7171c436b0c1.jpg" alt="enter image description here"></p>
+<p>根据同步字段orderType，来确定是普通商品订单还是账号充值订单，并初始化对应的组件；根据同步信息，异步获取下单信息（含商品信息及结算信息）；如果是普通商品订单，服务端会根据用户所选地址进行拆单，返回拆单后的商品和结算信息。按功能拆分后，组件及组件的嵌套关系如下：</p>
+<p><img src="https://haitao.nos.netease.com/38036660-6e61-4ea0-81aa-58a05d12ffd2.jpg" alt="enter image description here"></p>
+<p>下单页目录结构：</p>
+<pre><code>javascript
+|——components
+|  |——address/address.js //地址控件
+|  |——checkcode/checkcode.js //验证码控件    
+|——page/order
+|  |——order_confirm.js //入口脚本
+|  |——components
+|  |  |——confirmGoods.js+html //确认商品信息
+|  |  |——settlement.js+html //结算信息
+|  |  |——exchangeCoupon.js+html //兑换优惠券
+|  |  |——rechargeInfo.js+html //账号充值
+|  |  |——invoiceInfo.js+html //发票信息
+|  |  |——invoice.js+html //设置发票
+|  |  |——bean.html //考拉豆抵扣
+|  |  |——feeList.html //运费税费列表
+|  |  |——gift.html //赠品信息
+|  |  |——useCoupon.js+html //使用优惠券
+|  |  |——submitCB.js //提交回调
+|  |——widget
+|  |  |——popCoupon.js //弹窗领券
+</code></pre><h4 id="after-重构"><a href="#after-重构" class="headerlink" title="after 重构"></a>after 重构</h4><ul>
+<li>入口明确，调用关系清晰，查找方便</li>
+<li>功能实现与结构不耦合，可读性增强</li>
+<li>组件化后，有利于功能重用</li>
+<li>提升了编码体验，维护及功能迭代不再感觉煎熬o(^▽^)o</li>
+</ul>
+<hr>
+<h3 id="last"><a href="#last" class="headerlink" title="last"></a>last</h3><p>重构从来不是一次性行为，是我们需要不断进行的工作。多人维护以及不断的功能迭代之后，代码多多少少都会有优化的空间，所以在你看到不合理或任何值得重构的地方时，行动起来吧，去优化，不要等到重构的成本更大时再进行，因为那会更痛，不要问我怎么知道。 </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/16/CORS 跨域请求/" rel="next" title="CORS 跨域请求">
+                <i class="fa fa-chevron-left"></i> CORS 跨域请求
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/22/feedback 开发过程中遇到的问题及解决/" rel="prev" title="feedback 开发过程中遇到的问题及解决">
+                feedback 开发过程中遇到的问题及解决 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#考拉PC前端重构之路"><span class="nav-number">1.</span> <span class="nav-text">考拉PC前端重构之路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#why-重构"><span class="nav-number">1.1.</span> <span class="nav-text">why 重构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#when-重构"><span class="nav-number">1.2.</span> <span class="nav-text">when 重构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#do重构"><span class="nav-number">2.</span> <span class="nav-text">do重构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#功能模块拆分"><span class="nav-number">2.1.</span> <span class="nav-text">功能模块拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#after-重构"><span class="nav-number">2.2.</span> <span class="nav-text">after 重构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#last"><span class="nav-number">3.</span> <span class="nav-text">last</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

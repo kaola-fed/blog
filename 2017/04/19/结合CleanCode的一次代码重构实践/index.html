@@ -1,0 +1,780 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="类目参谋近期进行版本迭代，添加新功能。原本代码开发已久，可优化空间较大也为了便于日后的维护和拓展，决定页面重构。我参与了其中交易构成页面的代码重构。（数据门户 - 类目参谋 - 交易分析 - 交易构成）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="结合CleanCode的一次代码重构实践">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/04/19/结合CleanCode的一次代码重构实践/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="类目参谋近期进行版本迭代，添加新功能。原本代码开发已久，可优化空间较大也为了便于日后的维护和拓展，决定页面重构。我参与了其中交易构成页面的代码重构。（数据门户 - 类目参谋 - 交易分析 - 交易构成）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i1.piimg.com/567571/c562bf59802ff7d7.png">
+<meta property="og:image" content="https://i1.piimg.com/567571/c562bf59802ff7d7.png">
+<meta property="og:image" content="https://i2.buimg.com/567571/13221b404557978e.png">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="结合CleanCode的一次代码重构实践">
+<meta name="twitter:description" content="类目参谋近期进行版本迭代，添加新功能。原本代码开发已久，可优化空间较大也为了便于日后的维护和拓展，决定页面重构。我参与了其中交易构成页面的代码重构。（数据门户 - 类目参谋 - 交易分析 - 交易构成）">
+<meta name="twitter:image" content="https://i1.piimg.com/567571/c562bf59802ff7d7.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/04/19/结合CleanCode的一次代码重构实践/"/>
+
+
+
+
+
+  <title>结合CleanCode的一次代码重构实践 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/04/19/结合CleanCode的一次代码重构实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                结合CleanCode的一次代码重构实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-19T00:00:00+08:00">
+                2017-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>类目参谋近期进行版本迭代，添加新功能。原本代码开发已久，可优化空间较大也为了便于日后的维护和拓展，决定页面重构。我参与了其中交易构成页面的代码重构。（数据门户 - 类目参谋 - 交易分析 - 交易构成）</p>
+<a id="more"></a>
+<p><strong>目标：函数拆解，组件降耦，健壮逻辑，bugfix</strong></p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
+<li>线上请求分析，online-bug记录</li>
+<li>阅读原代码，功能、模块拆分</li>
+<li>按模块重构代码，连线上检验重构结果</li>
+<li>clean code</li>
+<li>静态代码检测</li>
+</ol>
+<h2 id="重构"><a href="#重构" class="headerlink" title="重构"></a>重构</h2><h3 id="1-线上请求分析"><a href="#1-线上请求分析" class="headerlink" title="1. 线上请求分析"></a>1. 线上请求分析</h3><h4 id="多次请求、频繁请求"><a href="#多次请求、频繁请求" class="headerlink" title="多次请求、频繁请求"></a>多次请求、频繁请求</h4><ol>
+<li><p>切换维度tab，连续2次获取数据列表 /dealConstituteDetail</p>
+<ol>
+<li>改变一级维度重新获取列表</li>
+<li><p>筛选器multiFilter监听dimension -&gt; 改变 -&gt; 重置筛选器 -&gt; 触发请求。</p>
+<p>第一个触发是合理的。第二个触发应该有前提，如果原先没有使用筛选器（下图为筛选器），则不需要触发请求<br><img src="https://i1.piimg.com/567571/c562bf59802ff7d7.png" alt=""></p>
+</li>
+</ol>
+</li>
+<li><p>每一次切换维度tab，都会获取二级维度 /secondDimensions</p>
+<p> 请求返回二级维度列表 = ‘未选择’ + 一级维度列表 - 当前tab维度</p>
+<p> 所有的请求都是这样的返回，因此根据当前一级维度动态更新二级维度列表</p>
+</li>
+<li><p>选择日期，发出2-3次 /dealConstituteDetail 和1次 /secondDimensions</p>
+<ol>
+<li>/dealConstituteDetail 一级维度重置，触发请求</li>
+<li>/secondDimensions 获取二级维度</li>
+<li><p>/dealConstituteDetail 对比时间重置，触发请求</p>
+<p>第三次请求不合理：修改基础时间不应该使对比时间选择器触发请求。两个组件耦合在一起。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="报错、页面异常"><a href="#报错、页面异常" class="headerlink" title="报错、页面异常"></a>报错、页面异常</h4><p><img src="https://i1.piimg.com/567571/c562bf59802ff7d7.png" alt=""></p>
+<ol>
+<li>[选择指标] 选择少于6个指标，更换时间类型，页面报错</li>
+<li>[选择指标] 选择除’uv’、’平均转化率’之外的6个以上的指标，第4和第6个表头字段被换成’UV/日均UV’和’转化率/平均转化率’，跟底下的数据对不上，显然错误</li>
+<li>只有[选择指标]中的前6个有排序</li>
+<li><p>页面宽度不够时，对比时间样式异常</p>
+<p><img src="https://i2.buimg.com/567571/13221b404557978e.png" alt=""></p>
+</li>
+</ol>
+<h3 id="2-CleanCode"><a href="#2-CleanCode" class="headerlink" title="2. CleanCode"></a>2. CleanCode</h3><ol>
+<li>‘period’设置默认值交给函数</li>
+<li>‘periodType’采用枚举</li>
+<li>‘periodMap’改为数组</li>
+<li>‘comparePeriod’使用key-val原本应该是考虑到本页中有其他模块的情况，建议模块自理，消除耦合</li>
+<li>‘tradeConstituteSort.sortType’ 0指代不明，使用枚举，使赋值语义化<figure class="highlight plain"><figcaption><span>DESC </span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">```</div><div class="line">// befor</div><div class="line">eu.extend(data, &#123;</div><div class="line">    &quot;period&quot;: data.period||u._$format(new Date(+now - 24 * 3600 * 1000), &apos;yyyy-MM-dd&apos;) + &apos;~&apos; + u._$format(new Date(+now - 24 * 3600 * 1000), &apos;yyyy-MM-dd&apos;), // 默认近1天</div><div class="line">    &quot;periodType&quot;: data.periodType||0, // 时间段类型，0 &apos;day&apos; 自然日，1 &apos;7day&apos; 近7天，2 &apos;30day&apos; 近30天，3 &apos;month&apos; 自然月</div><div class="line">    &quot;periodMap&quot;: &#123;</div><div class="line">        &quot;0&quot;: &apos;day&apos;, // 自然日</div><div class="line">        &quot;1&quot;: &apos;recent7&apos;, // 近7天</div><div class="line">        &quot;2&quot;: &apos;recent30&apos;, // 近30天</div><div class="line">        &quot;3&quot;: &apos;month&apos; // 自然月</div><div class="line">    &#125;,</div><div class="line">    &quot;comparePeriod&quot;: &#123;</div><div class="line">        &quot;tradeConstitute&quot;: &quot;&quot; //交易构成</div><div class="line">    &#125;,</div><div class="line">    &quot;tradeConstituteSort&quot;: &#123;    //默认排序字段</div><div class="line">        &quot;dimensionValue&quot;: &quot;sales&quot;,</div><div class="line">        &quot;sortType&quot;: 0</div><div class="line">    &#125;,</div><div class="line">    ...</div><div class="line">&#125;);</div></pre></td></tr></table></figure></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// after</div><div class="line">eu.extend(data, &#123;</div><div class="line">    period: ut.getYesterday(),</div><div class="line">    periodMap: [&apos;day&apos;, &apos;recent7&apos;, &apos;recent30&apos;, &apos;month&apos;],</div><div class="line">    periodType: +PERIOD_TYPE.DAY,</div><div class="line">    comparePeriod: &apos;&apos;,</div><div class="line">    sortInfo: &#123;</div><div class="line">        dimensionValue: &apos;sales&apos;,</div><div class="line">        sortType: DESC,</div><div class="line">    &#125;,</div><div class="line">    ...</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<ol>
+<li>函数应根据调用顺序排放（不在主流程中且不与其他函数有过多交集的函数可置后，如导出文件功能）</li>
+<li>注释掉的代码，原代码中有多处</li>
+<li><p>多余的注释</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//如果没有搜索信息 则清空搜索栏</div><div class="line">if (!searchText) &#123;</div><div class="line">    data.searchText = &quot;&quot;;</div><div class="line">&#125; else if(searchText !== true) &#123;</div><div class="line">    data.searchText = searchText;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>代码过长</p>
+<p> getTradeConstitute获取交易构成明细，函数40几行。做了几件事情，应拆解：</p>
+<ol>
+<li>处理传参</li>
+<li>获取类目名称</li>
+<li>请求参数声明</li>
+<li>设置回调函数</li>
+</ol>
+</li>
+<li><p>重复的功能相似的代码</p>
+<p>获取交易构成明细 与 导出文件 的参数基本一致，声明了两次。</p>
+</li>
+<li><p>不应在公共组件堆叠当前模块特有的组件</p>
+</li>
+</ol>
+<p>dealComposition &lt;- multifilter &lt;- multiSelector。将multi-两个组件放到dealComposition模块</p>
+<ol>
+<li>参数意义尽量直接<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">getTradeDataBySort: function(sort, notRequest) &#123;</div><div class="line">    ...</div><div class="line">    if (!notRequest) &#123;  // !不请求 = 请求</div><div class="line">        this.getTradeConstitute(undefined, undefined, sort, true);</div><div class="line">    &#125;</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>换成doRequest更直接</p>
+<ol>
+<li>函数参数过多</li>
+</ol>
+<p>getTradeConstitute这个方法带四个参数，html和js中调用常有undefined实参传入，阅读的时候会很困惑。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">getTradeConstitute: function (currentPage, filters, sort, searchText) &#123;...&#125;</div><div class="line"></div><div class="line">// html中使用该函数</div><div class="line">on-filterSearch=&#123;this.getTradeConstitute(undefined, $event, undefined, undefined)&#125;</div></pre></td></tr></table></figure>
+<p>建议将形参能去则去，请求数据时从组件的状态中获取参数或者根据不同情形重置参数。</p>
+<h3 id="3-静态代码检测"><a href="#3-静态代码检测" class="headerlink" title="3. 静态代码检测"></a>3. 静态代码检测</h3><h4 id="书写规范"><a href="#书写规范" class="headerlink" title="书写规范"></a>书写规范</h4><ol>
+<li><p>js中的字符串、文件路径采用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2. 统一文件命名，采用.分隔 ```tradeComposition -&gt; deal.composition</div></pre></td></tr></table></figure></p>
+</li>
+<li><p>object.key不用引号或者使用单引号</p>
+</li>
+<li>统一缩进</li>
+<li>弱等== 改为 强等===</li>
+</ol>
+<h4 id="多余变量"><a href="#多余变量" class="headerlink" title="多余变量"></a>多余变量</h4><ol>
+<li>大量未使用的变量</li>
+</ol>
+<h3 id="4-组件自治要彻底"><a href="#4-组件自治要彻底" class="headerlink" title="4. 组件自治要彻底"></a>4. 组件自治要彻底</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;checkBoxHub source=&#123;metrics&#125; defaulted=&#123;defaultMetrics&#125;</div><div class="line">             selected=&#123;tradeMetrics&#125; periodType=&#123;periodType&#125;&gt;</div><div class="line">&lt;/checkBoxHub&gt;</div><div class="line"></div><div class="line">// checkBoxHub</div><div class="line">getCheckedBox: function() &#123;</div><div class="line">    ...</div><div class="line">    for (var i = 0; i &lt; data.checkBox.length; i++) &#123;</div><div class="line">        if (data.checkBox[i].checked)&#123;</div><div class="line">            if( i === 3 &amp;&amp; data.periodType!=0)&#123;</div><div class="line">                data.checkBox[i].name = &quot;日均UV&quot;;</div><div class="line">            &#125;</div><div class="line">            ...</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>periodType不同的值会影响checkBoxHub组件字段和表头展示’UV/转化率’或者’日均UV/平均转化率’；而在父组件中也有这一功能的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">// 初始化表头数据</div><div class="line">if(data.periodType !=0)&#123;</div><div class="line">    uvValue = &apos;日均UV&apos;;</div><div class="line">    tpValue = &quot;平均转化率&quot;;</div><div class="line">&#125;else&#123;</div><div class="line">    uvValue = &apos;UV&apos;;</div><div class="line">    tpValue = &quot;转化率&quot;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">//监听时间段 修改交易构成表头</div><div class="line">self.$watch(&apos;periodType&apos;,function(newValue,oldValue)&#123;</div><div class="line">    if (newValue != undefined &amp;&amp; oldValue != undefined) &#123;</div><div class="line">        if(newValue != 0)&#123;</div><div class="line">            self.data.tradeMetrics[3].dimensionName = &apos;日均UV&apos;;</div><div class="line">            self.data.tradeMetrics[5].dimensionName = &apos;平均转化率&apos;;</div><div class="line">        &#125;else&#123;</div><div class="line">            self.data.tradeMetrics[3].dimensionName = &apos;UV&apos;;</div><div class="line">            self.data.tradeMetrics[5].dimensionName = &apos;转化率&apos;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>checkBoxHub和父组件都没有把功能、逻辑做完整，代码不健壮，耦合度高；</p>
+<p>后面watch里的赋值也直接引发了第4、5个线上bug。重构时将这一部分的代码全部在checkBoxHub中处理，降低耦合，只留periodType做接口</p>
+<h3 id="！！能不watch就不watch，尽量避免在watch中发请求"><a href="#！！能不watch就不watch，尽量避免在watch中发请求" class="headerlink" title="！！能不watch就不watch，尽量避免在watch中发请求"></a>！！能不watch就不watch，尽量避免在watch中发请求</h3><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>该页面有几个明显的问题：功能代码混乱，部分函数较长，大量冗余代码和错误代码，在线上还有明显bug。针对这些问题，着手理清功能和模块，拆解函数，组件间降低耦合，根据cleancode的原则整理代码，遵守静态代码规范。</li>
+<li>造成代码质量不高的原因可能是最初开发的人员对于regular的书写不够娴熟，代码也没有清晰的设计，组件接口设计不合理。除此之外，不能忽视的是后来的维护者。面对需求更改或者bugfix的时候只是想显式地快速地实现功能（但是也引发了bug），而忽略了代码本身可优化的空间，错过了当时重构的时机。</li>
+<li>之前芳芳总结重构的时候说的很对——“重构从来不是一次性行为，是我们需要不断进行的工作。多人维护以及不断的功能迭代之后，代码多多少少都会有优化的空间，所以在你看到不合理或任何值得重构的地方时，行动起来吧。”</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/07/SVG动画实践篇-无中生有的线条动画/" rel="next" title="SVG动画实践篇-无中生有的线条动画">
+                <i class="fa fa-chevron-left"></i> SVG动画实践篇-无中生有的线条动画
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/19/如何理解JS中的闭包/" rel="prev" title="如何理解JS中的闭包">
+                如何理解JS中的闭包 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重构"><span class="nav-number">2.</span> <span class="nav-text">重构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-线上请求分析"><span class="nav-number">2.1.</span> <span class="nav-text">1. 线上请求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#多次请求、频繁请求"><span class="nav-number">2.1.1.</span> <span class="nav-text">多次请求、频繁请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#报错、页面异常"><span class="nav-number">2.1.2.</span> <span class="nav-text">报错、页面异常</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-CleanCode"><span class="nav-number">2.2.</span> <span class="nav-text">2. CleanCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-静态代码检测"><span class="nav-number">2.3.</span> <span class="nav-text">3. 静态代码检测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#书写规范"><span class="nav-number">2.3.1.</span> <span class="nav-text">书写规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多余变量"><span class="nav-number">2.3.2.</span> <span class="nav-text">多余变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-组件自治要彻底"><span class="nav-number">2.4.</span> <span class="nav-text">4. 组件自治要彻底</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#！！能不watch就不watch，尽量避免在watch中发请求"><span class="nav-number">2.5.</span> <span class="nav-text">！！能不watch就不watch，尽量避免在watch中发请求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

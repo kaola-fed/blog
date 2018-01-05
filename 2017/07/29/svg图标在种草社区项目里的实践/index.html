@@ -1,0 +1,727 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前端仔对svg这个词应该都不陌生，可缩放的矢量图形，意味着清晰、无损，想来该是越来越高清的手机端的宠儿，然而实际大公司里用的并不多，知乎上也有关于这个问题的讨论。即便如此，svg在业界还是备受关注的，也有很多人对其看好，觉得是未来趋势。于是，在种草的最新一期需求里，小试了一把，来谈谈使用过程及感受。  先扔个扫盲贴，SVG Sprite 使用简介一文类比了icon font，清晰的介绍了svg图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="svg图标在种草社区项目里的实践">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/07/29/svg图标在种草社区项目里的实践/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="前端仔对svg这个词应该都不陌生，可缩放的矢量图形，意味着清晰、无损，想来该是越来越高清的手机端的宠儿，然而实际大公司里用的并不多，知乎上也有关于这个问题的讨论。即便如此，svg在业界还是备受关注的，也有很多人对其看好，觉得是未来趋势。于是，在种草的最新一期需求里，小试了一把，来谈谈使用过程及感受。  先扔个扫盲贴，SVG Sprite 使用简介一文类比了icon font，清晰的介绍了svg图">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.381Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="svg图标在种草社区项目里的实践">
+<meta name="twitter:description" content="前端仔对svg这个词应该都不陌生，可缩放的矢量图形，意味着清晰、无损，想来该是越来越高清的手机端的宠儿，然而实际大公司里用的并不多，知乎上也有关于这个问题的讨论。即便如此，svg在业界还是备受关注的，也有很多人对其看好，觉得是未来趋势。于是，在种草的最新一期需求里，小试了一把，来谈谈使用过程及感受。  先扔个扫盲贴，SVG Sprite 使用简介一文类比了icon font，清晰的介绍了svg图">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/07/29/svg图标在种草社区项目里的实践/"/>
+
+
+
+
+
+  <title>svg图标在种草社区项目里的实践 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/07/29/svg图标在种草社区项目里的实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                svg图标在种草社区项目里的实践
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-29T00:00:00+08:00">
+                2017-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>前端仔对svg这个词应该都不陌生，可缩放的矢量图形，意味着清晰、无损，想来该是越来越高清的手机端的宠儿，然而实际大公司里用的并不多，知乎上也有关于这个问题的<a href="https://www.zhihu.com/question/26865508" target="_blank" rel="noopener">讨论</a>。即便如此，svg在业界还是备受关注的，也有很多人对其看好，觉得是未来趋势。于是，在种草的最新一期需求里，小试了一把，来谈谈使用过程及感受。</p>
+</blockquote>
+<p>先扔个扫盲贴，<a href="https://github.com/kaola-fed/blog/issues/36" target="_blank" rel="noopener">SVG Sprite 使用简介</a>一文类比了icon font，清晰的介绍了svg图标的使用方式。</p>
+<a id="more"></a>
+<h3 id="项目中实践过程"><a href="#项目中实践过程" class="headerlink" title="项目中实践过程"></a>项目中实践过程</h3><ul>
+<li><h4 id="收集图标"><a href="#收集图标" class="headerlink" title="收集图标"></a>收集图标</h4></li>
+</ul>
+<p>在业务功能都码的差不多了，开始想捣腾下svg了，就从设计师那里，要到了本项目的一些svg图标文件，将各个文件换成了英文名后放到了项目的static目录下。</p>
+<ul>
+<li><h4 id="拼合图标"><a href="#拼合图标" class="headerlink" title="拼合图标"></a>拼合图标</h4></li>
+</ul>
+<p>查阅了一些文档，发现了一个可以<a href="https://github.com/Hiswe/gulp-svg-symbols" target="_blank" rel="noopener">将svg图标进行拼合的工具</a>，有点sprite精灵图的意思。于是在项目中安装了下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm i gulp-svg-symbols --save-dev</div></pre></td></tr></table></figure>
+<p>注：使用此工具，需要结合gulp构建工具，确保项目中安装了gulp插件</p>
+<p>然后设置gulp配置文件，gulpfile.js如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&apos;use strict&apos;;</div><div class="line"></div><div class="line">const &#123;resolve, join&#125; = require(&apos;path&apos;);</div><div class="line"></div><div class="line">var gulp       = require(&apos;gulp&apos;);</div><div class="line">var symbols = require(&apos;gulp-svg-symbols&apos;);</div><div class="line">var wapPath = resolve(__dirname, &apos;src&apos;, &apos;main&apos;, &apos;resources&apos;, &apos;wap&apos;)</div><div class="line">// svg 目录源</div><div class="line">var svgPath = resolve(wapPath, &apos;static&apos;, &apos;svg&apos;)</div><div class="line">// 拼合后的svg输出目录</div><div class="line">var distPath = resolve(wapPath, &apos;dist&apos;, &apos;m&apos;, &apos;svg&apos;)</div><div class="line"></div><div class="line"></div><div class="line">gulp.task(&apos;svgsprites&apos;, function () &#123;</div><div class="line">  return gulp.src(svgPath + &apos;/*.svg&apos;)</div><div class="line">    .pipe(symbols(&#123;&apos;svgClassname&apos;:&apos;svgicon&apos;&#125;))</div><div class="line">    .pipe(gulp.dest(distPath));</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>并在package.json中，配置了此任务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&quot;scripts&quot;: &#123;</div><div class="line">    &quot;svgsprites&quot;: &quot;gulp svgsprites&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>准备工作差不多了，跑下命令看看结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm run svgsprites</div></pre></td></tr></table></figure></p>
+<p>果然，在输出目录下生成了一个<code>svg-symbols.css</code>文件和一个<code>svg-symbols.svg</code>文件，查看了下此svg文件，确认所用的几个图标代码都在此文件里了，就迫不及待的想在业务代码里使用起来：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;svg class=&quot;svg-arrow&quot;&gt;</div><div class="line">  &lt;use xlink:href=&quot;/dist/m/svg/svg-symbols.svg#arrow-rt&quot;&gt;&lt;/use&gt;</div><div class="line">&lt;/svg&gt;</div></pre></td></tr></table></figure>
+<p>然后并没有在页面上如期看到图标，于是我又细看了下工具生成的这个svg，类比了其他能正常使用的文件，发现文件头缺少了XLink的定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;</div></pre></td></tr></table></figure></p>
+<p>看来此工具”年久失修”了，于是只好自己<a href="https://github.com/lzf0402/gulp-svg-symbols" target="_blank" rel="noopener">fork了一份</a>，改了此工具导出svg所用的模板（/templates/svg-symbols.svg），加上了这串定义，同时在此模板中加了use标签来显示各个图标：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&lt;% if(svgClassname) &#123;%&gt; class=&quot;&lt;%= svgClassname %&gt;&quot;&lt;% &#125; %&gt;&gt;&lt;% if(defs) &#123;%&gt;</div><div class="line">  &lt;defs&gt;</div><div class="line">  	&lt;%= defs %&gt;</div><div class="line">  &lt;/defs&gt;&lt;% &#125; %&gt;</div><div class="line">  &lt;% _.forEach( icons, function( icon )&#123; %&gt;</div><div class="line">  &lt;symbol id=&quot;&lt;%= icon.id %&gt;&quot; viewBox=&quot;&lt;%= icon.svg.viewBox %&gt;&quot;&lt;% if (icon.svg.originalAttributes.preserveAspectRatio) &#123;%&gt; preserveAspectRatio=&quot;&lt;%= icon.svg.originalAttributes.preserveAspectRatio %&gt;&quot; &lt;% &#125;%&gt;&gt;&lt;% if (icon.title) &#123;%&gt;</div><div class="line">      &lt;title&gt;&lt;%= icon.title %&gt;&lt;/title&gt;&lt;% &#125;%&gt;</div><div class="line">      &lt;%= icon.svg.content %&gt;</div><div class="line">  &lt;/symbol&gt;&lt;%</div><div class="line">  &#125;); %&gt;</div><div class="line">  &lt;!-- 添加use标签 显示symbol中定义的图标 --&gt;</div><div class="line">  &lt;% _.forEach( icons, function( icon, idx )&#123; %&gt;</div><div class="line">  &lt;use xlink:href=&quot;#&lt;%= icon.id %&gt;&quot; width=&quot;20&quot; height=&quot;20&quot; x=&quot;0&quot; y=&quot;&lt;%= idx*20 %&gt;&quot; fill=&quot;#666666&quot;&gt;&lt;/use&gt;&lt;%</div><div class="line">  &#125;); %&gt;</div><div class="line"></div><div class="line">&lt;/svg&gt;</div></pre></td></tr></table></figure>
+<p>再把这个修改后的工具，发了个npm包—<code>gulp-svg-combine</code>，重新更新工程里的包名和gulp配置，再进行拼合，这次终于可以正常使用了。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>现在拼合后的svg文件已有，只需要在各个使用到的地方像图片一样的引用就可以了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">// 可以把所有图标的样式统一到单个文件里</div><div class="line">.svg-arrow&#123;</div><div class="line">    width: 16px;</div><div class="line">    height: 16px;</div><div class="line">    fill: #666;</div><div class="line">    margin-left: 3px;</div><div class="line">    position: relative;</div><div class="line">    top: 3px;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// ftl中可以直接标签使用</div><div class="line">&lt;svg class=&quot;svg-arrow&quot;&gt;</div><div class="line">  &lt;use xlink:href=&quot;/dist/m/svg/svg-symbols.svg#arrow-rt&quot;&gt;&lt;/use&gt;</div><div class="line">&lt;/svg&gt;</div><div class="line"></div><div class="line">// regular中使用，参考：SVG Sprite 使用简介</div><div class="line">// 定义了r-xlink指令</div><div class="line">&lt;svg class=&quot;svg-zan&quot;&gt;</div><div class="line">  &lt;use r-xlink:href=&quot;/dist/m/svg/svg-symbols.svg#zan&quot;&gt;&lt;/use&gt;</div><div class="line">&lt;/svg&gt;</div><div class="line"></div><div class="line">// 指令动态设置标签的xlink定义</div><div class="line">List.directive(&apos;r-xlink:href&apos;, function(elem, val) &#123;</div><div class="line">    if (val&amp;&amp; val.type === &apos;expression&apos;) &#123;</div><div class="line">        this.$watch(val, function(newVal) &#123;</div><div class="line">            elem.setAttributeNS(&apos;http://www.w3.org/1999/xlink&apos;, &apos;href&apos;, newVal);</div><div class="line">        &#125;);</div><div class="line">    &#125; else &#123;</div><div class="line">        elem.setAttributeNS(&apos;http://www.w3.org/1999/xlink&apos;, &apos;href&apos;, val);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>至此，算是将svg图标在项目中，实际用起来了，从表现上来说，细看确实会发现对比图片图标或iconfont图标，都要清晰，相信放大之后清晰度的差异更明显，试了各大浏览器和微信中，均表现正常。</p>
+<h3 id="使用感受"><a href="#使用感受" class="headerlink" title="使用感受"></a>使用感受</h3><p>下面谈谈一路折腾下来的感受，以及项目中实际使用的一点想法。</p>
+<p>对于<a href="https://css-tricks.com/icon-fonts-vs-svg/" target="_blank" rel="noopener">Inline SVG vs Icon Fonts</a>一文中类比了svg和icon的优劣。</p>
+<ul>
+<li><p>svg 缩放无损不失真，毋庸置疑，几乎碾压png、iconfont，这也是TA最大的亮点。</p>
+</li>
+<li><p>css属性方面，iconfont能做到的，svg基本也能做到，同时Ta还能控制图标的部分内容，但实际这种场景应该不多，如果真需要工程师去控制一个小图标里的部分样式，也是工作效率上的一个考验了。</p>
+</li>
+<li><p>定位方便，虽然svg标签就是其本身的大小，但实际使用中的感受是，图标如果要和文字对其的话，也需要相应的样式控制。</p>
+</li>
+<li><p>对于iconfont各种原因可能造成字体显示失败的问题，对用户来说确实是不友好的体验，而svg全赖浏览器支持，不支持无非也就不显示内容不会出现乱码之类的情况。目前IE8-以及Android 2.3默认浏览器是不支持SVG的，但可以做一些<a href="一些SVG向下兼容优雅降级技术">fallback</a>。</p>
+</li>
+<li><p>svg在语义和可访问性方面，确实比iconfont更胜一筹，毕竟svg标签代表着图片，但事实上很多小图标的语义我们<br>并不关心，也不需要浏览器或者屏幕阅读器去过分解读。</p>
+</li>
+<li><p>性能方面，svg渲染的成本比图片和字体都要来得高。</p>
+</li>
+</ul>
+<p>最后要谈谈使用体验了。</p>
+<p>使用svg图标的时候，首先需要通过工具去合并。代码层面，<br>即需要在html中写结构（代码量上会增多），又需要通过选择器来给图标设置一些css属性。相对于使用iconfont，并无效率提升。</p>
+<p>设计师直接导出的svg图片，如果不做优化，通过工具合并后的文件会比较大，代码量惊人。而且如果导出的图标被设定死了颜色（fill属性），不做处理的话就无法复用了。当然可以去要求设计师导出的时候遵循一定的标准，但一切人为的操作都是很难保证的。 作为前端，如果花太多精力在处理图标上，实在也不是好的体验。</p>
+<p>svg虽然有向下兼容的降级方案，未免麻烦，PC端还是老实用iconfont吧。</p>
+<p>以上是自己的一点感想，欢迎拍砖。</p>
+<hr>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><ul>
+<li><a href="http://leungwensen.github.io/blog/2016/from-icon-fonts-to-svg-icons.html" target="_blank" rel="noopener">从icon fonts到SVG icons</a></li>
+<li><a href="https://css-tricks.com/icon-fonts-vs-svg/" target="_blank" rel="noopener">Inline SVG vs Icon Fonts</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/27/Regular 组件开发的一些建议/" rel="next" title="Regular 组件开发的一些建议">
+                <i class="fa fa-chevron-left"></i> Regular 组件开发的一些建议
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/30/Promise：从懵逼开始摸爬滚打/" rel="prev" title="Promise：从懵逼开始摸爬滚打">
+                Promise：从懵逼开始摸爬滚打 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目中实践过程"><span class="nav-number">1.</span> <span class="nav-text">项目中实践过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#收集图标"><span class="nav-number">1.1.</span> <span class="nav-text">收集图标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拼合图标"><span class="nav-number">1.2.</span> <span class="nav-text">拼合图标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用感受"><span class="nav-number">3.</span> <span class="nav-text">使用感受</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">4.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

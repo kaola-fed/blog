@@ -1,0 +1,703 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="提到前端工程的自动化构建，gulp是其中很重要的一个工具，gulp是一种基于stream的前端构建工具，相比于grunt使用临时文件的策略，会有较大的速度优势。本文会对gulp的主要部分进行详细剖析，期待本文能够帮助读者更好地在工程中实践gulp。 gulp等前端构建脚本并不是一种全新的思想，早在几十年前，gnu make已经在各种流行语言中风靡，并解决了相关的各种问题，可以简单的认为gulp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gulp源码解析之任务管理">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/08/31/gulp源码解析之任务管理/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="提到前端工程的自动化构建，gulp是其中很重要的一个工具，gulp是一种基于stream的前端构建工具，相比于grunt使用临时文件的策略，会有较大的速度优势。本文会对gulp的主要部分进行详细剖析，期待本文能够帮助读者更好地在工程中实践gulp。 gulp等前端构建脚本并不是一种全新的思想，早在几十年前，gnu make已经在各种流行语言中风靡，并解决了相关的各种问题，可以简单的认为gulp">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="gulp源码解析之任务管理">
+<meta name="twitter:description" content="提到前端工程的自动化构建，gulp是其中很重要的一个工具，gulp是一种基于stream的前端构建工具，相比于grunt使用临时文件的策略，会有较大的速度优势。本文会对gulp的主要部分进行详细剖析，期待本文能够帮助读者更好地在工程中实践gulp。 gulp等前端构建脚本并不是一种全新的思想，早在几十年前，gnu make已经在各种流行语言中风靡，并解决了相关的各种问题，可以简单的认为gulp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/08/31/gulp源码解析之任务管理/"/>
+
+
+
+
+
+  <title>gulp源码解析之任务管理 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/08/31/gulp源码解析之任务管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                gulp源码解析之任务管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T00:00:00+08:00">
+                2017-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+<p>提到前端工程的自动化构建，gulp是其中很重要的一个工具，gulp是一种基于stream的前端构建工具，相比于grunt使用临时文件的策略，会有较大的速度优势。本文会对gulp的主要部分进行详细剖析，期待本文能够帮助读者更好地在工程中实践gulp。</p>
+<p>gulp等前端构建脚本并不是一种全新的思想，早在几十年前，gnu make已经在各种流行语言中风靡，并解决了相关的各种问题，可以简单的认为gulp是JavaScript语言的“make”。</p>
+<a id="more"></a>
+<h3 id="Gulp-核心模块"><a href="#Gulp-核心模块" class="headerlink" title="Gulp 核心模块"></a>Gulp 核心模块</h3><p>gulp其中两大核心模块，任务管理和文件</p>
+<p>本文通过对<a href="https://github.com/robrich/orchestrator" target="_blank" rel="noopener">Orchestrator</a>任务管理模块的源码进行分析，理清gulp是如何进行任务管理的。</p>
+<p>通过查看<a href="https://github.com/gulpjs/gulp/blob/master/index.js" target="_blank" rel="noopener">gulp源码（3.x及之前的版本）</a>，可以看到，gulp所有任务管理相关的功能都是直接从Orchestrator模块继承的，而且可以发现gulp官网对相关任务管理接口的描述，和Orchestrator模块的描述几乎完全一样。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// gulp/index.js</span></div><div class="line">...</div><div class="line">var Orchestrator = <span class="built_in">require</span>(<span class="string">'orchestrator'</span>);</div><div class="line">...</div><div class="line"></div><div class="line">function Gulp() &#123;  <span class="comment">// 构造函数直接调用Orchestrator</span></div><div class="line">  Orchestrator.call(<span class="keyword">this</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">util.inherits(Gulp, Orchestrator);  <span class="comment">// 从Orchestrator继承而来</span></div><div class="line"></div><div class="line">Gulp.prototype.task = Gulp.prototype.add;  <span class="comment">// task方法直接使用Orchestrator中的add</span></div><div class="line">...</div></pre></td></tr></table></figure>
+<p>所以下面就一起来分析一下Orchestrator模块。</p>
+<h3 id="Orchestrator-模块"><a href="#Orchestrator-模块" class="headerlink" title="Orchestrator 模块"></a>Orchestrator 模块</h3><p><a href="https://github.com/robrich/orchestrator" target="_blank" rel="noopener">Orchestrator github主页</a>中对自身的描述</p>
+<blockquote>
+<p>A module for sequencing and executing tasks and dependencies in maximum concurrency.</p>
+</blockquote>
+<p>简单翻译就是</p>
+<blockquote>
+<p>一个能够以最大并发性对任务及其依赖任务进行排序执行的模块。</p>
+</blockquote>
+<p>Orchestrator模块主要就是添加管理任务</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Orchestrator/index.js</span></div><div class="line"></div><div class="line"><span class="comment">/*jshint node:true */</span></div><div class="line"><span class="meta"></span></div><div class="line">"use strict";</div><div class="line"></div><div class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>);</div><div class="line"><span class="keyword">var</span> events = <span class="built_in">require</span>(<span class="string">'events'</span>);</div><div class="line"><span class="keyword">var</span> EventEmitter = events.EventEmitter;</div><div class="line"><span class="keyword">var</span> runTask = <span class="built_in">require</span>(<span class="string">'./lib/runTask'</span>);</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> 构造函数里面</div><div class="line"> 首先调用node中事件模块的构造函数EventEmitter，</div><div class="line"> </div><div class="line"> EventEmitter.call(this);</div><div class="line"> </div><div class="line"> 这是一种典型的用法，直接挂载Event模块实例属性及方法。</div><div class="line"> </div><div class="line"> 接下来初始化了Orchestrator最核心的几个属性：</div><div class="line"> </div><div class="line"> doneCallback 是所有任务执行完成后的回调</div><div class="line"> seq 是排序后的任务队列，对任务及其依赖的排序是通过seqencify模块进行的，后面会介绍。</div><div class="line"> tasks 保存了所有定义的任务，通过add原型方法添加任务。</div><div class="line"> isRunning 标识当前是否有任务正在执行</div><div class="line">*/</div><div class="line"><span class="keyword">var</span> Orchestrator = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	EventEmitter.call(<span class="keyword">this</span>);</div><div class="line">	<span class="keyword">this</span>.doneCallback = <span class="literal">undefined</span>; <span class="comment">// call this when all tasks in the queue are done</span></div><div class="line">	<span class="keyword">this</span>.seq = []; <span class="comment">// the order to run the tasks</span></div><div class="line">	<span class="keyword">this</span>.tasks = &#123;&#125;; <span class="comment">// task objects: name, dep (list of names of dependencies), fn (the task to run)</span></div><div class="line">	<span class="keyword">this</span>.isRunning = <span class="literal">false</span>; <span class="comment">// is the orchestrator running tasks? .start() to start, .stop() to stop</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 继承Event模块</div><div class="line"> */</div><div class="line">util.inherits(Orchestrator, EventEmitter);</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 重置Orchestrator模块，即重置相应的状态和属性</div><div class="line"> */</div><div class="line">Orchestrator.prototype.reset = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.isRunning) &#123;</div><div class="line">		<span class="keyword">this</span>.stop(<span class="literal">null</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">this</span>.tasks = &#123;&#125;;</div><div class="line">	<span class="keyword">this</span>.seq = [];</div><div class="line">	<span class="keyword">this</span>.isRunning = <span class="literal">false</span>;</div><div class="line">	<span class="keyword">this</span>.doneCallback = <span class="literal">undefined</span>;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">  add前面主要是对参数进行了一些校验检测，最后将任务task的名字，依赖，回调添加到核心属性tasks中</div><div class="line">*/</div><div class="line">Orchestrator.prototype.add = <span class="function"><span class="keyword">function</span> (<span class="params">name, dep, fn</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (!fn &amp;&amp; <span class="keyword">typeof</span> dep === <span class="string">'function'</span>) &#123;</div><div class="line">		fn = dep;</div><div class="line">		dep = <span class="literal">undefined</span>;</div><div class="line">	&#125;</div><div class="line">	dep = dep || [];</div><div class="line">	fn = fn || <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;; <span class="comment">// no-op</span></div><div class="line">	<span class="keyword">if</span> (!name) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Task requires a name'</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">// validate name is a string, dep is an array of strings, and fn is a function</span></div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> name !== <span class="string">'string'</span>) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Task requires a name that is a string'</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> fn !== <span class="string">'function'</span>) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Task '</span>+name+<span class="string">' requires a function that is a function'</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(dep)) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Task '</span>+name+<span class="string">' can\'t support dependencies that is not an array of strings'</span>);</div><div class="line">	&#125;</div><div class="line">	dep.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">'string'</span>) &#123;</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Task '</span>+name+<span class="string">' dependency '</span>+item+<span class="string">' is not a string'</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	<span class="keyword">this</span>.tasks[name] = &#123;</div><div class="line">		<span class="attr">fn</span>: fn,</div><div class="line">		<span class="attr">dep</span>: dep,</div><div class="line">		<span class="attr">name</span>: name</div><div class="line">	&#125;;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">  如果只给了task的名字，则直接获取之前定义task，否则通过add添加新的task</div><div class="line">*/</div><div class="line">Orchestrator.prototype.task = <span class="function"><span class="keyword">function</span> (<span class="params">name, dep, fn</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (dep || fn) &#123;</div><div class="line">		<span class="comment">// alias for add, return nothing rather than this</span></div><div class="line">		<span class="keyword">this</span>.add(name, dep, fn);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.tasks[name];</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">  判断是否已经定义了某个task</div><div class="line">*/</div><div class="line">Orchestrator.prototype.hasTask = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> !!<span class="keyword">this</span>.tasks[name];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// tasks and optionally a callback</span></div><div class="line">Orchestrator.prototype.start = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> args, arg, names = [], lastTask, i, seq = [];</div><div class="line">	args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">0</span>);</div><div class="line">	<span class="keyword">if</span> (args.length) &#123;</div><div class="line">		lastTask = args[args.length<span class="number">-1</span>];</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">typeof</span> lastTask === <span class="string">'function'</span>) &#123;</div><div class="line">			<span class="keyword">this</span>.doneCallback = lastTask;</div><div class="line">			args.pop();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; args.length; i++) &#123;</div><div class="line">			arg = args[i];</div><div class="line">			<span class="keyword">if</span> (<span class="keyword">typeof</span> arg === <span class="string">'string'</span>) &#123;</div><div class="line">				names.push(arg);</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(arg)) &#123;</div><div class="line">				names = names.concat(arg); <span class="comment">// FRAGILE: ASSUME: it's an array of strings</span></div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'pass strings or arrays of strings'</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.isRunning) &#123;</div><div class="line">		<span class="comment">// reset specified tasks (and dependencies) as not run</span></div><div class="line">		<span class="keyword">this</span>._resetSpecificTasks(names);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// reset all tasks as not run</span></div><div class="line">		<span class="keyword">this</span>._resetAllTasks();</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.isRunning) &#123;</div><div class="line">		<span class="comment">// if you call start() again while a previous run is still in play</span></div><div class="line">		<span class="comment">// prepend the new tasks to the existing task queue</span></div><div class="line">		names = names.concat(<span class="keyword">this</span>.seq);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (names.length &lt; <span class="number">1</span>) &#123;</div><div class="line">		<span class="comment">// run all tasks</span></div><div class="line">		<span class="keyword">for</span> (i <span class="keyword">in</span> <span class="keyword">this</span>.tasks) &#123;</div><div class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.tasks.hasOwnProperty(i)) &#123;</div><div class="line">				names.push(<span class="keyword">this</span>.tasks[i].name);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	seq = [];</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">this</span>.sequence(<span class="keyword">this</span>.tasks, names, seq, []);</div><div class="line">	&#125; <span class="keyword">catch</span> (err) &#123;</div><div class="line">		<span class="comment">// Is this a known error?</span></div><div class="line">		<span class="keyword">if</span> (err) &#123;</div><div class="line">			<span class="keyword">if</span> (err.missingTask) &#123;</div><div class="line">				<span class="keyword">this</span>.emit(<span class="string">'task_not_found'</span>, &#123;<span class="attr">message</span>: err.message, <span class="attr">task</span>:err.missingTask, <span class="attr">err</span>: err&#125;);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (err.recursiveTasks) &#123;</div><div class="line">				<span class="keyword">this</span>.emit(<span class="string">'task_recursion'</span>, &#123;<span class="attr">message</span>: err.message, <span class="attr">recursiveTasks</span>:err.recursiveTasks, <span class="attr">err</span>: err&#125;);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">this</span>.stop(err);</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">this</span>.seq = seq;</div><div class="line">	<span class="keyword">this</span>.emit(<span class="string">'start'</span>, &#123;<span class="attr">message</span>:<span class="string">'seq: '</span>+<span class="keyword">this</span>.seq.join(<span class="string">','</span>)&#125;);</div><div class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isRunning) &#123;</div><div class="line">		<span class="keyword">this</span>.isRunning = <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">this</span>._runStep();</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line">Orchestrator.prototype.stop = <span class="function"><span class="keyword">function</span> (<span class="params">err, successfulFinish</span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.isRunning = <span class="literal">false</span>;</div><div class="line">	<span class="keyword">if</span> (err) &#123;</div><div class="line">		<span class="keyword">this</span>.emit(<span class="string">'err'</span>, &#123;<span class="attr">message</span>:<span class="string">'orchestration failed'</span>, <span class="attr">err</span>:err&#125;);</div><div class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (successfulFinish) &#123;</div><div class="line">		<span class="keyword">this</span>.emit(<span class="string">'stop'</span>, &#123;<span class="attr">message</span>:<span class="string">'orchestration succeeded'</span>&#125;);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// ASSUME</span></div><div class="line">		err = <span class="string">'orchestration aborted'</span>;</div><div class="line">		<span class="keyword">this</span>.emit(<span class="string">'err'</span>, &#123;<span class="attr">message</span>:<span class="string">'orchestration aborted'</span>, <span class="attr">err</span>: err&#125;);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.doneCallback) &#123;</div><div class="line">		<span class="comment">// Avoid calling it multiple times</span></div><div class="line">		<span class="keyword">this</span>.doneCallback(err);</div><div class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (err &amp;&amp; !<span class="keyword">this</span>.listeners(<span class="string">'err'</span>).length) &#123;</div><div class="line">		<span class="comment">// No one is listening for the error so speak louder</span></div><div class="line">		<span class="keyword">throw</span> err;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 引入任务及其依赖的排序模块</div><div class="line"> */</div><div class="line">Orchestrator.prototype.sequence = <span class="built_in">require</span>(<span class="string">'sequencify'</span>);</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line">  简单的循环判断是否所有的任务都已经执行完毕</div><div class="line">*/</div><div class="line">Orchestrator.prototype.allDone = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> i, task, allDone = <span class="literal">true</span>; <span class="comment">// nothing disputed it yet</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.seq.length; i++) &#123;</div><div class="line">		task = <span class="keyword">this</span>.tasks[<span class="keyword">this</span>.seq[i]];</div><div class="line">		<span class="keyword">if</span> (!task.done) &#123;</div><div class="line">			allDone = <span class="literal">false</span>;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> allDone;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 重置task，重置相应的状态和属性</div><div class="line"> */</div><div class="line">Orchestrator.prototype._resetTask = <span class="function"><span class="keyword">function</span>(<span class="params">task</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (task) &#123;</div><div class="line">		<span class="keyword">if</span> (task.done) &#123;</div><div class="line">			task.done = <span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">delete</span> task.start;</div><div class="line">		<span class="keyword">delete</span> task.stop;</div><div class="line">		<span class="keyword">delete</span> task.duration;</div><div class="line">		<span class="keyword">delete</span> task.hrDuration;</div><div class="line">		<span class="keyword">delete</span> task.args;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 循环遍历重置所有的task</div><div class="line"> */</div><div class="line">Orchestrator.prototype._resetAllTasks = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> task;</div><div class="line">	<span class="keyword">for</span> (task <span class="keyword">in</span> <span class="keyword">this</span>.tasks) &#123;</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.tasks.hasOwnProperty(task)) &#123;</div><div class="line">			<span class="keyword">this</span>._resetTask(<span class="keyword">this</span>.tasks[task]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 递归重置task及其依赖task</div><div class="line"> */</div><div class="line">Orchestrator.prototype._resetSpecificTasks = <span class="function"><span class="keyword">function</span> (<span class="params">names</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> i, name, t;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (names &amp;&amp; names.length) &#123;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; names.length; i++) &#123;</div><div class="line">			name = names[i];</div><div class="line">			t = <span class="keyword">this</span>.tasks[name];</div><div class="line">			<span class="keyword">if</span> (t) &#123;</div><div class="line">				<span class="keyword">this</span>._resetTask(t);</div><div class="line">				<span class="keyword">if</span> (t.dep &amp;&amp; t.dep.length) &#123;</div><div class="line">					<span class="keyword">this</span>._resetSpecificTasks(t.dep); <span class="comment">// recurse</span></div><div class="line">				&#125;</div><div class="line">			<span class="comment">//&#125; else &#123;</span></div><div class="line">				<span class="comment">// FRAGILE: ignore that the task doesn't exist</span></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Orchestrator.prototype._runStep = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> i, task;</div><div class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.isRunning) &#123;</div><div class="line">		<span class="keyword">return</span>; <span class="comment">// user aborted, ASSUME: stop called previously</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.seq.length; i++) &#123;</div><div class="line">		task = <span class="keyword">this</span>.tasks[<span class="keyword">this</span>.seq[i]];</div><div class="line">		<span class="keyword">if</span> (!task.done &amp;&amp; !task.running &amp;&amp; <span class="keyword">this</span>._readyToRunTask(task)) &#123;</div><div class="line">			<span class="keyword">this</span>._runTask(task);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (!<span class="keyword">this</span>.isRunning) &#123;</div><div class="line">			<span class="keyword">return</span>; <span class="comment">// task failed or user aborted, ASSUME: stop called previously</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.allDone()) &#123;</div><div class="line">		<span class="keyword">this</span>.stop(<span class="literal">null</span>, <span class="literal">true</span>);</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Orchestrator.prototype._readyToRunTask = <span class="function"><span class="keyword">function</span> (<span class="params">task</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> ready = <span class="literal">true</span>, <span class="comment">// no one disproved it yet</span></div><div class="line">		i, name, t;</div><div class="line">	<span class="keyword">if</span> (task.dep.length) &#123;</div><div class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; task.dep.length; i++) &#123;</div><div class="line">			name = task.dep[i];</div><div class="line">			t = <span class="keyword">this</span>.tasks[name];</div><div class="line">			<span class="keyword">if</span> (!t) &#123;</div><div class="line">				<span class="comment">// FRAGILE: this should never happen</span></div><div class="line">				<span class="keyword">this</span>.stop(<span class="string">"can't run "</span>+task.name+<span class="string">" because it depends on "</span>+name+<span class="string">" which doesn't exist"</span>);</div><div class="line">				ready = <span class="literal">false</span>;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (!t.done) &#123;</div><div class="line">				ready = <span class="literal">false</span>;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> ready;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Orchestrator.prototype._stopTask = <span class="function"><span class="keyword">function</span> (<span class="params">task, meta</span>) </span>&#123;</div><div class="line">	task.duration = meta.duration;</div><div class="line">	task.hrDuration = meta.hrDuration;</div><div class="line">	task.running = <span class="literal">false</span>;</div><div class="line">	task.done = <span class="literal">true</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Orchestrator.prototype._emitTaskDone = <span class="function"><span class="keyword">function</span> (<span class="params">task, message, err</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (!task.args) &#123;</div><div class="line">		task.args = &#123;<span class="attr">task</span>:task.name&#125;;</div><div class="line">	&#125;</div><div class="line">	task.args.duration = task.duration;</div><div class="line">	task.args.hrDuration = task.hrDuration;</div><div class="line">	task.args.message = task.name+<span class="string">' '</span>+message;</div><div class="line">	<span class="keyword">var</span> evt = <span class="string">'stop'</span>;</div><div class="line">	<span class="keyword">if</span> (err) &#123;</div><div class="line">		task.args.err = err;</div><div class="line">		evt = <span class="string">'err'</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">// 'task_stop' or 'task_err'</span></div><div class="line">	<span class="keyword">this</span>.emit(<span class="string">'task_'</span>+evt, task.args);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Orchestrator.prototype._runTask = <span class="function"><span class="keyword">function</span> (<span class="params">task</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line"></div><div class="line">	task.args = &#123;<span class="attr">task</span>:task.name, <span class="attr">message</span>:task.name+<span class="string">' started'</span>&#125;;</div><div class="line">	<span class="keyword">this</span>.emit(<span class="string">'task_start'</span>, task.args);</div><div class="line">	task.running = <span class="literal">true</span>;</div><div class="line"></div><div class="line">	runTask(task.fn.bind(<span class="keyword">this</span>), <span class="function"><span class="keyword">function</span> (<span class="params">err, meta</span>) </span>&#123;</div><div class="line">		that._stopTask.call(that, task, meta);</div><div class="line">		that._emitTaskDone.call(that, task, meta.runMethod, err);</div><div class="line">		<span class="keyword">if</span> (err) &#123;</div><div class="line">			<span class="keyword">return</span> that.stop.call(that, err);</div><div class="line">		&#125;</div><div class="line">		that._runStep.call(that);</div><div class="line">	&#125;);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// FRAGILE: ASSUME: this list is an exhaustive list of events emitted</span></div><div class="line"><span class="keyword">var</span> events = [<span class="string">'start'</span>,<span class="string">'stop'</span>,<span class="string">'err'</span>,<span class="string">'task_start'</span>,<span class="string">'task_stop'</span>,<span class="string">'task_err'</span>,<span class="string">'task_not_found'</span>,<span class="string">'task_recursion'</span>];</div><div class="line"></div><div class="line"><span class="keyword">var</span> listenToEvent = <span class="function"><span class="keyword">function</span> (<span class="params">target, event, callback</span>) </span>&#123;</div><div class="line">	target.on(event, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</div><div class="line">		e.src = event;</div><div class="line">		callback(e);</div><div class="line">	&#125;);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Orchestrator.prototype.onAll = <span class="function"><span class="keyword">function</span> (<span class="params">callback</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> i;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> callback !== <span class="string">'function'</span>) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'No callback specified'</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; events.length; i++) &#123;</div><div class="line">		listenToEvent(<span class="keyword">this</span>, events[i], callback);</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = Orchestrator;</div></pre></td></tr></table></figure>
+<h4 id="sequencify"><a href="#sequencify" class="headerlink" title="sequencify"></a>sequencify</h4><p>sequencify模块主要完成的工作就是对一个给定的任务数组，分析依赖关系，给出一个按照任务依赖顺序排列的任务数组，然后依次执行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// sequencify/index.js</span></div></pre></td></tr></table></figure>
+<p>对于gulp 4.x之后的版本，gulp更换了任务管理的模块为undertaker，后续文章中会对其进一步分析，并与orchestrator进行一定的对比。</p>
+<p>接下来的系列文章会对gulp中的stream流管理进行分析。</p>
+<p>待更新</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/25/利用 Jest 进行测试/" rel="next" title="利用 Jest 进行测试">
+                <i class="fa fa-chevron-left"></i> 利用 Jest 进行测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/07/HTTPS协议浅析/" rel="prev" title="HTTPS协议浅析">
+                HTTPS协议浅析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gulp-核心模块"><span class="nav-number">1.</span> <span class="nav-text">Gulp 核心模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Orchestrator-模块"><span class="nav-number">2.</span> <span class="nav-text">Orchestrator 模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sequencify"><span class="nav-number">2.1.</span> <span class="nav-text">sequencify</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

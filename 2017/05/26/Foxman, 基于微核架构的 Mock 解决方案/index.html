@@ -1,0 +1,841 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Foxman ⇗ 是一个使用 Node.js 开发的命令行工具，定位是一个可扩展的 Mock Server，帮助前端开发者轻松、独立、高效地完成前端开发和联调工作。 他不是一款静态文件响应工具， 假如你只需要一款轻量的 Node.js 开发服务器，推荐你使用 puer ⇗ 或 webpack-dev-server ⇗。 github 地址:  https://github.com/kaola-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Foxman, 基于微核架构的 Mock 解决方案">
+<meta property="og:url" content="https://blog.kaolafed.com/2017/05/26/Foxman, 基于微核架构的 Mock 解决方案/index.html">
+<meta property="og:site_name" content="考拉前端团队博客">
+<meta property="og:description" content="Foxman ⇗ 是一个使用 Node.js 开发的命令行工具，定位是一个可扩展的 Mock Server，帮助前端开发者轻松、独立、高效地完成前端开发和联调工作。 他不是一款静态文件响应工具， 假如你只需要一款轻量的 Node.js 开发服务器，推荐你使用 puer ⇗ 或 webpack-dev-server ⇗。 github 地址:  https://github.com/kaola-">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://haitao.nos.netease.com/056a58c4-0241-4947-a609-9a4bd657b52c.png">
+<meta property="og:image" content="https://avatars3.githubusercontent.com/u/10825163?v=3">
+<meta property="og:image" content="https://avatars3.githubusercontent.com/u/9125255?v=3">
+<meta property="og:image" content="https://avatars0.githubusercontent.com/u/4298621?v=3">
+<meta property="og:updated_time" content="2018-01-05T01:57:43.368Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Foxman, 基于微核架构的 Mock 解决方案">
+<meta name="twitter:description" content="Foxman ⇗ 是一个使用 Node.js 开发的命令行工具，定位是一个可扩展的 Mock Server，帮助前端开发者轻松、独立、高效地完成前端开发和联调工作。 他不是一款静态文件响应工具， 假如你只需要一款轻量的 Node.js 开发服务器，推荐你使用 puer ⇗ 或 webpack-dev-server ⇗。 github 地址:  https://github.com/kaola-">
+<meta name="twitter:image" content="https://haitao.nos.netease.com/056a58c4-0241-4947-a609-9a4bd657b52c.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.kaolafed.com/2017/05/26/Foxman, 基于微核架构的 Mock 解决方案/"/>
+
+
+
+
+
+  <title>Foxman, 基于微核架构的 Mock 解决方案 | 考拉前端团队博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><a href="http://163.lu/SCYY62" target="_blank" class="site-advertise">
+  <img src="https://haitao.nos.netease.com/50cd82c1-3fa4-47c4-bc97-b1fbfe5489b2.jpg" />
+</a> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">考拉前端团队博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <a href="http://163.lu/SCYY62" target="_blank" class="main-qrcode"></a>
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://blog.kaolafed.com/2017/05/26/Foxman, 基于微核架构的 Mock 解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="考拉前端团队">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="考拉前端团队博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Foxman, 基于微核架构的 Mock 解决方案
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-26T00:00:00+08:00">
+                2017-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- 为了更方便归档，请先完善以上信息，正文贴下面 -->
+<!--
+注意点：
+0. 文章中的资源（主要是图片）引用请使用 HTTPS
+1. 文章末可以加上自己的署名，如： by [Kaola](http://www.kaola.com)
+2. 最好不要用 NOS 图床，感觉加防盗链是迟早的事
+3. 文章会定期归档到 https://blog.kaolafed.com/
+-->
+<p><a href="https://github.com/kaola-fed/foxman" target="_blank" rel="noopener">Foxman ⇗</a> 是一个使用 Node.js 开发的命令行工具，定位是一个可扩展的 Mock Server，帮助前端开发者轻松、独立、高效地完成前端开发和联调工作。</p>
+<p>他不是一款静态文件响应工具， 假如你只需要一款轻量的 Node.js 开发服务器，推荐你使用 <a href="https://github.com/leeluolee/puer" target="_blank" rel="noopener">puer ⇗</a> 或 <a href="https://github.com/webpack/webpack-dev-server" target="_blank" rel="noopener">webpack-dev-server ⇗</a>。</p>
+<p>github 地址:  <a href="https://github.com/kaola-fed/foxman" target="_blank" rel="noopener">https://github.com/kaola-fed/foxman</a></p>
+<p><img src="https://haitao.nos.netease.com/056a58c4-0241-4947-a609-9a4bd657b52c.png" alt=""></p>
+<a id="more"></a>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>作为前端开发的我们，在实际的开发场景中会遇到以下问题：</p>
+<ol>
+<li>环境：进行本地开发，需要起后端环境(Tomcat)，对于新人来说，需要大量时间熟悉；熟练的人遇到某些确实存在的问题，也要花时间去解决，耗费大量前端开发的时间；</li>
+<li>流程：前端开发先开发 html，再将 html 改写成指定的模板语法，影响开发效率；</li>
+<li>接口：<ul>
+<li>接口定义使用聊天工具发送，前端开发时不好理解接口字段，影响开发效率；</li>
+<li>接口变更需要重新编写文档，并重新发送，影响开发效率；</li>
+<li>文档散落，影响接口维护；</li>
+</ul>
+</li>
+<li>联调：<ul>
+<li>联调过程很复杂，尤其是没有做热部署的Java工程，改视图还需要重启Tomcat，影响前端联调效率；</li>
+</ul>
+</li>
+<li>效益：<ul>
+<li>前后端对接的方式，期望纯粹的 JSON 交换。不过现实情况，是依赖后端的模板引擎，导致前端理解接口存在一定的障碍；</li>
+</ul>
+</li>
+</ol>
+<p>以上问题的存在，才产生了 Foxman 这个项目。</p>
+<h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><p>从 <em><a href="https://blog.kaolafed.com/">考拉前端</a></em> 使用情况来看，在接入 Foxman 后，拥有了更优雅的开发体验和更高的开发效率：</p>
+<ol>
+<li>前端开发者不再需要在本地起 Tomcat 服务，新人也无需熟悉本地启动环境；而启动一个 Foxman 所需的时间，在 2s 以内；</li>
+<li>接口定义，前端开发者更加有意识地去与后端定义接口，因为接口定义会落实到具体的 Mock 数据上；</li>
+<li>Mock 功能，使得前端开发者在开发阶段几乎可以是自治、无打扰的情况（产品不改需求的前提下）；</li>
+<li>Living Reload 的功能， 页面开发过程中，修改 html 和 js 会通知浏览器 reload 页面；修改 css 会通知浏览器只 reload 样式，提升了开发体验，节省了人肉刷新耗费的时间。</li>
+<li>Processors 的功能， 即时编译的设定，更好地结合无 webpack 构建的场景；</li>
+<li>Proxy 功能，更优雅的联调方式。前端开发者，可以在本地调试模板和 javascript，避免了修改提交，再重新部署服务器的时间耗费。</li>
+</ol>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><p><strong>容器</strong> - Foxman 核心提供了一个挂载插件的容器，并且提供方法供插件提供或调用的服务。实现上，使用了IoC（依赖查找）、插件化等架构设计的思想。</p>
+<p><strong>插件</strong> - Foxman 所有具体的功能都使用插件实现。插件的作用是实现本身需求，并提供服务供其他插件使用。</p>
+<p><strong>服务</strong> - 服务是架设于 容器 与 插件 之上的概念，容器 提供方法供 插件 注册或调用服务。</p>
+<p>在这样的体系下，你可以轻松地编写 Foxman 的插件，并调用已有插件的服务。所以，完全不需要担心，Foxman 会不适合你的项目，因为你完全可以根据自己的需求来定制你所需要的Foxman。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>NPM<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm i -g foxman@lastest <span class="comment"># 无梯子用户，推荐使用 cnpm</span></div></pre></td></tr></table></figure></p>
+<p>⚠️  Foxman 采用 es6 语法的大部分特性编写，要求使用 Node.js 版本不低于 v6.4.0</p>
+<h2 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    <span class="attr">port</span>: <span class="number">9000</span>,</div><div class="line">    <span class="attr">secure</span>: <span class="literal">false</span>,</div><div class="line">    <span class="attr">statics</span>: [</div><div class="line">        <span class="string">'./src/'</span></div><div class="line">    ],</div><div class="line">    <span class="attr">routes</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">method</span>: <span class="string">'GET'</span>,</div><div class="line">            <span class="attr">url</span>: <span class="string">'/ajax/index.html'</span>,</div><div class="line">            <span class="attr">sync</span>: <span class="literal">false</span>,</div><div class="line">            <span class="attr">filePath</span>: <span class="string">'foo.bar'</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">engineConfig</span>: &#123;&#125;,</div><div class="line">    <span class="attr">viewRoot</span>: <span class="string">'./views/'</span>,</div><div class="line">    <span class="attr">extension</span>: <span class="string">'ftl'</span>,</div><div class="line">    <span class="attr">syncData</span>: <span class="string">'./syncData/'</span>,</div><div class="line">    <span class="attr">asyncData</span>: <span class="string">'./ajax/'</span>,</div><div class="line">    <span class="attr">plugins</span>: [],</div><div class="line">    <span class="attr">processors</span>: [</div><div class="line">        &#123; <span class="attr">match</span>: <span class="string">'/src/css/*.css'</span>, <span class="attr">pipeline</span>: [], locate( reqUrl ) &#123;&#125; &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">proxy</span>:  [</div><div class="line">        &#123; <span class="attr">name</span>: <span class="string">'pre'</span>, <span class="attr">host</span>: <span class="string">'m.kaola.com'</span>, <span class="attr">ip</span>: <span class="string">'1.1.1.1'</span>, <span class="attr">protocol</span>: <span class="string">'http'</span> &#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这是一份基础的 Foxman 的配置文件，可以发现大部分字段都给 Server 用的，比如：</p>
+<ul>
+<li>port - Server 监听的端口</li>
+<li>secure - 是否启用 https</li>
+<li>statics - 静态资源配置</li>
+<li>routes - 路由列表</li>
+<li>engineConfig - 模板引擎配置项</li>
+<li>viewRoot - 模板根目录</li>
+<li>extension - 模板扩展名</li>
+<li>syncData - 同步数据根目录</li>
+<li>asyncData - 异步数据根目录</li>
+</ul>
+<p>以及一些特殊的字段，后面我们会重点介绍：</p>
+<ul>
+<li>proxy - 联调阶段，同步数据与异步数据的转发至后端主机或测试服务器</li>
+<li>processors - Runtime Compiler 的配置</li>
+<li>plugins - 插件配置</li>
+</ul>
+<p>更详细的 Foxman 配置，<a href="https://github.com/kaola-fed/foxman/blob/master/example/foxman.config.js" target="_blank" rel="noopener">点击此处 ⇗ </a></p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>在编写完 foxman.config 的目录下，执行命令即可启动 Foxman ：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ foxman</div></pre></td></tr></table></figure>
+<h2 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h2><h3 id="插件体系"><a href="#插件体系" class="headerlink" title="插件体系"></a>插件体系</h3><p>Foxman 的外置插件可以在配置文件中灵活载入:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">plugins: [</div><div class="line">        new RouteDisplay(),</div><div class="line">        new MockControl(&#123;&#125;),</div><div class="line">        new Automount(&#123;&#125;),</div><div class="line">        new WebpackDevServer(&#123;&#125;),</div><div class="line">]     </div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>而所有的内置功能，其实也是依托于插件展开。每个 Foxman 插件，需要实现一些方法，用于装载入 Foxman 容器时，做一些登记工作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Plugin</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="comment">// 初始化自身需要的属性</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    name() &#123; <span class="comment">// 定义插件的名字，如果没有该字段，会使用 constructor.name</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'name'</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    service() &#123; <span class="comment">// 提供给其他插件的服务</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            foo() &#123;</div><div class="line">                <span class="keyword">return</span> <span class="string">'bar'</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    init(&#123;getter, service&#125;) &#123;</div><div class="line">        <span class="keyword">const</span> use = service(<span class="string">'service.use'</span>); </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://github.com/kaola-fed/foxman/blob/master/packages/foxman-plugin-livereload/lib/index.js" target="_blank" rel="noopener">LivereloadPlugin ⇗ </a></p>
+<h3 id="容器与依赖查找"><a href="#容器与依赖查找" class="headerlink" title="容器与依赖查找"></a>容器与依赖查找</h3><p>容器的设定，离不开 IoC（控制反转）的概念。</p>
+<p>实现 IoC，惯用的一种方案是依赖注入 (Dependency Injection) ，用于运行时被动地接收依赖的对象，早期的 Foxman 是根据 DI 的方式实现插件化的；</p>
+<p>另一种方案是依赖查找 (Dependency Lookup) - 与 DI 相比更加主动，主动得调用框架提供的方法来获取依赖，获取时提供相关的配置文件路径 或 keypath 等信息。</p>
+<p>Foxman 核心提供了 use 和 start 两个方法：</p>
+<ul>
+<li>use - 注册 Plugin 及 service</li>
+<li>start - 执行 Plugin 的 init 方法，传入 service/getter 方法，供其依赖查找</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// core.js</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Core</span> </span>&#123;</div><div class="line">    use() &#123;</div><div class="line">        <span class="comment">// 1. 注册 Plugin 进入容器;</span></div><div class="line">        <span class="comment">// 2. 在容器中登记 Plugin 提供的 service </span></div><div class="line">    &#125; </div><div class="line"></div><div class="line">    start() &#123;</div><div class="line">        <span class="comment">// 1. 循环 Plugin 执行 init 方法， 注入 getters, service 等方法，用于获取其他插件的配置或是服务</span></div><div class="line">        <span class="comment">// 2. 如果插件执行了 this.pending 方法，则等待异步操作完成。</span></div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// app.js</span></div><div class="line"><span class="keyword">const</span> core = <span class="keyword">new</span> Core();</div><div class="line"></div><div class="line">core.use(<span class="keyword">new</span> Plugin(&#123;&#125;)); </div><div class="line"><span class="comment">// 1. 执行 Plugin constructor</span></div><div class="line"><span class="comment">// 2. 注册 Plugin 进入容器</span></div><div class="line"><span class="comment">// 3. 在容器中登记 Plugin 提供的 service </span></div><div class="line"></div><div class="line">core.start(); </div><div class="line"><span class="comment">// 执行 Plugin 的 init 方法，会在参数中注入的 getters 和 service 方法，用于插件依赖查找，</span></div></pre></td></tr></table></figure>
+<p>具体的实现细节，感兴趣的同学可以 <a href="https://github.com/kaola-fed/foxman/tree/master/packages/foxman-core" target="_blank" rel="noopener">查看源码 ⇗ </a></p>
+<h2 id="功能模块"><a href="#功能模块" class="headerlink" title="功能模块"></a>功能模块</h2><h3 id="Server模块"><a href="#Server模块" class="headerlink" title="Server模块"></a>Server模块</h3><blockquote>
+<p>基于 Node.js Server 框架 koa@1.x 构建，Server 的职责便是渲染模板、响应异步数据，以及在页面插入一些特定的脚本。</p>
+</blockquote>
+<p>整个 Server 的启动分为三个阶段：</p>
+<ol>
+<li>初始化 - 设置配置，设置路由，以及初始化 Koa 对象；</li>
+<li>装载中间件 - 初始化中间件队列；</li>
+<li>启动服务 - 启动 Server，并建立 websocket 服务器，用于与浏览器的通信。</li>
+</ol>
+<p>在 Server 启动后，请求进入 Server 时，会经历中间件的处理，这个过程又能分为 3 个阶段：</p>
+<ol>
+<li>请求分析，及确定响应方式，在请求的 context 上，生成 dispatcher 对象，用于在步骤 3 中确定以何种方式进行响应（同步 or 异步，模板路径 or mock 数据路径）；</li>
+<li>由插件装载的中间件对请求进行处理（取决于具体使用的插件），这个阶段可以对 dispatcher 对象进行修改，以完成插件所期望的渲染方式；</li>
+<li>请求响应，根据请求的类型，分为以下几种方式<ul>
+<li>同步请求 - 交给 Foxman-Engine 进行渲染，（注入一些 script 脚本，并且在页面上追加同步数据，使得浏览器 console 中输入 window.<strong>FOXMAN_SYNC_DATA</strong> 即可获得 ）</li>
+<li>异步请求 - 默认 json 方式展示，如需要 jsonp 响应，或是要自由控制响应方式，请使用插件 <a href="https://github.com/kaola-fed/foxman/tree/master/packages/foxman-plugin-mockcontrol" target="_blank" rel="noopener">@foxman/plugin-mockcontrol ⇗ </a></li>
+<li>文件夹请求 - 展示文件夹内的文件列表</li>
+<li>静态资源 - 响应静态资源</li>
+</ul>
+</li>
+</ol>
+<p>Server模块 提供其他插件一些关于 Server 相关的服务，可以供其他插件调用，比如：</p>
+<ul>
+<li>injectScript - 允许其他插件在同步接口中插入 javascript 脚本</li>
+<li>eval - 允许其他插件执行 js 代码</li>
+<li>livereload - 允许其他插件通知浏览器 reload </li>
+<li>use - 允许其他插件给 server 加入中间件</li>
+<li>registerRouterNamespace - 允许其他插件新增路由，使用命名空间可以保证不同的插件的路由不会相互干扰</li>
+</ul>
+<p>Foxman 的内置的 Mock Data 编写方式使用最原始的 JSON 字符串。<br>有特殊需求可以使用插件 <a href="https://github.com/kaola-fed/foxman/tree/master/packages/foxman-plugin-mockcontrol" target="_blank" rel="noopener">@foxman/plugin-mockcontrol ⇗ </a> 对响应进行额外控制，也可以在此基础上使用 MockJS，对响应数据进行控制。</p>
+<h3 id="Template-渲染引擎"><a href="#Template-渲染引擎" class="headerlink" title="Template 渲染引擎"></a>Template 渲染引擎</h3><blockquote>
+<p>模板解析模块，具有特定接口，完成模板渲染需求。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> engine = <span class="built_in">require</span>(<span class="string">'@foxman/engine-arttemplate'</span>);</div><div class="line"></div><div class="line">...</div><div class="line">engine: engine,</div><div class="line"><span class="attr">engineConfig</span>: &#123; <span class="comment">// 取决于具体的模板引擎</span></div><div class="line">    bail: <span class="literal">true</span>,</div><div class="line">    <span class="attr">compileDebug</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">imports</span>: renderImports,</div><div class="line">    <span class="attr">debug</span>: <span class="literal">false</span>,</div><div class="line">    <span class="attr">cache</span>: <span class="literal">false</span>,</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>目前支持的模板引擎有：</p>
+<ul>
+<li>Freemaker - <a href="https://github.com/kaola-fed/foxman/blob/master/packages/foxman-engine-freemarker/" target="_blank" rel="noopener">@foxman/engine-freemarker ⇗ </a></li>
+<li>Art-template - <a href="https://github.com/kaola-fed/foxman/blob/master/packages/foxman-engine-arttemplate/" target="_blank" rel="noopener">@foxman/engine-arttemplate ⇗ </a></li>
+<li>Handlebars - <a href="https://github.com/kaola-fed/foxman/blob/master/packages/foxman-engine-handlebars/" target="_blank" rel="noopener">@foxman/engine-handlebars ⇗ </a></li>
+</ul>
+<p>假如没有你需要的，你也可以自行开发一款 Foxman 的模板引擎解析器，只需要实现一个特定的接口，基本结构如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> template = <span class="built_in">require</span>(<span class="string">'xxx-template'</span>);</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TemplateEngin</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(viewRoot, engineConfig) &#123;</div><div class="line">        <span class="comment">// 初始化配置</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    parse(path, mockData) &#123;</div><div class="line">        <span class="comment">// 返回一个 Promise，Promise 的返回是处理后的接口</span></div><div class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(template(path, mockData));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>具体实现，参考 <a href="https://github.com/kaola-fed/foxman/blob/master/packages/foxman-engine-arttemplate/lib/index.js" target="_blank" rel="noopener">@foxman/engine-arttemplate ⇗ </a></p>
+<h3 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h3><blockquote>
+<p>使用本地的模板，结合远程端的数据来拼装页面。</p>
+</blockquote>
+<p>代理的原理：</p>
+<ol>
+<li>Foxman 接收到用户的代理需求时，将请求转发给后台服务器，并带上特殊的请求头（X-Special-Proxy-Header: foxman）;</li>
+<li>后端接收到 Foxman 的代理请求后，要求以 JSON 的方式将页面的同步数据返回；</li>
+<li>Foxman 接收到服务端的响应数据后，结合本地的模板来实现模板渲染的需求，并响应给用户。</li>
+</ol>
+<p>代理的设定，使得我们可以在本地的环境下调试测试环境的场景，发现存在前端的 bug 也能轻松修复，不再需要重复的部署测试服务器。</p>
+<p>来接触下 Foxman Proxy 的实际配置:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">proxy:  [&#123; </div><div class="line">    <span class="attr">name</span>: <span class="string">'pre'</span>, </div><div class="line">    <span class="attr">host</span>: <span class="string">'m.kaola.com'</span>,  <span class="comment">// 用于 nginx 转发到制定应用</span></div><div class="line">    ip: <span class="string">'1.1.1.1'</span>,        <span class="comment">// 目标的 IP 地址</span></div><div class="line">    protocol: <span class="string">'http'</span>      <span class="comment">// 协议</span></div><div class="line">&#125;]</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>完成上述配置后，使用者输入以下命令启动 Foxman，即可代理至远程服务器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ foxman -P pre <span class="comment"># pre 为 配置的 proxy name</span></div></pre></td></tr></table></figure></p>
+<h3 id="Processors"><a href="#Processors" class="headerlink" title="Processors"></a>Processors</h3><blockquote>
+<p>Processors 是 Runtime Compiler 的设定，在接收到静态资源请求时，才去即时地编译前端资源（sass/less/mcss/autoprefixer），主要目的是兼容无 webpack 构建的开发场景。如已使用 webpack，则推荐使用插件 <a href="https://github.com/kaola-fed/foxman/tree/master/packages/foxman-plugin-webpackdevserver" target="_blank" rel="noopener">@foxman/plugin-webapck-dev-server</a></p>
+</blockquote>
+<p>举例介绍 mcss 的即时编译配置<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Mcss = <span class="built_in">require</span>(<span class="string">'@foxman/processor-mcss'</span>);</div><div class="line"><span class="keyword">const</span> AutoPrefixer = <span class="built_in">require</span>(<span class="string">'@foxman/processor-autoprefixer'</span>);</div><div class="line"></div><div class="line">...</div><div class="line">processors: [</div><div class="line">    &#123;</div><div class="line">        <span class="attr">match</span>: <span class="string">'/src/css/**.css'</span>, <span class="comment">// 拦截该请求</span></div><div class="line">        pipeline: [ <span class="comment">// pipe 式的处理</span></div><div class="line">            <span class="keyword">new</span> Mcss(&#123;</div><div class="line">                <span class="attr">paths</span>: []</div><div class="line">            &#125;),</div><div class="line">            <span class="keyword">new</span> AutoPrefixer(&#123;</div><div class="line">                <span class="attr">cascade</span>: <span class="literal">false</span>,</div><div class="line">                <span class="attr">browsers</span>: <span class="string">'&gt; 5%'</span></div><div class="line">            &#125;)</div><div class="line">        ],</div><div class="line">        locate(reqPath) &#123; <span class="comment">// 根据请求路径，定位到在系统中具体路径</span></div><div class="line">            <span class="keyword">return</span> path.join(__dirname + reqPath.replace(<span class="regexp">/css/g</span>, <span class="string">'mcss'</span>));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">],</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>假如没有你需要的，你也可以自行开发一款 Foxman 的 Processor ，只需要实现一个特定的接口，基本结构如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> mcss = <span class="built_in">require</span>(<span class="string">'mcss'</span>);</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Processor</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(options) &#123;</div><div class="line">        <span class="comment">// 初始化解析器的参数</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    locate(reqPath) &#123; <span class="comment">// 根据请求路径找到文件在系统中的位置</span></div><div class="line">        <span class="keyword">return</span> reqPath.replace(<span class="regexp">/\.css$/g</span>, <span class="string">'\.mcss'</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    *handler(&#123; raw, filename &#125;) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">yield</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</div><div class="line">            <span class="comment">// 在这里 进行 parse 操作，如 sass | less 的解析操作</span></div><div class="line">            <span class="keyword">return</span> &#123;</div><div class="line">                dependencies, content </div><div class="line">                <span class="comment">// 该文件依赖，及内容</span></div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>具体实现，参考 <a href="https://github.com/kaola-fed/foxman/blob/master/packages/foxman-processor-mcss/index.js" target="_blank" rel="noopener">@foxman/processor-mcss ⇗ </a></p>
+<h2 id="关于贡献者"><a href="#关于贡献者" class="headerlink" title="关于贡献者"></a>关于贡献者</h2><!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><a href="https://github.com/imhype" target="_blank" rel="noopener"><img src="https://avatars3.githubusercontent.com/u/10825163?v=3" width="80px;"><br><sub>君羽</sub></a><br><a href="https://github.com/kaola-fed/foxman/commits?author=ImHype" title="Code" target="_blank" rel="noopener">💻</a> <a href="#plugin-ImHype" title="Plugin/utility libraries">🔌</a> <a href="#infra-ImHype" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kaola-fed/foxman/commits?author=ImHype" title="Documentation" target="_blank" rel="noopener">📖</a> <a href="https://github.com/kaola-fed/foxman/commits?author=ImHype" title="Tests" target="_blank" rel="noopener">⚠️</a> <a href="https://github.com/kaola-fed/foxman/issues?q=author%3AImHype" title="Bug reports" target="_blank" rel="noopener">🐛</a> <a href="#example-ImHype" title="Examples">💡</a></th>
+<th style="text-align:center"><a href="https://github.com/fengzilong" target="_blank" rel="noopener"><img src="https://avatars3.githubusercontent.com/u/9125255?v=3" width="80px;"><br><sub>MO</sub></a><br><a href="https://github.com/kaola-fed/foxman/commits?author=fengzilong" title="Code" target="_blank" rel="noopener">💻</a> <a href="#plugin-fengzilong" title="Plugin/utility libraries">🔌</a> <a href="#infra-fengzilong" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kaola-fed/foxman/commits?author=fengzilong" title="Documentation" target="_blank" rel="noopener">📖</a> <a href="https://github.com/kaola-fed/foxman/commits?author=fengzilong" title="Tests" target="_blank" rel="noopener">⚠️</a> <a href="https://github.com/kaola-fed/foxman/issues?q=author%3Afengzilong" title="Bug reports" target="_blank" rel="noopener">🐛</a></th>
+<th style="text-align:center"><a href="https://github.com/Froguard" target="_blank" rel="noopener"><img src="https://avatars0.githubusercontent.com/u/4298621?v=3" width="80px;"><br><sub>froguardoge</sub></a><br><a href="https://github.com/kaola-fed/foxman/commits?author=Froguard" title="Code" target="_blank" rel="noopener">💻</a> <a href="#plugin-Froguard" title="Plugin/utility libraries">🔌</a> <a href="https://github.com/kaola-fed/foxman/commits?author=Froguard" title="Documentation" target="_blank" rel="noopener">📖</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>最后，如果你对 Foxman 的设计有那么点好感，或者是感兴趣，欢迎一起参与到开发当中。</p>
+<p>感谢阅读！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/24/自定义webpack配置实战总结/" rel="next" title="自定义webpack配置实战总结">
+                <i class="fa fa-chevron-left"></i> 自定义webpack配置实战总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/30/从event loop看vue的nextTick/" rel="prev" title="从event loop看vue的nextTick">
+                从event loop看vue的nextTick <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://haitao.nos.netease.com/c8dd832b-900a-494f-91d7-3db1328a11f7.png"
+               alt="考拉前端团队" />
+          <p class="site-author-name" itemprop="name">考拉前端团队</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#影响"><span class="nav-number">2.</span> <span class="nav-text">影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心概念"><span class="nav-number">3.</span> <span class="nav-text">核心概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">4.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写配置文件"><span class="nav-number">5.</span> <span class="nav-text">编写配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动"><span class="nav-number">6.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计理念"><span class="nav-number">7.</span> <span class="nav-text">设计理念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#插件体系"><span class="nav-number">7.1.</span> <span class="nav-text">插件体系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器与依赖查找"><span class="nav-number">7.2.</span> <span class="nav-text">容器与依赖查找</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能模块"><span class="nav-number">8.</span> <span class="nav-text">功能模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Server模块"><span class="nav-number">8.1.</span> <span class="nav-text">Server模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Template-渲染引擎"><span class="nav-number">8.2.</span> <span class="nav-text">Template 渲染引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Proxy"><span class="nav-number">8.3.</span> <span class="nav-text">Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Processors"><span class="nav-number">8.4.</span> <span class="nav-text">Processors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于贡献者"><span class="nav-number">9.</span> <span class="nav-text">关于贡献者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">10.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">考拉前端团队</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
